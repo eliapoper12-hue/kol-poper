@@ -56,13 +56,12 @@
         }
 
         .logo-container {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             margin: 0 auto 15px;
             border-radius: 50%;
             overflow: hidden;
             border: 5px solid var(--primary);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         .logo-container img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -74,19 +73,17 @@
         }
         .party-active .logo-container img { animation: dance 0.5s infinite; }
 
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 25px;
+        /* עיצוב נגן ה-MP4 */
+        .video-card {
             background: #000;
+            border-radius: 20px;
+            overflow: hidden;
             margin-bottom: 15px;
-            border: 3px solid #eee;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%; border: none;
+        video {
+            width: 100%;
+            display: block;
         }
 
         .riddle-box { background-color: var(--riddle-bg); border: 3px dashed #fbc02d; border-radius: 25px; padding: 15px; margin-bottom: 20px; }
@@ -108,13 +105,7 @@
 
         .party-toggle { background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        footer {
-            margin: 20px 0;
-            padding: 10px;
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-        }
+        footer { margin: 20px 0; padding: 10px; font-size: 14px; color: #666; text-align: center; }
     </style>
 </head>
 <body id="main-body">
@@ -128,9 +119,13 @@
             <img src="logo.png" alt="לוגו קול פופר">
         </div>
 
-        <h3 id="video-title">טוען סרטון...</h3>
-        <div class="video-container">
-            <iframe id="youtube-player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <h3 id="video-title">טוען וידאו...</h3>
+        
+        <div class="video-card">
+            <video id="main-video" controls>
+                <source id="video-src" src="video1.mp4" type="video/mp4">
+                הדפדפן שלך לא תומך בוידאו.
+            </video>
         </div>
 
         <div class="controls">
@@ -167,32 +162,36 @@
     </footer>
 
     <script>
-        // שימוש בגרסאות סרטונים שמאפשרות הטמעה (Embedding)
-        const playlist = [
-            { title: "ברוך שם - שמוליק קליין", id: "0v9Nn-D9XgE" },
-            { title: "סנדי דינקל - אשרינו", id: "5R8V0-nOf-c" },
-            { title: "מי שאתה - סנדי דינקל", id: "mAnB1A7E_m0" }
+        // רשימת קבצי הוידאו שלך ב-GitHub
+        const videos = [
+            { title: "ברוך שם - שמוליק קליין", file: "video1.mp4" },
+            { title: "סנדי דינקל - אשרינו", file: "video2.mp4" },
+            { title: "מי שאתה - סנדי דינקל", file: "video3.mp4" }
         ];
 
-        let currentVideoIndex = 0;
+        let currentIdx = 0;
+        const videoPlayer = document.getElementById('main-video');
+        const videoSource = document.getElementById('video-src');
+        const videoTitle = document.getElementById('video-title');
 
-        function updatePlayer() {
-            const video = playlist[currentVideoIndex];
-            document.getElementById('video-title').innerText = video.title;
-            // שימוש בפורמט embed תקין
-            document.getElementById('youtube-player').src = "https://www.youtube.com/embed/" + video.id + "?rel=0";
+        function loadVideo() {
+            videoTitle.innerText = videos[currentIdx].title;
+            videoSource.src = videos[currentIdx].file;
+            videoPlayer.load();
         }
 
-        function changeVideo(direction) {
-            currentVideoIndex = (currentVideoIndex + direction + playlist.length) % playlist.length;
-            updatePlayer();
+        function changeVideo(dir) {
+            currentIdx = (currentIdx + dir + videos.length) % videos.length;
+            loadVideo();
+            videoPlayer.play();
         }
 
+        // --- שאלות וחידון ---
         const quizData = [
             { q: "איזה כלי נגינה הכי נפוץ ברדיו?", options: ["פסנתר 🎹", "גיטרה 🎸", "חצוצרה 🎺"], correct: 1 },
             { q: "מי שר את 'אשרינו'?", options: ["סנדי דינקל", "שמוליק קליין", "אברהם פריד"], correct: 0 },
             { q: "מה אוכלים בפסח?", options: ["מצה", "תפוח בדבש", "אוזן המן"], correct: 0 },
-            { q: "קול פופר משעמם?", options: ["ברור שלא! הערוץ הכי מטורף בעולם", "כן", "ברור שכן"], correct: 0 },
+            { q: "קול פופר משעמם?", options: ["ברור שלא! הערוץ הכי מטורף בעולם", "כן", "ברור שכן"], correct: 0 }
         ];
 
         let qIndex = 0;
@@ -203,27 +202,20 @@
             document.getElementById('quiz-question').innerText = q.q;
             const optionsDiv = document.getElementById('quiz-options');
             optionsDiv.innerHTML = "";
-
             q.options.forEach((opt, i) => {
                 const b = document.createElement('div');
                 b.className = 'quiz-option';
                 b.innerText = opt;
                 b.onclick = () => {
                     if(i === q.correct) {
-                        alert("נכון מאוד! קיבלת כוכב! ⭐");
-                        addStar();
+                        alert("נכון מאוד! ⭐");
+                        starCount++;
+                        document.getElementById('stars').innerText = "⭐ ".repeat(starCount);
                         loadNextQuestion();
-                    } else {
-                        alert("לא נכון, נסה שוב 🤔");
-                    }
+                    } else { alert("לא נכון, נסה שוב 🤔"); }
                 };
                 optionsDiv.appendChild(b);
             });
-        }
-
-        function addStar() {
-            starCount++;
-            document.getElementById('stars').innerText = "⭐ ".repeat(starCount);
         }
 
         function loadNextQuestion() {
@@ -235,14 +227,12 @@
             const name = document.getElementById('kidName').value;
             const msg = document.getElementById('msg').value;
             if(!name || !msg) return alert("מלאו שם והודעה!");
-            window.open("https://wa.me/972534314202?text=" + encodeURIComponent('היי קול פופר! אני ' + name + ': ' + msg), '_blank');
+            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('אני '+name+': '+msg)}`, '_blank');
         }
 
-        function toggleParty() { 
-            document.getElementById('main-body').classList.toggle('party-active'); 
-        }
+        function toggleParty() { document.getElementById('main-body').classList.toggle('party-active'); }
 
-        updatePlayer();
+        loadVideo();
         displayQuiz();
     </script>
 </body>
