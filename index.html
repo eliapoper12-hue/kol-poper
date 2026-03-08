@@ -162,6 +162,30 @@
         .party-toggle { background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
         footer { margin: 20px 0; padding: 10px; font-size: 14px; color: #666; text-align: center; }
+/* עיצוב כפתור הצבעים */
+.theme-toggle {
+    background: linear-gradient(45deg, #00dbde, #fc00ff);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* הגדרות הצבעים החדשות */
+.rainbow-theme {
+    --primary: #ff00ff; /* ורוד של הלוגו */
+    --secondary: #7000ff; /* סגול של הלוגו */
+    --bg: #fff0f5;
+    --quiz-bg: #f3e5f5;
+}
+
+.rainbow-theme header { background: linear-gradient(to left, #ff00ff, #7000ff) !important; }
     </style>
 </head>
 <body id="main-body">
@@ -210,7 +234,7 @@
             <textarea id="msg" placeholder="התשובה או הדש שלי"></textarea>
             <button class="send-wa" onclick="sendToWhatsApp()">שלח הודעה לשדרן 📱</button>
         </div>
-
+        <button class="theme-toggle" onclick="toggleTheme()">🎨 צבעי הקשת של קול פופר 🌈</button>
         <button class="party-toggle" onclick="toggleParty()">⚡ מצב מסיבה! ⚡</button>
     </div>
 
@@ -291,7 +315,11 @@
 
         loadVideo();
         displayQuiz();
+function toggleTheme() {
+    document.body.classList.toggle('rainbow-theme');
+}
     </script>
 </body>
 </html>
+
 
