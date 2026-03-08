@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קול פופר | ניהול תוכן מלא</title>
+    <title>קול פופר | האתר הרשמי</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
     <style>
         :root { --popper-blue: #4facfe; --secondary: #ff9d00; --bg: #f0faff; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; direction: rtl; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; direction: rtl; padding-bottom: 50px; }
         
-        header { background: var(--secondary); color: white; padding: 20px; text-align: center; cursor: pointer; border-bottom: 5px solid #e68a00; }
+        header { background: var(--secondary); color: white; padding: 25px; text-align: center; cursor: pointer; border-bottom: 5px solid #e68a00; user-select: none; }
         nav { background: #333; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
         nav a { color: white; padding: 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
         nav a.active { background: var(--popper-blue); }
@@ -20,100 +20,116 @@
         .container.active { display: block; }
 
         .section-box { border: 2px solid #ddd; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
-        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .form-input { width: 80%; padding: 10px; margin: 5px; border-radius: 10px; border: 1px solid #ccc; }
+        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .form-input { width: 85%; padding: 12px; margin: 8px auto; border-radius: 12px; border: 1px solid #ccc; font-family: inherit; display: block; }
+        .send-wa { background: #25d366; color: white; border: none; padding: 15px; border-radius: 50px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
 
         /* לוח מודעות */
         #news-container { width: 90%; max-width: 600px; margin: 10px auto; }
         .news-item { background: #fff9c4; border: 2px solid #fbc02d; padding: 10px; border-radius: 15px; margin-bottom: 5px; font-weight: bold; color: #f57f17; }
 
-        /* חלון אדמין */
+        /* אדמין */
         #admin-panel { display: none; position: fixed; top: 5%; left: 5%; width: 90%; height: 90%; background: white; z-index: 2000; padding: 20px; border-radius: 25px; box-shadow: 0 0 50px rgba(0,0,0,0.5); overflow-y: auto; border: 5px solid var(--secondary); }
         .admin-section { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #eee; text-align: right; }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 10px; overflow: hidden; }
-        .admin-table tr { border-bottom: 1px solid #eee; }
-        .admin-table td { padding: 10px; font-size: 14px; }
-        .btn-del { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .btn-del:hover { background: #d32f2f; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        .admin-table td { padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; }
+        .btn-del { background: #ff5252; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+
+        .winner-tag { background: #f3e5f5; padding: 8px; border-radius: 12px; margin: 5px auto; width: 80%; border: 1px dashed #9c27b0; color: #7b1fa2; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="admin-panel">
-        <h2 style="text-align:center; color: var(--secondary);">⚙️ ניהול תוכן קול פופר</h2>
+        <h2 style="text-align:center;">⚙️ ניהול "קול פופר"</h2>
         
         <div class="admin-section">
-            <h3>📢 הודעות בלוח המודעות</h3>
+            <h3>📢 מודעות</h3>
             <div id="adm-news-list"></div>
-            <hr>
-            <input type="text" id="new-news-txt" class="form-input" placeholder="כתוב הודעה חדשה...">
-            <button class="btn-ctrl" onclick="addItem('news', {text: document.getElementById('new-news-txt').value}, 'new-news-txt')">הוסף הודעה</button>
+            <input type="text" id="new-news-txt" class="form-input" placeholder="הודעה חדשה...">
+            <button class="btn-ctrl" onclick="addItem('news', {text: document.getElementById('new-news-txt').value}, 'new-news-txt')">הוסף</button>
         </div>
 
         <div class="admin-section">
-            <h3>😂 ניהול בדיחות</h3>
+            <h3>😂 בדיחות</h3>
             <div id="adm-jokes-list"></div>
-            <hr>
-            <textarea id="new-joke-txt" class="form-input" style="height:50px;" placeholder="כתוב בדיחה חדשה..."></textarea>
-            <button class="btn-ctrl" onclick="addItem('jokes', {text: document.getElementById('new-joke-txt').value}, 'new-joke-txt')">הוסף בדיחה למאגר</button>
+            <input type="text" id="new-joke-txt" class="form-input" placeholder="בדיחה חדשה...">
+            <button class="btn-ctrl" onclick="addItem('jokes', {text: document.getElementById('new-joke-txt').value}, 'new-joke-txt')">הוסף</button>
         </div>
 
         <div class="admin-section">
-            <h3>🧩 ניהול חידות</h3>
+            <h3>🧩 חידות</h3>
             <div id="adm-riddles-list"></div>
-            <hr>
-            <textarea id="new-riddle-txt" class="form-input" style="height:50px;" placeholder="כתוב חידה חדשה..."></textarea>
-            <button class="btn-ctrl" onclick="addItem('riddles', {text: document.getElementById('new-riddle-txt').value}, 'new-riddle-txt')">הוסף חידה למאגר</button>
+            <input type="text" id="new-riddle-txt" class="form-input" placeholder="חידה חדשה...">
+            <button class="btn-ctrl" onclick="addItem('riddles', {text: document.getElementById('new-riddle-txt').value}, 'new-riddle-txt')">הוסף</button>
         </div>
 
         <div class="admin-section">
-            <h3>🎬 ניהול סרטונים</h3>
+            <h3>🎬 סרטונים</h3>
             <div id="adm-vids-list"></div>
-            <hr>
-            <input type="text" id="new-vid-name" class="form-input" style="width:40%" placeholder="שם הסרטון">
-            <input type="text" id="new-vid-url" class="form-input" style="width:40%" placeholder="קישור (mp4)">
-            <button class="btn-ctrl" onclick="addItem('videos', {name: document.getElementById('new-vid-name').value, url: document.getElementById('new-vid-url').value}, ['new-vid-name','new-vid-url'])">הוסף סרטון</button>
+            <input type="text" id="new-vid-name" class="form-input" placeholder="שם סרטון">
+            <input type="text" id="new-vid-url" class="form-input" placeholder="קישור mp4">
+            <button class="btn-ctrl" onclick="addItem('videos', {name: document.getElementById('new-vid-name').value, url: document.getElementById('new-vid-url').value}, ['new-vid-name','new-vid-url'])">הוסף</button>
         </div>
 
-        <button class="btn-ctrl" style="background:#333; width:100%; height:50px; font-size:18px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור תפריט ניהול</button>
+        <button class="btn-ctrl" style="background:#333; width:100%; height:45px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור ניהול</button>
     </div>
 
     <header onclick="handleAdminClick()">
-        <h1>רדיו קול פופר 🎈</h1>
-        <p style="margin:0; font-size:14px;">(3 לחיצות כאן לפתיחת ניהול)</p>
+        <h1 style="margin:0;">רדיו קול פופר 🎈</h1>
     </header>
 
     <nav>
-        <a onclick="showPage('home')" id="nav-home" class="active">🏠 דף הבית</a>
+        <a onclick="showPage('home')" id="nav-home" class="active">🏠 בית</a>
         <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות</a>
         <a onclick="showPage('jokes')" id="nav-jokes">😂 בדיחות</a>
+        <a onclick="showPage('contact')" id="nav-contact">📱 קשר</a>
     </nav>
 
     <div id="news-container"></div>
 
     <div id="home" class="container active">
-        <div class="section-box" style="background:#000; color:white; overflow:hidden; position:relative;">
-            <div id="vid-name-display" style="background:rgba(0,0,0,0.6); padding:5px; position:absolute; top:0; width:100%; z-index:10;">טוען...</div>
+        <div class="section-box" style="background:#000; padding:0; overflow:hidden;">
+            <div id="vid-name-display" style="background:rgba(0,0,0,0.6); color:white; padding:5px; font-weight:bold;">טוען...</div>
             <video id="main-video" style="width:100%;" controls src=""></video>
         </div>
         <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
         <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
+
+        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0; margin-top:20px;">
+            <h3 style="color:#7b1fa2; margin:0 0 10px 0;">🏆 טבלת הזוכים</h3>
+            <div id="leaderboard"></div>
+        </div>
     </div>
 
     <div id="riddles" class="container">
-        <h2>🧩 מאגר החידות</h2>
-        <div id="riddle-display" class="section-box" style="font-size:20px; font-weight:bold; background:#fff8e1; min-height:80px; display:flex; align-items:center; justify-content:center;">טוען חידה...</div>
-        <button class="btn-ctrl" onclick="changeRiddle(1)">חידה אחרת 🎲</button>
+        <h2>🧩 החידה היומית</h2>
+        <div id="riddle-display" class="section-box" style="font-size:18px; font-weight:bold; background:#fff8e1; min-height:60px;">טוען...</div>
+        <button class="btn-ctrl" onclick="changeRiddle(1)">חידה אחרת</button>
     </div>
 
     <div id="jokes" class="container">
-        <h2>😂 פינת הצחוק</h2>
-        <div id="joke-display" class="section-box" style="font-size:20px; font-weight:bold; background:#f1f8ff; min-height:80px; display:flex; align-items:center; justify-content:center;">טוען בדיחה...</div>
-        <button class="btn-ctrl" onclick="changeJoke(1)">בדיחה אחרת 🤣</button>
+        <h2>😂 פינת הבדיחות</h2>
+        <div id="joke-display" class="section-box" style="font-size:18px; font-weight:bold; background:#f1f8ff; min-height:60px;">טוען...</div>
+        <button class="btn-ctrl" onclick="changeJoke(1)">בדיחה אחרת</button>
+    </div>
+
+    <div id="contact" class="container">
+        <h2 style="color: #2e7d32;">📱 צור קשר</h2>
+        <div class="section-box" style="background:#e8f5e9;">
+            <h3>🎵 בקשת שיר</h3>
+            <input type="text" id="songName" class="form-input" placeholder="איזה שיר תרצו לשמוע?">
+            <button class="send-wa" onclick="sendSongRequest()">שלח בקשה לוואטסאפ 🎵</button>
+        </div>
+        <div class="section-box" style="background:#e3f2fd;">
+            <h3>💬 הודעה לאולפן</h3>
+            <input type="text" id="contactUser" class="form-input" placeholder="השם שלי">
+            <textarea id="contactMsg" class="form-input" placeholder="מה תרצו לכתוב לנו?" style="height:60px;"></textarea>
+            <button class="send-wa" style="background:#2196f3;" onclick="sendGeneralContact()">שלח הודעה 📱</button>
+        </div>
     </div>
 
     <script>
-        // הגדרות Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
             databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
@@ -123,10 +139,9 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let dataStore = { news: [], videos: [], jokes: [], riddles: [] };
+        let dataStore = { news: [], videos: [], jokes: [], riddles: [], winners: [] };
         let currentIdx = { video: 0, joke: 0, riddle: 0 };
 
-        // סנכרון נתונים
         function sync(path) {
             db.ref(path).on('value', s => {
                 const val = s.val();
@@ -135,66 +150,52 @@
                 renderAll();
             });
         }
-        ['news', 'videos', 'jokes', 'riddles'].forEach(sync);
+        ['news', 'videos', 'jokes', 'riddles', 'winners'].forEach(sync);
 
         function renderAll() {
-            // הודעות
             document.getElementById('news-container').innerHTML = dataStore.news.map(m => `<div class="news-item">📢 ${m.text}</div>`).join('');
-
-            // סרטון
+            
             if(dataStore.videos.length > 0) {
                 const v = dataStore.videos[currentIdx.video % dataStore.videos.length];
                 document.getElementById('vid-name-display').innerText = v.name;
                 if(document.getElementById('main-video').src !== v.url) document.getElementById('main-video').src = v.url;
             }
 
-            // בדיחות וחידות
             if(dataStore.jokes.length > 0) document.getElementById('joke-display').innerText = dataStore.jokes[currentIdx.joke % dataStore.jokes.length].text;
             if(dataStore.riddles.length > 0) document.getElementById('riddle-display').innerText = dataStore.riddles[currentIdx.riddle % dataStore.riddles.length].text;
 
-            // עדכון טבלאות אדמין (כאן נמצאת מערכת המחיקה)
-            renderAdminTable('news', 'adm-news-list', (i) => i.text);
-            renderAdminTable('jokes', 'adm-jokes-list', (i) => i.text);
-            renderAdminTable('riddles', 'adm-riddles-list', (i) => i.text);
-            renderAdminTable('videos', 'adm-vids-list', (i) => `<b>${i.name}</b> (${i.url})`);
+            const lb = document.getElementById('leaderboard');
+            lb.innerHTML = dataStore.winners.length > 0 ? 
+                dataStore.winners.sort((a,b)=>b.score-a.score).slice(0,5).map(w => `<div class="winner-tag">⭐ ${w.name} - ${w.score}</div>`).join('') : "אין זוכים עדיין";
+
+            renderAdminTable('news', 'adm-news-list', i => i.text);
+            renderAdminTable('jokes', 'adm-jokes-list', i => i.text);
+            renderAdminTable('riddles', 'adm-riddles-list', i => i.text);
+            renderAdminTable('videos', 'adm-vids-list', i => i.name);
         }
 
         function renderAdminTable(path, targetId, formatter) {
-            const list = dataStore[path];
-            const keys = dataStore[path + '_keys'];
-            if(list.length === 0) { document.getElementById(targetId).innerHTML = "<p>אין נתונים ברשימה.</p>"; return; }
-            
+            const list = dataStore[path], keys = dataStore[path + '_keys'];
             let html = `<table class="admin-table">`;
             list.forEach((item, i) => {
-                html += `<tr>
-                    <td>${formatter(item)}</td>
-                    <td style="width:50px;"><button class="btn-del" onclick="deleteItem('${path}', '${keys[i]}')">מחק X</button></td>
-                </tr>`;
+                html += `<tr><td>${formatter(item)}</td><td style="width:40px"><button class="btn-del" onclick="deleteItem('${path}','${keys[i]}')">X</button></td></tr>`;
             });
-            html += `</table>`;
-            document.getElementById(targetId).innerHTML = html;
+            document.getElementById(targetId).innerHTML = html + `</table>`;
         }
 
-        // פונקציות הוספה ומחיקה
         function addItem(path, data, clearIds) {
-            if(!data.text && !data.url) return;
+            if(!data.text && !data.url && !data.name) return;
             db.ref(path).push(data);
             if(Array.isArray(clearIds)) clearIds.forEach(id => document.getElementById(id).value = "");
             else document.getElementById(clearIds).value = "";
         }
 
-        function deleteItem(path, key) {
-            if(confirm('האם אתה בטוח שברצונך למחוק פריט זה לצמיתות?')) {
-                db.ref(`${path}/${key}`).remove();
-            }
-        }
+        function deleteItem(path, key) { if(confirm('למחוק?')) db.ref(`${path}/${key}`).remove(); }
 
-        // דפדוף באתר
         function changeVideo(d) { currentIdx.video = (currentIdx.video + d + dataStore.videos.length) % dataStore.videos.length; renderAll(); document.getElementById('main-video').play(); }
         function changeJoke(d) { currentIdx.joke = (currentIdx.joke + d + dataStore.jokes.length) % dataStore.jokes.length; renderAll(); }
         function changeRiddle(d) { currentIdx.riddle = (currentIdx.riddle + d + dataStore.riddles.length) % dataStore.riddles.length; renderAll(); }
 
-        // ניווט ואדמין
         let clickCount = 0;
         function handleAdminClick() {
             clickCount++;
@@ -208,6 +209,9 @@
             document.getElementById(p).classList.add('active');
             document.getElementById('nav-' + p).classList.add('active');
         }
+
+        function sendSongRequest() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('בקשת שיר: ' + document.getElementById('songName').value)}`); }
+        function sendGeneralContact() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה מ' + document.getElementById('contactUser').value + ': ' + document.getElementById('contactMsg').value)}`); }
     </script>
 </body>
 </html>
