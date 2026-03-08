@@ -3,130 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קול פופר | רדיו הילדים</title>
+    <title>קול פופר | האתר הרשמי</title>
     <style>
         :root {
             --primary: #4facfe;
             --secondary: #ff9d00;
             --bg: #f0faff;
-            --quiz-bg: #e0f2f1;
-            --live-red: #ff3d00;
-            --joke-bg: #fff3e0;
+            --nav-bg: #333;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             margin: 0;
+            padding-bottom: 50px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: 0.3s;
-            overflow-x: hidden;
         }
 
-        header {
-            background-color: var(--secondary);
+        nav {
+            background-color: var(--nav-bg);
             width: 100%;
-            padding: 15px;
-            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        nav a {
             color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .live-status {
-            background: #fff;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            display: inline-block;
-            font-size: 14px;
-            color: #333;
+            padding: 15px 20px;
+            text-decoration: none;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
         }
+        nav a:hover, nav a.active { background-color: var(--primary); }
+
+        header { background-color: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; border-bottom: 5px solid #e68a00; }
 
         .container {
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             background: white;
-            margin: 20px;
+            margin: 20px auto;
             padding: 25px;
             border-radius: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
             border: 4px solid var(--primary);
-            position: relative;
+            display: none;
         }
+        .container.active { display: block; }
 
-        .logo-container {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 20px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 4px solid var(--primary);
-        }
-        .logo-container img { width: 100%; height: auto; display: block; }
-
-        .video-card { background: #000; border-radius: 20px; overflow: hidden; margin-bottom: 15px; }
+        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; }
+        .video-card { background: #000; border-radius: 20px; overflow: hidden; margin: 15px 0; border: 3px solid #333; }
         video { width: 100%; display: block; }
 
-        .btn-ctrl { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .btn-joke { background: #ff5722; color: white; border: none; padding: 12px; border-radius: 15px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        
-        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; }
-        .request-box { background-color: #f3e5f5; border-color: #9c27b0; }
-        .joke-box { background-color: var(--joke-bg); border-color: #ff9800; }
-        
-        select { width: 95%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 10px; font-family: inherit; font-size: 16px; }
+        .btn-ctrl { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; box-shadow: 0 4px 0 #3891d9; }
 
-        .whatsapp-box { background: #e6ffed; padding: 20px; border-radius: 25px; border: 2px dashed #25d366; margin-bottom: 15px; }
-        input[type="text"], textarea { width: 90%; padding: 10px; margin: 5px 0; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; }
+        .quiz-option { background: white; border: 2px solid #009688; border-radius: 15px; padding: 12px; margin: 10px 0; cursor: pointer; font-weight: bold; }
         
-        .send-wa { background: #25d366; color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        /* עיצוב זוכים */
+        .winner-tag { background: #f3e5f5; border-radius: 15px; padding: 8px; margin: 5px auto; width: 85%; border: 2px dashed #9c27b0; font-size: 17px; font-weight: bold; color: #4a148c; }
+
+        input, textarea, select { width: 90%; padding: 12px; margin: 10px 0; border-radius: 15px; border: 2px solid #ccc; font-family: inherit; }
+        .send-wa { background: #25d366; color: white; border: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; width: 100%; margin-top: 10px; }
 
         .falling-item { position: fixed; top: -50px; font-size: 28px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-        
-        @keyframes party-bg {
-            0% { background-color: #ffadad; }
-            50% { background-color: #9bf6ff; }
-            100% { background-color: #ffadad; }
-        }
+        @keyframes party-bg { 0% { background-color: #ffadad; } 50% { background-color: #9bf6ff; } 100% { background-color: #ffadad; } }
         .party-active { animation: party-bg 1s infinite linear !important; }
 
-        footer { margin-bottom: 20px; font-size: 14px; color: #666; }
+        footer { text-align: center; color: #888; font-size: 14px; margin: 20px 0; }
     </style>
 </head>
-<body id="main-body">
+<body>
+
+    <nav>
+        <a onclick="showPage('home')" id="nav-home" class="active">🏠 דף הבית</a>
+        <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות</a>
+        <a onclick="showPage('jokes')" id="nav-jokes">😂 בדיחות</a>
+        <a onclick="showPage('contact')" id="nav-contact">📱 צור קשר</a>
+    </nav>
 
     <header>
         <h1 style="margin:0;">רדיו קול פופר 🎈</h1>
-        <div class="live-status">🎧 <span id="listener-count">142</span> מאזינים איתנו עכשיו!</div>
+        <div style="background:white; color:black; display:inline-block; padding:5px 15px; border-radius:20px; margin-top:10px; font-size:14px; font-weight: bold;">
+            🎧 <span id="listener-count">156</span> מאזינים עכשיו
+        </div>
     </header>
 
-    <div class="container">
-        <div id="main-logo" class="logo-container">
-            <img src="logo.png" alt="לוגו קול פופר">
-        </div>
-
-        <h3 id="video-title">טוען...</h3>
+    <div id="home" class="container active">
+        <div style="max-width:250px; margin: 0 auto 20px;"><img src="logo.png" style="width:100%;" alt="לוגו"></div>
+        
+        <h3 id="video-title">טוען סרטון...</h3>
         <div class="video-card">
             <video id="main-video" controls><source id="video-src" src="video1.mp4" type="video/mp4"></video>
         </div>
+        <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
+        <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
 
-        <div class="controls">
-            <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
-            <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
+        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0; margin-top:20px;">
+            <h3 style="margin:0 0 10px 0; color:#7b1fa2;">🏆 טבלת הזוכים:</h3>
+            <div class="winner-tag">🥇 ישראל ישראלי</div>
+            <div class="winner-tag">🥈 לוי לוי</div>
+            <div class="winner-tag">🥉 משה כהן</div>
+        </div>
+        
+        <button class="btn-ctrl" style="background:linear-gradient(45deg, #f093fb, #f5576c); width:100%; margin-top:10px; padding: 18px;" onclick="toggleParty()">⚡ מצב מסיבה מוזיקלית! ⚡</button>
+    </div>
+
+    <div id="riddles" class="container">
+        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0; padding: 10px;">
+            <h4 style="margin:0 0 10px 0; color:#7b1fa2;">🏆 אלופי החידות:</h4>
+            <div class="winner-tag">🥇 ישראל ישראלי</div>
+            <div class="winner-tag">🥈 לוי לוי</div>
+            <div class="winner-tag">🥉 משה כהן</div>
         </div>
 
-        <hr style="margin: 20px 0; border: 1px solid #eee;">
+        <h2 style="color: #00796b;">🧩 מרכז החידות</h2>
+        
+        <div class="section-box quiz-box" style="background: #e0f2f1; border-color: #009688;">
+            <div id="stars" style="font-size:24px; margin-bottom: 10px;"></div>
+            <p id="quiz-question" style="font-weight:bold; font-size:20px;"></p>
+            <div id="quiz-options"></div>
+        </div>
+        
+        <div class="section-box" style="background:#fffde7; border: 3px dashed #fbc02d;">
+            <h3 style="color:#f57f17; margin-top: 0;">📨 שלח תשובה לחידה הגדולה</h3>
+            <p style="font-weight: bold;">החידה: איזה חג מתקרב אלינו?</p>
+            <input type="text" id="riddleKidName" placeholder="השם שלי">
+            <textarea id="riddleAnswer" placeholder="התשובה שלי..."></textarea>
+            <button class="send-wa" onclick="sendRiddleAnswer()">שלח תשובה לוואטסאפ 🧩</button>
+        </div>
+    </div>
 
-        <div class="section-box request-box">
-            <h3 style="margin-top:0; color:#7b1fa2;">🎵 איזה שיר לשים בשידור?</h3>
+    <div id="jokes" class="container">
+        <h2 style="color: #e65100;">😂 פינת הצחוק</h2>
+        <div class="section-box" style="background: #fff3e0; border-color: #ff9800; min-height: 200px;">
+            <p id="joke-text" style="font-size:22px; font-weight:bold; color: #bf360c; padding:20px;">לחצו על הכפתור!</p>
+            <button class="btn-ctrl" style="background:#ff9800; padding:15px;" onclick="getNewJoke()">תצחיק אותי! 🤣</button>
+        </div>
+    </div>
+
+    <div id="contact" class="container">
+        <h2 style="color: #2e7d32;">📱 דברו איתנו</h2>
+        <div class="section-box" style="background:#e8f5e9; border-color:#4caf50;">
+            <h3>🎵 בקשת שיר לשידור</h3>
             <select id="song-request">
-                <option>בחר שיר מהרשימה...</option>
+                <option>בחרו שיר...</option>
                 <option>שמוליק סוכות - הילד הזה</option>
                 <option>ארי היל - איכא בשוקא</option>
                 <option>שי וינר - יש לי מלך</option>
@@ -134,60 +162,32 @@
                 <option>ברוך שם - שמוליק קליין</option>
                 <option>אשרינו - סנדי דינקל</option>
             </select>
-            <button class="btn-ctrl" style="background:#9c27b0;" onclick="sendRequest()">שלח בקשה 🎸</button>
         </div>
-
-        <div class="section-box joke-box">
-            <h3 style="margin-top:0; color:#e65100;">😂 פינת הבדיחה</h3>
-            <p id="joke-text" style="font-weight:bold; min-height:40px;">לחצו על הכפתור כדי לצחוק!</p>
-            <button class="btn-joke" onclick="getNewJoke()">תצחיק אותי! 🤣</button>
+        <div class="section-box" style="background:#e3f2fd; border-color:#2196f3;">
+            <h3 style="color:#0d47a1;">💬 הערות ודרישות שלום</h3>
+            <input type="text" id="contactName" placeholder="השם שלי">
+            <textarea id="contactMsg" rows="4" placeholder="כתבו כאן..."></textarea>
+            <button class="send-wa" style="background:#2196f3;" onclick="sendGeneralContact()">שלח ד"ש 📱</button>
         </div>
-
-        <div class="whatsapp-box">
-            <h3>שלחו ד"ש ותשובה! 👋</h3>
-            <input type="text" id="kidName" placeholder="השם שלי">
-            <textarea id="msg" placeholder="התשובה או הדש שלי"></textarea>
-            <button class="send-wa" onclick="sendToWhatsApp()">שלח הודעה לשדרן 📱</button>
-        </div>
-
-        <button class="btn-ctrl" style="background:linear-gradient(45deg, #f093fb, #f5576c); width:100%; padding:15px;" onclick="toggleParty()">⚡ מצב מסיבה! ⚡</button>
     </div>
 
     <footer>© כל הזכויות שמורות לרדיו קול פופר</footer>
 
     <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
         const videos = [
             { title: "ברוך שם - שמוליק קליין", file: "video1.mp4" },
             { title: "סנדי דינקל - אשרינו", file: "video2.mp4" },
             { title: "מי שאתה - סנדי דינקל", file: "video3.mp4" }
         ];
-
-        // מאגר בדיחות מורחב
-        const jokes = [
-            "למה פילים לא משתמשים במחשב? כי הם מפחדים מהעכבר!",
-            "מה הדבר הכי מוזיקלי במטבח? הכף-תוף!",
-            "למה המורה חבשה משקפי שמש? כי התלמידים שלה היו כל כך מבריקים!",
-            "איך קוראים לדג שאין לו עין? דג (ד' ג' בלי י'!).",
-            "מה עושה שוקולד כשהוא בלחץ? הוא נמס!",
-            "למה התרנגולת חצתה את הכביש? כדי להראות לארנב שאפשר לעשות את זה!",
-            "איך יודעים שמיץ ענבים הוא דתי? כי כתוב עליו 'תירוש'!",
-            "מה אמר העציץ לחבר שלו? 'מה קורה, אחי? צומח?'",
-            "למה הספרייה היא המקום הכי גבוה בעולם? כי יש בה המון סיפורים (קומות)!",
-            "איך קוראים לילד שמתופף על כל דבר? 'דופק בדלת'!",
-            "מה עושה ענן כשיש לו גירוד? הוא מחפש גורד שחקים!",
-            "למה השמיכה לא מרגישה טוב? כי יש לה חום!",
-            "מה אמר האפס לתשע? 'וואו, איזה כובע יפה!'",
-            "איך קוראים לאיש שתמיד שומר על השקט? ששש-מעון!",
-            "למה הירח תמיד כל כך עייף? כי הוא ער כל הלילה!",
-            "מה ההבדל בין פיל לפסנתר? על פסנתר אפשר לנגן, אבל פיל אי אפשר לנגן!"
-        ];
-
-        let currentIdx = 0, partyInterval;
-
-        setInterval(() => {
-            const count = 120 + Math.floor(Math.random() * 50);
-            document.getElementById('listener-count').innerText = count;
-        }, 5000);
+        let currentIdx = 0;
 
         function changeVideo(dir) {
             currentIdx = (currentIdx + dir + videos.length) % videos.length;
@@ -197,32 +197,68 @@
             document.getElementById('main-video').play();
         }
 
+        // --- החידות המקוריות שלך חזרו! ---
+        const quizData = [
+            { q: "איזה אות באה אחרי א'?", options: ["ב'", "ג'"], correct: 0 },
+            { q: "מה רואים בתמונה של הלוגו?", options: ["בלון", "אוטו"], correct: 0 },
+            { q: "מי שר את 'אשרינו'?", options: ["סנדי דינקל", "אבי אילסון"], correct: 0 },
+            { q: "איזה צבע הרקע של כפתור המסיבה?", options: ["צבעוני", "שחור"], correct: 0 }
+        ];
+        let qIndex = 0, starCount = 0;
+
+        function displayQuiz() {
+            const q = quizData[qIndex];
+            document.getElementById('quiz-question').innerText = q.q;
+            const optDiv = document.getElementById('quiz-options');
+            optDiv.innerHTML = "";
+            q.options.forEach((opt, i) => {
+                const b = document.createElement('div');
+                b.className = 'quiz-option';
+                b.innerText = opt;
+                b.onclick = () => {
+                    if(i === q.correct) {
+                        starCount++;
+                        document.getElementById('stars').innerText = "⭐ ".repeat(starCount);
+                        qIndex = (qIndex + 1) % quizData.length;
+                        displayQuiz();
+                    } else alert("נסה שוב! 🤔");
+                };
+                optDiv.appendChild(b);
+            });
+        }
+
+        const jokes = [
+            "למה פילים לא משתמשים במחשב? כי הם מפחדים מהעכבר!",
+            "מה הדבר הכי מוזיקלי במטבח? הכף-תוף!",
+            "איך יודעים שמיץ ענבים הוא דתי? כי כתוב עליו תירוש!",
+            "למה הספר הלך לרופא? כי נקרע לו דף!"
+        ];
         function getNewJoke() {
-            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-            document.getElementById('joke-text').innerText = randomJoke;
+            document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random() * jokes.length)];
         }
 
-        function sendRequest() {
-            const song = document.getElementById('song-request').value;
-            if(song.includes("בחר")) return alert("בחר שיר קודם!");
-            alert("הבקשה לשיר '" + song + "' נשלחה לשדרן! 🎧");
-        }
-
-        function sendToWhatsApp() {
-            const name = document.getElementById('kidName').value;
-            const msg = document.getElementById('msg').value;
-            if(!name || !msg) return alert("מלאו שם והודעה!");
-            
-            // פורמט הודעה מעודכן לבקשתך
-            const finalMsg = `שלום לקול פופר! השם שלי (${name}) התשובה \\ הדש שלי (${msg})`;
-            
+        function sendRiddleAnswer() {
+            const name = document.getElementById('riddleKidName').value;
+            const ans = document.getElementById('riddleAnswer').value;
+            if(!name || !ans) return alert("מלאו שם ותשובה!");
+            const finalMsg = `שלום לקול פופר! השם שלי (${name}) התשובה שלי לחידה היא: (${ans})`;
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent(finalMsg)}`, '_blank');
         }
 
+        function sendGeneralContact() {
+            const name = document.getElementById('contactName').value;
+            const msg = document.getElementById('contactMsg').value;
+            const song = document.getElementById('song-request').value;
+            if(!name || !msg) return alert("מלאו שם והודעה!");
+            let finalMsg = `שלום לקול פופר! השם שלי (${name}) הודעה: (${msg})`;
+            if(!song.includes("בחרו")) finalMsg += ` | שיר: ${song}`;
+            window.open(`https://wa.me/972534314202?text=${encodeURIComponent(finalMsg)}`, '_blank');
+        }
+
+        let partyInterval;
         function toggleParty() { 
-            const b = document.body;
-            b.classList.toggle('party-active'); 
-            if(b.classList.contains('party-active')) {
+            document.body.classList.toggle('party-active'); 
+            if(document.body.classList.contains('party-active')) {
                 partyInterval = setInterval(() => {
                     const item = document.createElement('div');
                     item.className = 'falling-item';
@@ -235,7 +271,12 @@
             } else clearInterval(partyInterval);
         }
 
+        setInterval(() => {
+            document.getElementById('listener-count').innerText = 140 + Math.floor(Math.random() * 40);
+        }, 4000);
+
         changeVideo(0);
+        displayQuiz();
     </script>
 </body>
 </html>
