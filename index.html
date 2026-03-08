@@ -96,6 +96,20 @@
             border: 3px solid white; transition: 0.2s;
         }
 
+        /* עיצוב שדות קלט מסודרים */
+        .form-input {
+            width: 85%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+        .form-input:focus { border-color: var(--popper-blue); outline: none; }
+        
+        .winner-tag { background: #fff; border-radius: 15px; padding: 8px; margin: 5px auto; width: 90%; border: 2px dashed #9c27b0; font-size: 17px; font-weight: bold; color: #4a148c; }
+
         /* פריטים נופלים */
         .falling-item {
             position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999;
@@ -139,13 +153,23 @@
 
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 טבלת הזוכים:</h3>
-            <div style="background:#fff; border-radius:15px; padding:10px; border:2px dashed #9c27b0; font-weight:bold; color:#4a148c;">🥇 ישראל ישראלי</div>
+            <div class="winner-tag">🥇 ישראל ישראלי</div>
+            <div class="winner-tag">🥈 לוי לוי</div>
+            <div class="winner-tag">🥉 משה כהן</div>
         </div>
         
         <button class="btn-party" onclick="togglePartyMode()">🎊 הפעל מסיבת קול פופר! 🎊</button>
     </div>
 
     <div id="riddles" class="container">
+        
+        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
+            <h3 style="color:#7b1fa2; margin-top:0;">🏆 אלופי החידות:</h3>
+            <div class="winner-tag">🥇 ישראל ישראלי</div>
+            <div class="winner-tag">🥈 לוי לוי</div>
+            <div class="winner-tag">🥉 משה כהן</div>
+        </div>
+
         <h2 style="color: #00796b;">🧩 חידון יהדות וכוכבים</h2>
         <div class="section-box" style="background: #e0f2f1; border-color: #009688;">
             <div id="stars-display" style="font-size:24px; margin-bottom:10px;"></div>
@@ -153,10 +177,15 @@
             <div id="quiz-options"></div>
         </div>
         
+        <div class="section-box" style="background:#fff8e1; border-color:#ffc107;">
+            <h3 style="color:#f57f17; margin-top:0;">❓ החידה היומית</h3>
+            <p style="font-size: 18px; font-weight: bold;">כמה נרות מדליקים בכל שמונת ימי חנוכה יחד? (כולל שמש)</p>
+        </div>
+
         <div class="section-box" style="background:#fffde7; border: 3px dashed #fbc02d;">
             <h3>📨 שלח תשובה לחידה</h3>
-            <input type="text" id="riddleKidName" placeholder="השם שלי">
-            <textarea id="riddleAnswer" placeholder="התשובה שלי..."></textarea>
+            <input type="text" id="riddleKidName" class="form-input" placeholder="השם שלי">
+            <textarea id="riddleAnswer" class="form-input" placeholder="התשובה שלי..." style="height: 60px;"></textarea>
             <button class="send-wa" onclick="sendRiddleAnswer()">שלח תשובה לוואטסאפ 🧩</button>
         </div>
     </div>
@@ -173,13 +202,23 @@
         <h2 style="color: #2e7d32;">📱 צור קשר</h2>
         <div class="section-box" style="background:#e8f5e9;">
             <h3>🎵 בקשת שיר לשידור</h3>
-            <select id="song-choice">
+            <select id="song-choice" class="form-input">
                 <option>בחרו שיר...</option>
                 <option>שמוליק סוכות - הילד הזה</option>
                 <option>ארי היל - איכא בשוקא</option>
+                <option>שי וינר - יש לי מלך</option>
+                <option>אבי אילסון ואהרלה סמט - המלמד תורה</option>
                 <option>ברוך שם - שמוליק קליין</option>
+                <option>אשרינו - סנדי דינקל</option>
             </select>
             <button class="send-wa" onclick="sendSongRequest()">שלח בקשת שיר 🎵</button>
+        </div>
+
+        <div class="section-box" style="background:#e3f2fd; border-color:#2196f3;">
+            <h3 style="color:#0d47a1; margin-top:0;">💬 הודעה כללית לצוות</h3>
+            <input type="text" id="contactName" class="form-input" placeholder="השם שלי">
+            <textarea id="contactMsg" class="form-input" placeholder="כתבו כאן את ההודעה..." style="height: 80px;"></textarea>
+            <button class="send-wa" style="background:#2196f3;" onclick="sendGeneralContact()">שלח הודעה 📱</button>
         </div>
     </div>
 
@@ -200,7 +239,6 @@
                 partyInterval = setInterval(() => {
                     const item = document.createElement('div');
                     item.className = 'falling-item';
-                    // פריטי קול פופר
                     const icons = ['📢', '🎤', '🎵', '🎶', '⭐', '✨', '📻', '🎧'];
                     item.innerText = icons[Math.floor(Math.random() * icons.length)];
                     item.style.left = Math.random() * 100 + 'vw';
@@ -222,7 +260,6 @@
             document.getElementById('main-video').play();
         }
 
-        // חידות דתיות
         const quizData = [
             { q: "איזו מסכת היא הראשונה בש\"ס?", options: ["ברכות", "שבת"], correct: 0 },
             { q: "כמה תפילות מתפללים בשבת?", options: ["3", "4"], correct: 1 },
@@ -257,7 +294,6 @@
             document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random()*jokes.length)];
         }
 
-        // עדכון מונה צופים
         setInterval(() => {
             document.getElementById('listener-count').innerText = 150 + Math.floor(Math.random() * 25);
         }, 3000);
@@ -265,12 +301,20 @@
         function sendRiddleAnswer() {
             const n = document.getElementById('riddleKidName').value;
             const a = document.getElementById('riddleAnswer').value;
+            if(!n || !a) { alert("אנא מלאו שם ותשובה"); return; }
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent('חידה מקול פופר: ' + n + ' ענה ' + a)}`);
         }
 
         function sendSongRequest() {
             const s = document.getElementById('song-choice').value;
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent('אני רוצה לשמוע את השיר: ' + s)}`);
+        }
+
+        function sendGeneralContact() {
+            const n = document.getElementById('contactName').value;
+            const m = document.getElementById('contactMsg').value;
+            if(!n || !m) { alert("אנא מלאו את כל השדות"); return; }
+            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה לצוות מקול פופר. מאת: ' + n + '. הודעה: ' + m)}`);
         }
 
         displayQuiz();
