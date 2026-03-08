@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>קול פופר | האתר הרשמי</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <style>
         :root {
             --popper-blue: #4facfe;
@@ -152,9 +155,7 @@
         <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 טבלת הזוכים:</h3>
-            <div class="winner-tag">🥇 ישראל ישראלי</div>
-            <div class="winner-tag">🥈 לוי לוי</div>
-            <div class="winner-tag">🥉 משה כהן</div>
+            <div id="leaderboard-home"></div>
         </div>
         <button class="btn-party" onclick="togglePartyMode()">🎊 הפעל מסיבת קול פופר! 🎊</button>
     </div>
@@ -162,9 +163,7 @@
     <div id="riddles" class="container">
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 אלופי החידות:</h3>
-            <div class="winner-tag">🥇 ישראל ישראלי</div>
-            <div class="winner-tag">🥈 לוי לוי</div>
-            <div class="winner-tag">🥉 משה כהן</div>
+            <div id="leaderboard-riddles"></div>
         </div>
         <h2 style="color: #00796b;">🧩 חידון יהדות וכוכבים</h2>
         <div class="section-box" style="background: #e0f2f1; border-color: #009688;">
@@ -218,6 +217,46 @@
     <footer>© כל הזכויות שמורות לרדיו קול פופר</footer>
 
     <script>
+        // הגדרות Firebase - הנתונים שלך הוזנו כאן
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
+            databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
+            projectId: "kolpopper-46",
+            appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        
+        // האזנה לטבלת הזוכים הגלובלית
+        db.ref('winners').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                // הפיכת הנתונים למערך ומיון לפי הציון הכי גבוה
+                const list = Object.values(data).sort((a,b) => b.score - a.score).slice(0, 5);
+                renderLeaderboard(list);
+            } else {
+                renderLeaderboard([
+                    {name: "ישראל ישראלי", score: 10},
+                    {name: "לוי לוי", score: 8},
+                    {name: "משה כהן", score: 5}
+                ]);
+            }
+        });
+
+        function renderLeaderboard(list) {
+            const html = list.map((w, i) => {
+                const icons = ["🥇", "🥈", "🥉"];
+                return `<div class="winner-tag">${icons[i] || '⭐'} ${w.name} - ${w.score} כוכבים</div>`;
+            }).join('');
+            document.getElementById('leaderboard-home').innerHTML = html;
+            document.getElementById('leaderboard-riddles').innerHTML = html;
+        }
+
+        function saveGlobalScore(name, score) {
+            db.ref('winners').push({ name, score });
+        }
+
         function showPage(pageId) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -265,13 +304,28 @@
             { q: "איזו עיר היא הקדושה ביותר בעולם?", options: ["ירושלים", "צפת"], correct: 0 },
             { q: "מה מברכים על פרי הגפן?", options: ["בורא פרי העץ", "בורא פרי הגפן"], correct: 1 }
         ];
+        
         let qIndex = 0, starCount = 0;
 
         function displayQuiz() {
-            const q = quizData[qIndex];
-            document.getElementById('quiz-question').innerText = q.q;
-            document.getElementById('stars-display').innerText = "⭐ ".repeat(starCount);
+            const questionElement = document.getElementById('quiz-question');
             const optDiv = document.getElementById('quiz-options');
+            const starsDisplay = document.getElementById('stars-display');
+
+            if (qIndex >= quizData.length) {
+                questionElement.innerHTML = "🎉 סיימת את כל השאלות!";
+                starsDisplay.innerText = "⭐ ".repeat(starCount);
+                optDiv.innerHTML = `
+                    <div style="font-size:20px; margin-bottom:10px;">צברת ${starCount} כוכבים!</div>
+                    <input type="text" id="winner-name" class="form-input" placeholder="הכנס שם לטבלת הזוכים">
+                    <button class="btn-ctrl" onclick="finishQuiz()">שלח שם 🏆</button>
+                `;
+                return;
+            }
+
+            const q = quizData[qIndex];
+            questionElement.innerText = q.q;
+            starsDisplay.innerText = "⭐ ".repeat(starCount);
             optDiv.innerHTML = "";
             
             q.options.forEach((opt, i) => {
@@ -283,23 +337,26 @@
                     if(i === q.correct) {
                         starCount++;
                         b.classList.add('correct');
-                        allOptions.forEach(btn => btn.classList.add('disabled'));
-                        setTimeout(() => {
-                            qIndex = (qIndex + 1) % quizData.length;
-                            displayQuiz();
-                        }, 1000);
                     } else {
                         if(starCount > 0) starCount--;
                         b.classList.add('wrong');
-                        allOptions.forEach(btn => btn.classList.add('disabled'));
-                        setTimeout(() => {
-                            qIndex = (qIndex + 1) % quizData.length;
-                            displayQuiz();
-                        }, 1000);
                     }
+                    allOptions.forEach(btn => btn.classList.add('disabled'));
+                    setTimeout(() => {
+                        qIndex++;
+                        displayQuiz();
+                    }, 1000);
                 };
                 optDiv.appendChild(b);
             });
+        }
+
+        function finishQuiz() {
+            const name = document.getElementById('winner-name').value;
+            if(!name) { alert("אנא הכנס שם"); return; }
+            saveGlobalScore(name, starCount);
+            alert("השם שלך נשלח למערכת הגלובלית!");
+            location.reload();
         }
 
         function getNewJoke() {
@@ -344,4 +401,4 @@
         getNewJoke();
     </script>
 </body>
-        </html>
+                                           </html>
