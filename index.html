@@ -186,6 +186,21 @@
 }
 
 .rainbow-theme header { background: linear-gradient(to left, #ff00ff, #7000ff) !important; }
+ /* עיצוב הכוכבים הנופלים */
+.star-particle {
+    position: fixed;
+    top: -20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(105vh) rotate(360deg);
+    }
+}
     </style>
 </head>
 <body id="main-body">
@@ -317,9 +332,31 @@
         displayQuiz();
 function toggleTheme() {
     document.body.classList.toggle('rainbow-theme');
+    // הפעלת גשם הכוכבים רק כשמפעילים את ערכת הנושא
+    if (document.body.classList.contains('rainbow-theme')) {
+        createStars();
+    }
+}
+}
+  function createStars() {
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const star = document.createElement('div');
+            star.className = 'star-particle';
+            star.innerText = '⭐';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
+            
+            // מחיקת הכוכב אחרי שהוא מסיים ליפול כדי לא להכביד על האתר
+            setTimeout(() => star.remove(), 3000);
+        }, i * 100);
+    }
 }
     </script>
 </body>
 </html>
+
 
 
