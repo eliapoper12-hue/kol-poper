@@ -25,7 +25,6 @@
             overflow-x: hidden;
         }
 
-        /* אפקט צבעי הקשת לרקע במצב מסיבה */
         @keyframes rainbow-party {
             0% { background-color: #ffadad; }
             20% { background-color: #ffd6a5; }
@@ -44,7 +43,6 @@
 
         header { background-color: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; border-bottom: 5px solid #e68a00; }
 
-        /* עיצוב לייב וצופים */
         .live-badge {
             background: white;
             color: black;
@@ -63,7 +61,6 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* לוגו ענק */
         .main-logo {
             width: 90%; 
             max-width: 500px;
@@ -88,7 +85,6 @@
 
         .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; }
         
-        /* כפתור מסיבה */
         .btn-party { 
             background: linear-gradient(45deg, #ff0080, #ff8c00); 
             color: white; border: none; padding: 22px; border-radius: 40px; cursor: pointer; 
@@ -96,7 +92,6 @@
             border: 3px solid white; transition: 0.2s;
         }
 
-        /* עיצוב שדות קלט מסודרים */
         .form-input {
             width: 85%;
             padding: 12px;
@@ -106,11 +101,9 @@
             font-family: inherit;
             font-size: 16px;
         }
-        .form-input:focus { border-color: var(--popper-blue); outline: none; }
         
         .winner-tag { background: #fff; border-radius: 15px; padding: 8px; margin: 5px auto; width: 90%; border: 2px dashed #9c27b0; font-size: 17px; font-weight: bold; color: #4a148c; }
 
-        /* פריטים נופלים */
         .falling-item {
             position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999;
             animation: fall linear forwards;
@@ -118,7 +111,16 @@
         @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
         .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .quiz-option { background: white; border: 2px solid #009688; border-radius: 15px; padding: 12px; margin: 10px 0; cursor: pointer; font-weight: bold; }
+        
+        .quiz-option { 
+            background: white; border: 2px solid #009688; border-radius: 15px; 
+            padding: 12px; margin: 10px 0; cursor: pointer; font-weight: bold;
+            transition: 0.3s;
+        }
+        .quiz-option.correct { background: #c8e6c9; border-color: #4caf50; pointer-events: none; }
+        .quiz-option.wrong { background: #ffcdd2; border-color: #f44336; pointer-events: none; }
+        .quiz-option.disabled { opacity: 0.6; pointer-events: none; }
+
         .send-wa { background: #25d366; color: white; border: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; width: 100%; margin-top: 10px; }
 
         footer { text-align: center; color: #888; font-size: 14px; margin: 20px 0; }
@@ -143,45 +145,37 @@
 
     <div id="home" class="container active">
         <img src="logo.png" class="main-logo" alt="לוגו קול פופר">
-        
         <div class="section-box" style="background:#000; color:white; overflow:hidden;">
             <video id="main-video" style="width:100%;" controls><source id="video-src" src="video1.mp4" type="video/mp4"></video>
         </div>
-        
         <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
         <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
-
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 טבלת הזוכים:</h3>
             <div class="winner-tag">🥇 ישראל ישראלי</div>
             <div class="winner-tag">🥈 לוי לוי</div>
             <div class="winner-tag">🥉 משה כהן</div>
         </div>
-        
         <button class="btn-party" onclick="togglePartyMode()">🎊 הפעל מסיבת קול פופר! 🎊</button>
     </div>
 
     <div id="riddles" class="container">
-        
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 אלופי החידות:</h3>
             <div class="winner-tag">🥇 ישראל ישראלי</div>
             <div class="winner-tag">🥈 לוי לוי</div>
             <div class="winner-tag">🥉 משה כהן</div>
         </div>
-
         <h2 style="color: #00796b;">🧩 חידון יהדות וכוכבים</h2>
         <div class="section-box" style="background: #e0f2f1; border-color: #009688;">
             <div id="stars-display" style="font-size:24px; margin-bottom:10px;"></div>
             <p id="quiz-question" style="font-weight:bold; font-size:20px;"></p>
             <div id="quiz-options"></div>
         </div>
-        
         <div class="section-box" style="background:#fff8e1; border-color:#ffc107;">
             <h3 style="color:#f57f17; margin-top:0;">❓ החידה היומית</h3>
             <p style="font-size: 18px; font-weight: bold;">באיזה תאריך חל ליל הסדר, ומה המצווה העיקרית של הלילה מהתורה?</p>
         </div>
-
         <div class="section-box" style="background:#fffde7; border: 3px dashed #fbc02d;">
             <h3>📨 שלח תשובה לחידה</h3>
             <input type="text" id="riddleKidName" class="form-input" placeholder="השם שלי">
@@ -213,7 +207,6 @@
             </select>
             <button class="send-wa" onclick="sendSongRequest()">שלח בקשת שיר 🎵</button>
         </div>
-
         <div class="section-box" style="background:#e3f2fd; border-color:#2196f3;">
             <h3 style="color:#0d47a1; margin-top:0;">💬 הודעה כללית לצוות</h3>
             <input type="text" id="contactName" class="form-input" placeholder="השם שלי">
@@ -277,19 +270,33 @@
         function displayQuiz() {
             const q = quizData[qIndex];
             document.getElementById('quiz-question').innerText = q.q;
+            document.getElementById('stars-display').innerText = "⭐ ".repeat(starCount);
             const optDiv = document.getElementById('quiz-options');
             optDiv.innerHTML = "";
+            
             q.options.forEach((opt, i) => {
                 const b = document.createElement('div');
                 b.className = 'quiz-option';
                 b.innerText = opt;
                 b.onclick = () => {
+                    const allOptions = optDiv.querySelectorAll('.quiz-option');
                     if(i === q.correct) {
                         starCount++;
-                        document.getElementById('stars-display').innerText = "⭐ ".repeat(starCount);
-                        qIndex = (qIndex + 1) % quizData.length;
-                        displayQuiz();
-                    } else alert("נסה שוב! 🤔");
+                        b.classList.add('correct');
+                        allOptions.forEach(btn => btn.classList.add('disabled'));
+                        setTimeout(() => {
+                            qIndex = (qIndex + 1) % quizData.length;
+                            displayQuiz();
+                        }, 1000);
+                    } else {
+                        if(starCount > 0) starCount--;
+                        b.classList.add('wrong');
+                        allOptions.forEach(btn => btn.classList.add('disabled'));
+                        setTimeout(() => {
+                            qIndex = (qIndex + 1) % quizData.length;
+                            displayQuiz();
+                        }, 1000);
+                    }
                 };
                 optDiv.appendChild(b);
             });
@@ -305,9 +312,6 @@
                 "מה המאכל האהוב על אסטרונאוטים? קוסקוס (כי זה בחלל!).",
                 "למה הספרייה היא המקום הכי גבוה בעולם? כי יש בה המון קומות!",
                 "מה עושה כלב שרוצה לקנות משהו? הולך ל'הב-נק'.",
-                "מה אומר ענן אחד לענן אחר? 'אל תסתכל עלי, אני מתפרק...'",
-                "למה פילים לובשים נעליים ירוקות? כדי להתחבא בדשא!",
-                "איך קוראים לנמלה גבוהה? נמ-לאה.",
                 "מה אמר המלח לסוכר? ניפגש בקפה!"
             ];
             document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random()*jokes.length)];
@@ -340,4 +344,4 @@
         getNewJoke();
     </script>
 </body>
-    </html>
+                </html>
