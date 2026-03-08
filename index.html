@@ -22,6 +22,7 @@
             flex-direction: column;
             align-items: center;
             transition: 0.3s;
+            overflow-x: hidden;
         }
 
         header {
@@ -55,6 +56,7 @@
             text-align: center;
             border: 4px solid var(--primary);
             position: relative;
+            z-index: 5;
         }
 
         /* באנר LIVE */
@@ -111,6 +113,7 @@
             border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 16px;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 0 #3a8fd6; position: relative; top: 0;
+            margin: 5px;
         }
         .btn-ctrl:hover { transform: scale(1.1); background: var(--secondary); box-shadow: 0 6px 0 #e68a00; top: -2px; }
         .btn-ctrl:active { transform: scale(0.95); box-shadow: 0 2px 0 #e68a00; top: 2px; }
@@ -133,9 +136,10 @@
 
         /* חידה ו-WhatsApp */
         .riddle-box { background-color: var(--riddle-bg); border: 3px dashed #fbc02d; border-radius: 25px; padding: 15px; margin-bottom: 15px; }
-        .whatsapp-box { background: #e6ffed; padding: 20px; border-radius: 25px; border: 2px dashed #25d366; }
+        .whatsapp-box { background: #e6ffed; padding: 20px; border-radius: 25px; border: 2px dashed #25d366; margin-bottom: 15px; }
         input, textarea { width: 90%; padding: 10px; margin: 5px 0; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; }
         
+        /* פעימת לב לוואטסאפ */
         .send-wa { 
             background: #25d366; color: white; border: none; padding: 12px 30px; 
             border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px;
@@ -151,13 +155,12 @@
         }
         .party-toggle { background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        /* ערכת נושא קשת */
+        /* דברים יורדים */
+        .falling-item { position: fixed; top: -50px; font-size: 28px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
         .rainbow-theme { --primary: #ff00ff; --secondary: #7000ff; --bg: #fff0f5; --quiz-bg: #f3e5f5; }
         .rainbow-theme header { background: linear-gradient(to left, #ff00ff, #7000ff) !important; }
-
-        /* כוכבים */
-        .star-particle { position: fixed; top: -20px; font-size: 20px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
         footer { margin: 20px 0; padding: 10px; font-size: 14px; color: #666; text-align: center; }
     </style>
@@ -198,9 +201,9 @@
         <div class="winners-box">
             <h4>🏆 הזוכים בהגרלה:</h4>
             <div class="winners-list">
-                מקום ראשון: [אליה פופר] 🥇<br>
-                מקום שני: [רעות פופר] 🥈<br>
-                מקום שלישי: [בת ציון פופר] 🥉
+                מקום ראשון: [שם הזוכה] 🥇<br>
+                מקום שני: [שם הזוכה] 🥈<br>
+                מקום שלישי: [שם הזוכה] 🥉
             </div>
         </div>
 
@@ -224,7 +227,6 @@
     <footer>© כל הזכויות שמורות לרדיו קול פופר</footer>
 
     <script>
-        // נתונים מקוריים
         const videos = [
             { title: "ברוך שם - שמוליק קליין", file: "video1.mp4" },
             { title: "סנדי דינקל - אשרינו", file: "video2.mp4" },
@@ -241,13 +243,13 @@
         let currentIdx = 0;
         let qIndex = 0;
         let starCount = 0;
+        let partyInterval;
 
         const videoPlayer = document.getElementById('main-video');
         const videoSource = document.getElementById('video-src');
         const videoTitle = document.getElementById('video-title');
         const logoContainer = document.getElementById('main-logo');
 
-        // פונקציות וידאו
         function loadVideo() {
             videoTitle.innerText = videos[currentIdx].title;
             videoSource.src = videos[currentIdx].file;
@@ -260,7 +262,6 @@
             videoPlayer.play();
         }
 
-        // פונקציות חידון
         function displayQuiz() {
             const q = quizData[qIndex];
             document.getElementById('quiz-question').innerText = q.q;
@@ -287,7 +288,6 @@
             displayQuiz();
         }
 
-        // WhatsApp
         function sendToWhatsApp() {
             const name = document.getElementById('kidName').value;
             const msg = document.getElementById('msg').value;
@@ -295,17 +295,42 @@
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent("דש מ"+name+": "+msg)}`, '_blank');
         }
 
-        // אפקטים חדשים
-        function toggleParty() { document.getElementById('main-body').classList.toggle('party-active'); }
+        // מצב מסיבה - גשם מוזיקלי רציף
+        function toggleParty() { 
+            const body = document.getElementById('main-body');
+            body.classList.toggle('party-active'); 
+            
+            if(body.classList.contains('party-active')) {
+                // גשם מוזיקלי: תווים, מיקרופונים, אוזניות
+                partyInterval = setInterval(() => {
+                    createFallingItem(['🎵', '🎶', '🎼', '🎤', '🎧', '🎸', '🎹', '🎷', '🎺']);
+                }, 200);
+            } else {
+                clearInterval(partyInterval);
+            }
+        }
 
         function toggleTheme() {
             document.body.classList.toggle('rainbow-theme');
             if (document.body.classList.contains('rainbow-theme')) {
                 playMagicSound();
-                createStars();
+                for(let i=0; i<30; i++) {
+                    setTimeout(() => createFallingItem(['⭐']), i * 100);
+                }
                 logoContainer.classList.add('logo-rotate');
                 setTimeout(() => logoContainer.classList.remove('logo-rotate'), 1000);
             }
+        }
+
+        function createFallingItem(icons) {
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            item.innerText = icons[Math.floor(Math.random() * icons.length)];
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            item.style.opacity = Math.random() + 0.3;
+            document.body.appendChild(item);
+            setTimeout(() => item.remove(), 4000);
         }
 
         function playMagicSound() {
@@ -318,20 +343,6 @@
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + 0.5);
-        }
-
-        function createStars() {
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const star = document.createElement('div');
-                    star.className = 'star-particle';
-                    star.innerText = '⭐';
-                    star.style.left = Math.random() * 100 + 'vw';
-                    star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                    document.body.appendChild(star);
-                    setTimeout(() => star.remove(), 3000);
-                }, i * 100);
-            }
         }
 
         loadVideo();
