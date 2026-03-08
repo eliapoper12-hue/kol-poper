@@ -28,7 +28,6 @@
             overflow-x: hidden;
         }
 
-        /* סגנון לפופ-אפ החדש */
         #special-popup {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; border: 5px solid var(--secondary); border-radius: 30px;
@@ -56,107 +55,43 @@
         header { background-color: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; border-bottom: 5px solid #e68a00; }
 
         .live-badge {
-            background: white;
-            color: black;
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: white; color: black; display: inline-flex; align-items: center;
+            padding: 5px 15px; border-radius: 20px; margin-top: 10px; font-size: 14px;
+            font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .dot {
-            height: 10px; width: 10px; background-color: #ff0000; border-radius: 50%;
-            display: inline-block; margin-left: 8px; animation: blink 1s infinite;
-        }
+        .dot { height: 10px; width: 10px; background-color: #ff0000; border-radius: 50%; display: inline-block; margin-left: 8px; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        .news-flash {
-            background: #fff9c4;
-            border: 2px solid #fbc02d;
-            border-radius: 15px;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #f57f17;
-            display: none;
-        }
+        .news-flash { background: #fff9c4; border: 2px solid #fbc02d; border-radius: 15px; padding: 10px; margin-bottom: 20px; font-weight: bold; color: #f57f17; display: none; }
 
-        /* סגנון למונה הלייקים */
         .likes-container { margin: 20px 0; }
-        .heart-btn {
-            background: none; border: none; font-size: 50px; cursor: pointer;
-            transition: transform 0.2s; display: inline-block;
-        }
+        .heart-btn { background: none; border: none; font-size: 50px; cursor: pointer; transition: transform 0.2s; display: inline-block; }
         .heart-btn:active { transform: scale(1.4); }
         .likes-count { font-size: 24px; font-weight: bold; color: #e91e63; display: block; }
 
-        /* סגנון למערכת התגובות */
-        .comments-section { 
-            background: #f1f8ff; border: 2px solid #90caf9; border-radius: 20px; 
-            padding: 15px; margin-top: 20px; text-align: right; 
-        }
+        .comments-section { background: #f1f8ff; border: 2px solid #90caf9; border-radius: 20px; padding: 15px; margin-top: 20px; text-align: right; }
         #comments-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
         .comment-bubble { background: white; padding: 8px 12px; border-radius: 15px; border-right: 4px solid var(--popper-blue); font-size: 14px; }
 
-        .main-logo {
-            width: 90%; 
-            max-width: 500px;
-            margin: 20px auto 30px;
-            display: block;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
-        }
+        .main-logo { width: 90%; max-width: 500px; margin: 20px auto 30px; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); }
 
-        .container {
-            width: 90%;
-            max-width: 600px;
-            background: white;
-            margin: 20px auto;
-            padding: 25px;
-            border-radius: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            border: 4px solid var(--popper-blue);
-            display: none;
-        }
+        .container { width: 90%; max-width: 600px; background: white; margin: 20px auto; padding: 25px; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 4px solid var(--popper-blue); display: none; }
         .container.active { display: block; }
 
         .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; }
         
-        .btn-party { 
-            background: linear-gradient(45deg, #ff0080, #ff8c00); 
-            color: white; border: none; padding: 22px; border-radius: 40px; cursor: pointer; 
-            font-weight: bold; font-size: 22px; width: 100%; box-shadow: 0 5px 15px rgba(255, 0, 128, 0.4);
-            border: 3px solid white; transition: 0.2s;
-        }
+        .btn-party { background: linear-gradient(45deg, #ff0080, #ff8c00); color: white; border: none; padding: 22px; border-radius: 40px; cursor: pointer; font-weight: bold; font-size: 22px; width: 100%; box-shadow: 0 5px 15px rgba(255, 0, 128, 0.4); border: 3px solid white; transition: 0.2s; }
 
-        .form-input {
-            width: 85%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #ccc;
-            border-radius: 15px;
-            font-family: inherit;
-            font-size: 16px;
-        }
+        .form-input { width: 85%; padding: 12px; margin-bottom: 15px; border: 2px solid #ccc; border-radius: 15px; font-family: inherit; font-size: 16px; }
         
         .winner-tag { background: #fff; border-radius: 15px; padding: 8px; margin: 5px auto; width: 90%; border: 2px dashed #9c27b0; font-size: 17px; font-weight: bold; color: #4a148c; }
 
-        .falling-item {
-            position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999;
-            animation: fall linear forwards;
-        }
+        .falling-item { position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
         .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; }
         
-        .quiz-option { 
-            background: white; border: 2px solid #009688; border-radius: 15px; 
-            padding: 12px; margin: 10px 0; cursor: pointer; font-weight: bold;
-            transition: 0.3s;
-        }
+        .quiz-option { background: white; border: 2px solid #009688; border-radius: 15px; padding: 12px; margin: 10px 0; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .quiz-option.correct { background: #c8e6c9; border-color: #4caf50; pointer-events: none; }
         .quiz-option.wrong { background: #ffcdd2; border-color: #f44336; pointer-events: none; }
         .quiz-option.disabled { opacity: 0.6; pointer-events: none; }
@@ -286,82 +221,41 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         
-        // --- פונקציות חדשות: לייקים, תגובות ופופ-אפ ---
+        db.ref('likes').on('value', (s) => { document.getElementById('likes-number').innerText = s.val() || 0; });
+        function addLike() { db.ref('likes').transaction((c) => (c || 0) + 1); }
 
-        // ניהול לייקים בשידור חי
-        db.ref('likes').on('value', (s) => {
-            document.getElementById('likes-number').innerText = s.val() || 0;
-        });
-        function addLike() {
-            db.ref('likes').transaction((current) => (current || 0) + 1);
-        }
-
-        // ניהול תגובות בשידור חי
         db.ref('comments').limitToLast(10).on('value', (s) => {
-            const data = s.val();
-            const list = document.getElementById('comments-list');
-            list.innerHTML = "";
-            if(data) Object.values(data).forEach(c => {
-                list.innerHTML += `<div class="comment-bubble"><b>${c.name}:</b> ${c.text}</div>`;
-            });
+            const data = s.val(); const list = document.getElementById('comments-list'); list.innerHTML = "";
+            if(data) Object.values(data).forEach(c => { list.innerHTML += `<div class="comment-bubble"><b>${c.name}:</b> ${c.text}</div>`; });
             list.scrollTop = list.scrollHeight;
         });
         function postComment() {
-            const n = document.getElementById('comm-name').value;
-            const t = document.getElementById('comm-text').value;
-            if(n && t) { 
-                db.ref('comments').push({ name: n, text: t }); 
-                document.getElementById('comm-text').value = ""; 
-            }
+            const n = document.getElementById('comm-name').value, t = document.getElementById('comm-text').value;
+            if(n && t) { db.ref('comments').push({ name: n, text: t }); document.getElementById('comm-text').value = ""; }
         }
 
-        // ניהול פופ-אפ מרוחק
         db.ref('live_popup').on('value', (s) => {
             const msg = s.val();
-            if(msg) {
-                document.getElementById('popup-msg').innerText = msg;
-                document.getElementById('special-popup').style.display = 'block';
-                document.getElementById('popup-overlay').style.display = 'block';
-            }
+            if(msg) { document.getElementById('popup-msg').innerText = msg; document.getElementById('special-popup').style.display = 'block'; document.getElementById('popup-overlay').style.display = 'block'; }
         });
-        function closePopup() {
-            document.getElementById('special-popup').style.display = 'none';
-            document.getElementById('popup-overlay').style.display = 'none';
-        }
-
-        // --- פונקציות קיימות (ללא שינוי) ---
+        function closePopup() { document.getElementById('special-popup').style.display = 'none'; document.getElementById('popup-overlay').style.display = 'none'; }
 
         db.ref('broadcast_news').on('value', (snapshot) => {
-            const news = snapshot.val();
-            const newsDiv = document.getElementById('global-news');
-            if(news) {
-                newsDiv.innerHTML = "📢 " + news;
-                newsDiv.style.display = 'block';
-            } else {
-                newsDiv.style.display = 'none';
-            }
+            const news = snapshot.val(); const newsDiv = document.getElementById('global-news');
+            if(news) { newsDiv.innerHTML = "📢 " + news; newsDiv.style.display = 'block'; } else { newsDiv.style.display = 'none'; }
         });
 
         db.ref('winners').on('value', (snapshot) => {
             const data = snapshot.val();
-            if(data) {
-                const list = Object.values(data).sort((a,b) => b.score - a.score).slice(0, 5);
-                renderLeaderboard(list);
-            }
+            if(data) { const list = Object.values(data).sort((a,b) => b.score - a.score).slice(0, 5); renderLeaderboard(list); }
         });
 
         function renderLeaderboard(list) {
-            const html = list.map((w, i) => {
-                const icons = ["🥇", "🥈", "🥉"];
-                return `<div class="winner-tag">${icons[i] || '⭐'} ${w.name} - ${w.score} כוכבים</div>`;
-            }).join('');
-            document.getElementById('leaderboard-home').innerHTML = html;
-            document.getElementById('leaderboard-riddles').innerHTML = html;
+            const html = list.map((w, i) => { const icons = ["🥇", "🥈", "🥉"]; return `<div class="winner-tag">${icons[i] || '⭐'} ${w.name} - ${w.score} כוכבים</div>`; }).join('');
+            document.getElementById('leaderboard-home').innerHTML = html; document.getElementById('leaderboard-riddles').innerHTML = html;
         }
 
-        function saveGlobalScore(name, score) {
-            db.ref('winners').push({ name, score });
-        }
+        function saveGlobalScore(name, score) { db.ref('winners').push({ name, score }); }
 
         function showPage(pageId) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
@@ -375,27 +269,21 @@
             const isActive = document.body.classList.toggle('party-active');
             if(isActive) {
                 partyInterval = setInterval(() => {
-                    const item = document.createElement('div');
-                    item.className = 'falling-item';
+                    const item = document.createElement('div'); item.className = 'falling-item';
                     const icons = ['📢', '🎤', '🎵', '🎶', '⭐', '✨', '📻', '🎧'];
                     item.innerText = icons[Math.floor(Math.random() * icons.length)];
                     item.style.left = Math.random() * 100 + 'vw';
                     item.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(item);
-                    setTimeout(() => item.remove(), 4000);
+                    document.body.appendChild(item); setTimeout(() => item.remove(), 4000);
                 }, 200);
-            } else {
-                clearInterval(partyInterval);
-            }
+            } else { clearInterval(partyInterval); }
         }
 
-        const videos = ["video1.mp4", "video2.mp4"];
-        let vIdx = 0;
+        const videos = ["video1.mp4", "video2.mp4"]; let vIdx = 0;
         function changeVideo(d) {
             vIdx = (vIdx + d + videos.length) % videos.length;
             document.getElementById('video-src').src = videos[vIdx];
-            document.getElementById('main-video').load();
-            document.getElementById('main-video').play();
+            document.getElementById('main-video').load(); document.getElementById('main-video').play();
         }
 
         const quizData = [
@@ -421,22 +309,43 @@
             if (qIndex >= quizData.length) {
                 questionElement.innerHTML = "🎉 סיימת את כל השאלות!";
                 starsDisplay.innerText = "⭐ ".repeat(starCount);
-                optDiv.innerHTML = `
-                    <div style="font-size:20px; margin-bottom:10px;">צברת ${starCount} כוכבים!</div>
+                optDiv.innerHTML = `<div style="font-size:20px; margin-bottom:10px;">צברת ${starCount} כוכבים!</div>
                     <input type="text" id="winner-name" class="form-input" placeholder="הכנס שם לטבלת הזוכים">
-                    <button class="btn-ctrl" onclick="finishQuiz()">שלח שם 🏆</button>
-                `;
+                    <button class="btn-ctrl" onclick="finishQuiz()">שלח שם 🏆</button>`;
                 return;
             }
 
-            const q = quizData[qIndex];
-            questionElement.innerText = q.q;
-            starsDisplay.innerText = "⭐ ".repeat(starCount);
-            optDiv.innerHTML = "";
+            const q = quizData[qIndex]; questionElement.innerText = q.q;
+            starsDisplay.innerText = "⭐ ".repeat(starCount); optDiv.innerHTML = "";
             
             q.options.forEach((opt, i) => {
-                const b = document.createElement('div');
-                b.className = 'quiz-option';
-                b.innerText = opt;
+                const b = document.createElement('div'); b.className = 'quiz-option'; b.innerText = opt;
                 b.onclick = () => {
-              
+                    if(i === q.correct) { starCount++; b.classList.add('correct'); } else { b.classList.add('wrong'); }
+                    document.querySelectorAll('.quiz-option').forEach(btn => btn.classList.add('disabled'));
+                    setTimeout(() => { qIndex++; displayQuiz(); }, 1000);
+                };
+                optDiv.appendChild(b);
+            });
+        }
+
+        function finishQuiz() {
+            const name = document.getElementById('winner-name').value;
+            if(!name) { alert("אנא הכנס שם"); return; }
+            saveGlobalScore(name, starCount); alert("השם שלך נשלח!"); location.reload();
+        }
+
+        function getNewJoke() {
+            const jokes = ["למה פילים מפחדים מעכבר? כי הוא במחשב!", "איך דג דתי מברך? ברוך שעשני כרפיון!", "מה אמר השולחן לכיסא? שב עלי!", "איך קוראים לילד שגר בתוך מקרר? קור-ן.", "למה העגבניה הסמיקה? כי היא ראתה את הרוטב מתלבש!"];
+            document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random()*jokes.length)];
+        }
+
+        setInterval(() => { document.getElementById('listener-count').innerText = 150 + Math.floor(Math.random() * 25); }, 3000);
+        function sendRiddleAnswer() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('חידה: ' + document.getElementById('riddleKidName').value + ' ענה ' + document.getElementById('riddleAnswer').value)}`); }
+        function sendSongRequest() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('שיר: ' + document.getElementById('song-choice').value)}`); }
+        function sendGeneralContact() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה מ' + document.getElementById('contactName').value + ': ' + document.getElementById('contactMsg').value)}`); }
+
+        displayQuiz(); getNewJoke();
+    </script>
+</body>
+</html>
