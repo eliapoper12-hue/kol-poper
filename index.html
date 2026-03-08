@@ -28,6 +28,15 @@
             overflow-x: hidden;
         }
 
+        /* סגנון לפופ-אפ החדש */
+        #special-popup {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; border: 5px solid var(--secondary); border-radius: 30px;
+            padding: 30px; z-index: 10001; box-shadow: 0 0 100px rgba(0,0,0,0.5);
+            width: 80%; max-width: 400px; text-align: center;
+        }
+        #popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; }
+
         @keyframes rainbow-party {
             0% { background-color: #ffadad; }
             20% { background-color: #ffd6a5; }
@@ -64,7 +73,6 @@
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* סגנון ללוח המודעות החדש */
         .news-flash {
             background: #fff9c4;
             border: 2px solid #fbc02d;
@@ -73,8 +81,25 @@
             margin-bottom: 20px;
             font-weight: bold;
             color: #f57f17;
-            display: none; /* יופיע רק אם יש הודעה */
+            display: none;
         }
+
+        /* סגנון למונה הלייקים */
+        .likes-container { margin: 20px 0; }
+        .heart-btn {
+            background: none; border: none; font-size: 50px; cursor: pointer;
+            transition: transform 0.2s; display: inline-block;
+        }
+        .heart-btn:active { transform: scale(1.4); }
+        .likes-count { font-size: 24px; font-weight: bold; color: #e91e63; display: block; }
+
+        /* סגנון למערכת התגובות */
+        .comments-section { 
+            background: #f1f8ff; border: 2px solid #90caf9; border-radius: 20px; 
+            padding: 15px; margin-top: 20px; text-align: right; 
+        }
+        #comments-list { max-height: 200px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
+        .comment-bubble { background: white; padding: 8px 12px; border-radius: 15px; border-right: 4px solid var(--popper-blue); font-size: 14px; }
 
         .main-logo {
             width: 90%; 
@@ -143,6 +168,13 @@
 </head>
 <body>
 
+    <div id="popup-overlay"></div>
+    <div id="special-popup">
+        <h2 style="color: var(--secondary); margin-top:0;">📣 הודעה מהאולפן!</h2>
+        <p id="popup-msg" style="font-size: 20px; font-weight: bold;"></p>
+        <button class="btn-ctrl" style="background: #333;" onclick="closePopup()">סגור X</button>
+    </div>
+
     <nav>
         <a onclick="showPage('home')" id="nav-home" class="active">🏠 דף הבית</a>
         <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות</a>
@@ -166,7 +198,21 @@
         </div>
         <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
         <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
-        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
+
+        <div class="likes-container">
+            <button class="heart-btn" onclick="addLike()">❤️</button>
+            <span class="likes-count"><span id="likes-number">0</span> לייקים לרדיו</span>
+        </div>
+
+        <div class="comments-section">
+            <h4 style="margin-top:0; color:#1976d2;">💬 תגובות מהמאזינים:</h4>
+            <div id="comments-list"></div>
+            <input type="text" id="comm-name" class="form-input" placeholder="שם..." style="width:30%">
+            <input type="text" id="comm-text" class="form-input" placeholder="כתבו תגובה..." style="width:55%">
+            <button class="btn-ctrl" onclick="postComment()">שלח</button>
+        </div>
+
+        <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0; margin-top:20px;">
             <h3 style="color:#7b1fa2; margin-top:0;">🏆 טבלת הזוכים:</h3>
             <div id="leaderboard-home"></div>
         </div>
@@ -240,7 +286,51 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         
-        // עדכון חדשות בשידור חי
+        // --- פונקציות חדשות: לייקים, תגובות ופופ-אפ ---
+
+        // ניהול לייקים בשידור חי
+        db.ref('likes').on('value', (s) => {
+            document.getElementById('likes-number').innerText = s.val() || 0;
+        });
+        function addLike() {
+            db.ref('likes').transaction((current) => (current || 0) + 1);
+        }
+
+        // ניהול תגובות בשידור חי
+        db.ref('comments').limitToLast(10).on('value', (s) => {
+            const data = s.val();
+            const list = document.getElementById('comments-list');
+            list.innerHTML = "";
+            if(data) Object.values(data).forEach(c => {
+                list.innerHTML += `<div class="comment-bubble"><b>${c.name}:</b> ${c.text}</div>`;
+            });
+            list.scrollTop = list.scrollHeight;
+        });
+        function postComment() {
+            const n = document.getElementById('comm-name').value;
+            const t = document.getElementById('comm-text').value;
+            if(n && t) { 
+                db.ref('comments').push({ name: n, text: t }); 
+                document.getElementById('comm-text').value = ""; 
+            }
+        }
+
+        // ניהול פופ-אפ מרוחק
+        db.ref('live_popup').on('value', (s) => {
+            const msg = s.val();
+            if(msg) {
+                document.getElementById('popup-msg').innerText = msg;
+                document.getElementById('special-popup').style.display = 'block';
+                document.getElementById('popup-overlay').style.display = 'block';
+            }
+        });
+        function closePopup() {
+            document.getElementById('special-popup').style.display = 'none';
+            document.getElementById('popup-overlay').style.display = 'none';
+        }
+
+        // --- פונקציות קיימות (ללא שינוי) ---
+
         db.ref('broadcast_news').on('value', (snapshot) => {
             const news = snapshot.val();
             const newsDiv = document.getElementById('global-news');
@@ -252,7 +342,6 @@
             }
         });
 
-        // האזנה לטבלת הזוכים
         db.ref('winners').on('value', (snapshot) => {
             const data = snapshot.val();
             if(data) {
@@ -274,7 +363,6 @@
             db.ref('winners').push({ name, score });
         }
 
-        // פונקציות הניווט והמסיבה (לא השתנו)
         function showPage(pageId) {
             document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -310,7 +398,6 @@
             document.getElementById('main-video').play();
         }
 
-        // החידון
         const quizData = [
             { q: "איזו מסכת היא הראשונה בש\"ס?", options: ["ברכות", "שבת"], correct: 0 },
             { q: "כמה תפילות מתפללים בשבת?", options: ["3", "4"], correct: 1 },
@@ -352,70 +439,4 @@
                 b.className = 'quiz-option';
                 b.innerText = opt;
                 b.onclick = () => {
-                    const allOptions = optDiv.querySelectorAll('.quiz-option');
-                    if(i === q.correct) {
-                        starCount++;
-                        b.classList.add('correct');
-                    } else {
-                        if(starCount > 0) starCount--;
-                        b.classList.add('wrong');
-                    }
-                    allOptions.forEach(btn => btn.classList.add('disabled'));
-                    setTimeout(() => {
-                        qIndex++;
-                        displayQuiz();
-                    }, 1000);
-                };
-                optDiv.appendChild(b);
-            });
-        }
-
-        function finishQuiz() {
-            const name = document.getElementById('winner-name').value;
-            if(!name) { alert("אנא הכנס שם"); return; }
-            saveGlobalScore(name, starCount);
-            alert("השם שלך נשלח למערכת הגלובלית!");
-            location.reload();
-        }
-
-        // בדיחות ונתוני מאזינים
-        function getNewJoke() {
-            const jokes = [
-                "למה פילים מפחדים מעכבר? כי הוא במחשב!", 
-                "איך דג דתי מברך? ברוך שעשני כרפיון!", 
-                "מה אמר השולחן לכיסא? שב עלי!",
-                "איך קוראים לילד שגר בתוך מקרר? קור-ן.",
-                "למה העגבניה הסמיקה? כי היא ראתה את הרוטב מתלבש!",
-                "מה המאכל האהוב על אסטרונאוטים? קוסקוס (כי זה בחלל!)."
-            ];
-            document.getElementById('joke-text').innerText = jokes[Math.floor(Math.random()*jokes.length)];
-        }
-
-        setInterval(() => {
-            document.getElementById('listener-count').innerText = 150 + Math.floor(Math.random() * 25);
-        }, 3000);
-
-        function sendRiddleAnswer() {
-            const n = document.getElementById('riddleKidName').value;
-            const a = document.getElementById('riddleAnswer').value;
-            if(!n || !a) { alert("אנא מלאו שם ותשובה"); return; }
-            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('חידה מקול פופר: ' + n + ' ענה ' + a)}`);
-        }
-
-        function sendSongRequest() {
-            const s = document.getElementById('song-choice').value;
-            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('אני רוצה לשמוע את השיר: ' + s)}`);
-        }
-
-        function sendGeneralContact() {
-            const n = document.getElementById('contactName').value;
-            const m = document.getElementById('contactMsg').value;
-            if(!n || !m) { alert("אנא מלאו את כל השדות"); return; }
-            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה לצוות מקול פופר. מאת: ' + n + '. הודעה: ' + m)}`);
-        }
-
-        displayQuiz();
-        getNewJoke();
-    </script>
-</body>
-                </html>
+              
