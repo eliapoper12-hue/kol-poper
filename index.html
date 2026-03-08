@@ -16,10 +16,10 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg); margin: 0; padding-bottom: 50px;
-            transition: background-color 0.5s ease; overflow-x: hidden;
+            transition: background-color 0.5s ease; overflow-x: hidden; direction: rtl;
         }
 
-        /* סדר אלמנטים בראש */
+        /* סדר אלמנטים בראש הדף */
         header { background-color: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; border-bottom: 5px solid #e68a00; cursor: pointer; user-select: none; }
         nav { background-color: var(--nav-bg); width: 100%; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; }
         nav a { color: white; padding: 15px 20px; text-decoration: none; font-weight: bold; cursor: pointer; }
@@ -29,23 +29,33 @@
         #news-container { width: 90%; max-width: 600px; margin: 10px auto; }
         .news-item { background: #fff9c4; border: 2px solid #fbc02d; padding: 10px; border-radius: 15px; margin-bottom: 8px; font-weight: bold; color: #f57f17; border-right: 8px solid #fbc02d; text-align: right; }
 
-        /* עיצוב קונטיינרים מקורי */
+        /* אנימציות מסיבה */
+        @keyframes rainbow-party {
+            0% { background-color: #ffadad; } 20% { background-color: #ffd6a5; }
+            40% { background-color: #fdffb6; } 60% { background-color: #caffbf; }
+            80% { background-color: #9bf6ff; } 100% { background-color: #ffadad; }
+        }
+        body.party-active { animation: rainbow-party 3s infinite linear !important; }
+        .falling-item { position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+        /* קונטיינרים */
         .container { width: 90%; max-width: 600px; background: white; margin: 20px auto; padding: 25px; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 4px solid var(--popper-blue); display: none; }
         .container.active { display: block; }
-        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; }
+        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; position: relative; }
 
         .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; }
         .form-input { width: 85%; padding: 12px; margin-bottom: 10px; border: 2px solid #ccc; border-radius: 15px; font-family: inherit; }
 
-        /* מסיבה */
-        body.party-active { animation: rainbow-party 3s infinite linear !important; }
-        @keyframes rainbow-party { 0% { background-color: #ffadad; } 50% { background-color: #9bf6ff; } 100% { background-color: #ffadad; } }
+        /* נגנים */
+        .video-box { background: #000; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
+        .mp3-player-box { background: #333; color: white; border-radius: 20px; padding: 15px; text-align: right; }
 
         /* אדמין */
         #admin-panel { display: none; position: fixed; top: 5%; left: 5%; width: 90%; height: 90%; background: #fff; border: 6px solid var(--secondary); z-index: 10002; padding: 20px; border-radius: 30px; box-shadow: 0 0 100px rgba(0,0,0,0.5); overflow-y: auto; text-align: right; }
-        .admin-table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; }
-        .admin-table td { border: 1px solid #eee; padding: 8px; font-size: 13px; }
-        .btn-del { background: #ff5252; color: white; border: none; padding: 5px; border-radius: 5px; cursor: pointer; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .admin-table td { border-bottom: 1px solid #eee; padding: 8px; font-size: 14px; }
+        .btn-del { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -57,7 +67,7 @@
 
     <nav>
         <a onclick="showPage('home')" id="nav-home" class="active">🏠 דף הבית</a>
-        <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות</a>
+        <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות וחידון</a>
         <a onclick="showPage('jokes')" id="nav-jokes">😂 בדיחות</a>
         <a onclick="showPage('contact')" id="nav-contact">📱 צור קשר</a>
     </nav>
@@ -65,79 +75,92 @@
     <div id="news-container"></div>
 
     <div id="admin-panel">
-        <h2 style="text-align:center;">⚙️ ניהול קול פופר</h2>
+        <h2 style="text-align:center; color:var(--secondary);">⚙️ ניהול קול פופר</h2>
         
-        <div style="background:#fff0f0; padding:15px; border-radius:20px; margin-bottom:20px;">
-            <button class="btn-ctrl" style="background:red;" onclick="db.ref('likes').set(0)">איפוס לייקים 0</button>
-            <button class="btn-ctrl" style="background:red;" onclick="db.ref('comments').remove()">מחיקת כל התגובות 🗑️</button>
+        <div style="background:#fff0f0; padding:15px; border-radius:20px; margin-bottom:20px; border:1px solid #ffcccc;">
+            <button class="btn-ctrl" style="background:red;" onclick="if(confirm('לאפס לייקים?')) db.ref('likes').set(0)">איפוס לייקים ❤️</button>
+            <button class="btn-ctrl" style="background:red;" onclick="if(confirm('למחוק את כל התגובות?')) db.ref('comments').remove()">מחיקת כל התגובות 🗑️</button>
         </div>
 
-        <div style="background:#f0f7ff; padding:15px; border-radius:20px;">
+        <div style="background:#f0f7ff; padding:15px; border-radius:20px; border:1px solid #cce3ff;">
             <h3>🏆 ניהול טבלת מובילים:</h3>
             <div id="adm-winners-list"></div>
             <h3>🎵 ניהול שירים (MP3):</h3>
             <div id="adm-mp3-list"></div>
-            <h3>❓ ניהול שאלות:</h3>
+            <h3>❓ ניהול שאלות חידון:</h3>
             <div id="adm-q-list"></div>
         </div>
 
-        <button class="btn-ctrl" style="width:100%; background:#333; margin-top:20px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור X</button>
+        <button class="btn-ctrl" style="width:100%; background:#333; margin-top:20px; padding:15px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור פאנל ניהול X</button>
     </div>
 
     <div id="home" class="container active">
-        <img src="logo.png" style="width:200px; margin-bottom:20px;" alt="לוגו">
+        <img src="logo.png" style="width:200px; margin-bottom:20px;" alt="לוגו קול פופר">
         
-        <div class="section-box" style="background:#000; padding:0; overflow:hidden;">
+        <div class="video-box">
             <video id="main-video" style="width:100%;" controls></video>
         </div>
-        <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
-        <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
-
-        <div class="section-box" style="background:#333; color:white; text-align:right;">
-            <div id="mp3-title" style="font-weight:bold; color:var(--popper-light);">טוען שיר...</div>
-            <audio id="main-audio" style="width:100%; margin-top:10px;" controls></audio>
-            <div id="playlist-home" style="font-size:12px; margin-top:10px; max-height:100px; overflow-y:auto;"></div>
+        <div style="margin-bottom:20px;">
+            <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
+            <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
         </div>
 
-        <button class="btn-ctrl" style="font-size:40px;" onclick="addLike()">❤️</button>
-        <p><span id="likes-number">0</span> לייקים לרדיו</p>
+        <div class="mp3-player-box">
+            <div id="mp3-title" style="font-weight:bold; color:var(--popper-light);">בחר שיר להשמעה...</div>
+            <audio id="main-audio" style="width:100%; margin-top:10px;" controls></audio>
+            <div id="playlist-home" style="font-size:12px; margin-top:10px; max-height:100px; overflow-y:auto; border-top:1px solid #555; padding-top:5px;"></div>
+        </div>
 
-        <div class="section-box" style="text-align:right; background:#f1f8ff;">
+        <div style="margin-top:25px;">
+            <button class="btn-ctrl" style="font-size:45px; background:none;" onclick="addLike()">❤️</button>
+            <p style="font-size:18px; font-weight:bold;"><span id="likes-number">0</span> לייקים לרדיו</p>
+        </div>
+
+        <div class="section-box" style="text-align:right; background:#f1f8ff; border-color:#90caf9;">
+            <h4 style="margin:0 0 10px 0;">💬 תגובות מאזינים:</h4>
             <div id="comments-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px;"></div>
-            <input type="text" id="comm-name" placeholder="שם" style="width:30%; padding:5px; border-radius:10px; border:1px solid #ccc;">
-            <input type="text" id="comm-text" placeholder="תגובה..." style="width:50%; padding:5px; border-radius:10px; border:1px solid #ccc;">
-            <button onclick="postComment()" class="btn-ctrl" style="padding:5px 15px;">שלח</button>
+            <input type="text" id="comm-name" placeholder="שם" style="width:30%; padding:8px; border-radius:10px; border:1px solid #ccc;">
+            <input type="text" id="comm-text" placeholder="תגובה..." style="width:50%; padding:8px; border-radius:10px; border:1px solid #ccc;">
+            <button onclick="postComment()" class="btn-ctrl" style="padding:8px 15px;">שלח</button>
         </div>
 
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
-            <h3>🏆 טבלת האלופים:</h3>
+            <h3 style="color:#7b1fa2; margin:0 0 10px 0;">🏆 טבלת האלופים:</h3>
             <div id="leaderboard"></div>
         </div>
 
-        <button class="btn-ctrl" style="background: linear-gradient(45deg, #ff0080, #ff8c00); width:100%;" onclick="document.body.classList.toggle('party-active')">🎊 מסיבה! 🎊</button>
+        <button class="btn-ctrl" style="background: linear-gradient(45deg, #ff0080, #ff8c00); width:100%; padding:20px; font-size:20px;" onclick="togglePartyMode()">🎊 מסיבת קול פופר! 🎊</button>
     </div>
 
     <div id="riddles" class="container">
-        <h2>🧩 חידות וחידון</h2>
-        <div class="section-box">
-            <p id="quiz-question" style="font-weight:bold; font-size:18px;">טוען...</p>
+        <h2>🧩 חידות וחידון הפרסים</h2>
+        <div class="section-box" style="background:#e0f2f1; border-color:#009688;">
+            <p id="quiz-question" style="font-weight:bold; font-size:18px;">טוען חידון...</p>
             <div id="quiz-options"></div>
+        </div>
+        <div class="section-box" style="background:#fff8e1; border-color:#ffc107;">
+            <h3>החידה היומית:</h3>
+            <p id="riddle-display" style="font-size:18px; font-weight:bold;"></p>
+            <button class="btn-ctrl" onclick="changeRiddle(1)">חידה אחרת 🎲</button>
         </div>
     </div>
 
     <div id="jokes" class="container">
         <h2>😂 פינת הצחוק</h2>
-        <div id="joke-display" class="section-box" style="font-size:20px; font-weight:bold;"></div>
-        <button class="btn-ctrl" onclick="changeJoke(1)">בדיחה אחרת 🤣</button>
+        <div id="joke-display" class="section-box" style="font-size:20px; font-weight:bold; min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
+        <button class="btn-ctrl" style="width:100%; background:#ff9800;" onclick="changeJoke(1)">בדיחה הבאה 🤣</button>
     </div>
 
     <div id="contact" class="container">
         <h2>📱 צור קשר עם האולפן</h2>
         <div class="section-box" style="background:#e8f5e9; text-align:right;">
-            <p>שלח לנו הודעה או בקשת שיר:</p>
-            <input type="text" id="contact-name" class="form-input" placeholder="השם שלך">
-            <textarea id="contact-msg" class="form-input" placeholder="ההודעה שלך..." style="height:80px;"></textarea>
+            <p>שלחו לנו הודעה, בקשת שיר או בדיחה משלכם:</p>
+            <input type="text" id="contact-name" class="form-input" placeholder="השם שלכם">
+            <textarea id="contact-msg" class="form-input" placeholder="מה תרצו להגיד לנו?" style="height:100px;"></textarea>
             <button class="btn-ctrl" style="background:#25d366; width:100%;" onclick="sendContactWA()">שלח לוואטסאפ האולפן 💬</button>
+        </div>
+        <div class="section-box">
+            <p style="font-weight:bold;">📞 טלפון המערכת: 053-4314202</p>
         </div>
     </div>
 
@@ -151,72 +174,89 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let data = { jokes_list:[], video_list:[], mp3_list:[], quiz_questions:[], winners:[], news_list:[] };
-        let cur = { video:0, joke:0, mp3:0 };
+        let dataStore = { jokes_list:[], video_list:[], mp3_list:[], quiz_questions:[], winners:[], news_list:[] };
+        let currentIdx = { video:0, joke:0, mp3:0, riddle:0 };
 
         function sync(path) {
             db.ref(path).on('value', s => {
                 const v = s.val();
-                data[path] = v ? Object.values(v) : [];
-                data[path + '_keys'] = v ? Object.keys(v) : [];
-                render();
+                dataStore[path] = v ? Object.values(v) : [];
+                dataStore[path + '_keys'] = v ? Object.keys(v) : [];
+                renderAll();
             });
         }
-        ['jokes_list','video_list','mp3_list','quiz_questions','winners','news_list','likes'].forEach(sync);
+        ['jokes_list','video_list','mp3_list','quiz_questions','winners','news_list','likes','riddles_list'].forEach(sync);
 
         db.ref('comments').on('value', s => {
             const list = document.getElementById('comments-list'); list.innerHTML = "";
-            if(s.val()) Object.values(s.val()).forEach(c => list.innerHTML += `<div><b>${c.name}:</b> ${c.text}</div>`);
+            if(s.val()) Object.values(s.val()).forEach(c => list.innerHTML += `<div style="margin-bottom:5px;"><b>${c.name}:</b> ${c.text}</div>`);
         });
 
-        function render() {
-            document.getElementById('likes-number').innerText = data.likes || 0;
-            document.getElementById('news-container').innerHTML = data.news_list.map(n => `<div class="news-item">📢 ${n.text}</div>`).join('');
+        function renderAll() {
+            document.getElementById('likes-number').innerText = dataStore.likes || 0;
+            document.getElementById('news-container').innerHTML = dataStore.news_list.map(n => `<div class="news-item">📢 ${n.text}</div>`).join('');
             
-            if(data.video_list.length > 0) {
-                const v = data.video_list[cur.video % data.video_list.length];
+            if(dataStore.video_list.length > 0) {
+                const v = dataStore.video_list[currentIdx.video % dataStore.video_list.length];
                 if(document.getElementById('main-video').src !== v.url) document.getElementById('main-video').src = v.url;
             }
 
-            if(data.mp3_list.length > 0) {
-                const m = data.mp3_list[cur.mp3 % data.mp3_list.length];
-                document.getElementById('mp3-title').innerText = "מתנגן: " + m.name;
+            if(dataStore.mp3_list.length > 0) {
+                const m = dataStore.mp3_list[currentIdx.mp3 % dataStore.mp3_list.length];
+                document.getElementById('mp3-title').innerText = "מתנגן כעת: " + m.name;
                 if(document.getElementById('main-audio').src !== m.url) document.getElementById('main-audio').src = m.url;
-                document.getElementById('playlist-home').innerHTML = data.mp3_list.map((t,i) => `<div onclick="playSong(${i})" style="cursor:pointer">🎵 ${t.name}</div>`).join('');
+                document.getElementById('playlist-home').innerHTML = dataStore.mp3_list.map((t,i) => `<div onclick="playSong(${i})" style="cursor:pointer; padding:3px;">🎵 ${t.name}</div>`).join('');
             }
 
-            if(data.jokes_list.length > 0) document.getElementById('joke-display').innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
+            if(dataStore.jokes_list.length > 0) document.getElementById('joke-display').innerText = dataStore.jokes_list[currentIdx.joke % dataStore.jokes_list.length].text;
+            if(dataStore.riddles_list && dataStore.riddles_list.length > 0) document.getElementById('riddle-display').innerText = dataStore.riddles_list[currentIdx.riddle % dataStore.riddles_list.length].text;
 
-            document.getElementById('leaderboard').innerHTML = data.winners.map(w => `<div>⭐ ${w.name} - ${w.score}</div>`).join('');
+            document.getElementById('leaderboard').innerHTML = dataStore.winners.map(w => `<div style="font-weight:bold; margin-bottom:5px;">⭐ ${w.name} - ${w.score} נקודות</div>`).join('');
 
-            // אדמין
-            renderAdminTable('winners', 'adm-winners-list', i => i.name);
+            // עדכון טבלאות ניהול
+            renderAdminTable('winners', 'adm-winners-list', i => `${i.name} (${i.score})`);
             renderAdminTable('mp3_list', 'adm-mp3-list', i => i.name);
             renderAdminTable('quiz_questions', 'adm-q-list', i => i.q);
         }
 
         function renderAdminTable(path, target, format) {
-            const list = data[path], keys = data[path+'_keys'];
-            let h = '<table class="admin-table">';
-            list.forEach((item, i) => { h += `<tr><td>${format(item)}</td><td><button class="btn-del" onclick="db.ref('${path}/${keys[i]}').remove()">X</button></td></tr>`; });
-            document.getElementById(target).innerHTML = h + '</table>';
+            const list = dataStore[path], keys = dataStore[path+'_keys'];
+            let html = '<table class="admin-table">';
+            list.forEach((item, i) => { html += `<tr><td>${format(item)}</td><td style="width:40px"><button class="btn-del" onclick="db.ref('${path}/${keys[i]}').remove()">X</button></td></tr>`; });
+            document.getElementById(target).innerHTML = html + '</table>';
         }
 
         function addLike() { db.ref('likes').transaction(c => (c || 0) + 1); }
-        function postComment() { const n=document.getElementById('comm-name').value, t=document.getElementById('comm-text').value; if(n&&t) db.ref('comments').push({name:n,text:t}); }
-        function playSong(i) { cur.mp3=i; render(); document.getElementById('main-audio').play(); }
-        function changeVideo(d) { cur.video=(cur.video+d+data.video_list.length)%data.video_list.length; render(); }
-        function changeJoke(d) { cur.joke=(cur.joke+d+data.jokes_list.length)%data.jokes_list.length; render(); }
+        function postComment() { const n=document.getElementById('comm-name').value, t=document.getElementById('comm-text').value; if(n&&t) { db.ref('comments').push({name:n,text:t}); document.getElementById('comm-text').value=""; } }
+        function playSong(i) { currentIdx.mp3=i; renderAll(); document.getElementById('main-audio').play(); }
+        function changeVideo(d) { currentIdx.video=(currentIdx.video+d+dataStore.video_list.length)%dataStore.video_list.length; renderAll(); }
+        function changeJoke(d) { currentIdx.joke=(currentIdx.joke+d+dataStore.jokes_list.length)%dataStore.jokes_list.length; renderAll(); }
+        function changeRiddle(d) { currentIdx.riddle=(currentIdx.riddle+d+dataStore.riddles_list.length)%dataStore.riddles_list.length; renderAll(); }
         function showPage(p) { document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); document.getElementById(p).classList.add('active'); }
         
         function sendContactWA() {
             const name = document.getElementById('contact-name').value;
             const msg = document.getElementById('contact-msg').value;
+            if(!name || !msg) return alert("נא למלא שם והודעה");
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה מ: ' + name + '\n' + msg)}`);
         }
 
-        let cc = 0;
-        function handleAdminClick() { cc++; if(cc>=3) document.getElementById('admin-panel').style.display='block'; setTimeout(()=>cc=0,2000); }
+        let clickCount = 0;
+        function handleAdminClick() { clickCount++; if(clickCount >= 3) { document.getElementById('admin-panel').style.display = 'block'; clickCount = 0; } setTimeout(() => clickCount = 0, 2000); }
+
+        function togglePartyMode() {
+            const isAct = document.body.classList.toggle('party-active');
+            if(isAct) {
+                partyInterval = setInterval(() => {
+                    const item = document.createElement('div');
+                    item.className = 'falling-item';
+                    item.innerText = ['🎈','🎵','✨','⭐'][Math.floor(Math.random()*4)];
+                    item.style.left = Math.random()*100 + 'vw';
+                    document.body.appendChild(item);
+                    setTimeout(() => item.remove(), 4000);
+                }, 300);
+            } else clearInterval(partyInterval);
+        }
     </script>
 </body>
 </html>
