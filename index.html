@@ -3,59 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קול פופר | האתר הרשמי</title>
+    <title>קול פופר | ניהול מלא</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
     <style>
-        :root {
-            --popper-blue: #4facfe; --popper-light: #00f2fe; --secondary: #ff9d00;
-            --bg: #f0faff; --nav-bg: #333;
-        }
+        :root { --popper-blue: #4facfe; --popper-light: #00f2fe; --secondary: #ff9d00; --bg: #f0faff; --nav-bg: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 50px; direction: rtl; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg); margin: 0; padding-bottom: 50px;
-            transition: background-color 0.5s ease; overflow-x: hidden; direction: rtl;
-        }
-
-        /* סדר אלמנטים בראש הדף */
-        header { background-color: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; border-bottom: 5px solid #e68a00; cursor: pointer; user-select: none; }
-        nav { background-color: var(--nav-bg); width: 100%; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; }
+        /* כותרת וניווט */
+        header { background: var(--secondary); padding: 25px; text-align: center; color: white; border-bottom: 5px solid #e68a00; cursor: pointer; user-select: none; }
+        nav { background: var(--nav-bg); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; }
         nav a { color: white; padding: 15px 20px; text-decoration: none; font-weight: bold; cursor: pointer; }
-        nav a:hover, nav a.active { background-color: var(--popper-blue); }
+        nav a:hover, nav a.active { background: var(--popper-blue); }
 
-        /* לוח מודעות צהוב */
-        #news-container { width: 90%; max-width: 600px; margin: 10px auto; }
-        .news-item { background: #fff9c4; border: 2px solid #fbc02d; padding: 10px; border-radius: 15px; margin-bottom: 8px; font-weight: bold; color: #f57f17; border-right: 8px solid #fbc02d; text-align: right; }
-
-        /* אנימציות מסיבה */
-        @keyframes rainbow-party {
-            0% { background-color: #ffadad; } 20% { background-color: #ffd6a5; }
-            40% { background-color: #fdffb6; } 60% { background-color: #caffbf; }
-            80% { background-color: #9bf6ff; } 100% { background-color: #ffadad; }
-        }
-        body.party-active { animation: rainbow-party 3s infinite linear !important; }
-        .falling-item { position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+        /* פופ-אפ */
+        #popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; }
+        #special-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 6px solid var(--popper-blue); border-radius: 30px; padding: 30px; z-index: 10001; width: 85%; max-width: 450px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
 
         /* קונטיינרים */
-        .container { width: 90%; max-width: 600px; background: white; margin: 20px auto; padding: 25px; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 4px solid var(--popper-blue); display: none; }
+        .container { width: 92%; max-width: 650px; background: white; margin: 20px auto; padding: 25px; border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border: 4px solid var(--popper-blue); display: none; box-sizing: border-box; }
         .container.active { display: block; }
-        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; position: relative; }
+        .section-box { border-radius: 25px; padding: 15px; margin-bottom: 20px; border: 2px solid #ddd; position: relative; overflow: hidden; }
 
-        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .form-input { width: 85%; padding: 12px; margin-bottom: 10px; border: 2px solid #ccc; border-radius: 15px; font-family: inherit; }
+        /* כפתורים וטפסים */
+        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.2s; }
+        .btn-ctrl:active { transform: scale(0.95); }
+        .form-input { width: 90%; padding: 12px; margin-bottom: 10px; border: 2px solid #ccc; border-radius: 15px; font-family: inherit; }
 
         /* נגנים */
-        .video-box { background: #000; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
-        .mp3-player-box { background: #333; color: white; border-radius: 20px; padding: 15px; text-align: right; }
+        .video-player { background: #000; border-radius: 20px; width: 100%; margin-bottom: 10px; }
+        .mp3-player { background: #333; color: white; border-radius: 25px; padding: 15px; text-align: right; border: 3px solid var(--popper-blue); }
 
-        /* אדמין */
-        #admin-panel { display: none; position: fixed; top: 5%; left: 5%; width: 90%; height: 90%; background: #fff; border: 6px solid var(--secondary); z-index: 10002; padding: 20px; border-radius: 30px; box-shadow: 0 0 100px rgba(0,0,0,0.5); overflow-y: auto; text-align: right; }
+        /* פאנל ניהול נסתר */
+        #admin-panel { display: none; position: fixed; top: 2%; left: 2%; width: 96%; height: 96%; background: #fff; border: 6px solid var(--secondary); z-index: 10002; padding: 20px; border-radius: 30px; overflow-y: auto; text-align: right; box-sizing: border-box; }
+        .admin-section { background: #f9f9f9; border: 2px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 20px; }
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .admin-table td { border-bottom: 1px solid #eee; padding: 8px; font-size: 14px; }
-        .btn-del { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .admin-table td { border-bottom: 1px solid #ddd; padding: 10px; font-size: 14px; vertical-align: middle; }
+        .btn-del { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; }
+
+        /* מסיבה */
+        @keyframes rainbow { 0% { background: #ffadad; } 50% { background: #9bf6ff; } 100% { background: #ffadad; } }
+        body.party-active { animation: rainbow 3s infinite linear !important; }
+        .falling-item { position: fixed; top: -50px; font-size: 32px; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
     </style>
 </head>
 <body>
@@ -66,101 +57,115 @@
     </header>
 
     <nav>
-        <a onclick="showPage('home')" id="nav-home" class="active">🏠 דף הבית</a>
-        <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות וחידון</a>
+        <a onclick="showPage('home')" id="nav-home" class="active">🏠 בית</a>
+        <a onclick="showPage('riddles')" id="nav-riddles">🧩 חידות</a>
         <a onclick="showPage('jokes')" id="nav-jokes">😂 בדיחות</a>
-        <a onclick="showPage('contact')" id="nav-contact">📱 צור קשר</a>
+        <a onclick="showPage('contact')" id="nav-contact">📱 קשר</a>
     </nav>
 
-    <div id="news-container"></div>
+    <div id="news-container" style="width:90%; max-width:600px; margin:10px auto;"></div>
+
+    <div id="popup-overlay" onclick="closePopup()"></div>
+    <div id="special-popup">
+        <h2 style="color:var(--popper-blue);">הודעה מהאולפן 📢</h2>
+        <p id="popup-msg" style="font-size: 20px; font-weight: bold; color: #333;"></p>
+        <button class="btn-ctrl" onclick="closePopup()">סגור</button>
+    </div>
 
     <div id="admin-panel">
-        <h2 style="text-align:center; color:var(--secondary);">⚙️ ניהול קול פופר</h2>
+        <h2 style="text-align:center;">⚙️ שליטה מלאה - קול פופר</h2>
         
-        <div style="background:#fff0f0; padding:15px; border-radius:20px; margin-bottom:20px; border:1px solid #ffcccc;">
-            <button class="btn-ctrl" style="background:red;" onclick="if(confirm('לאפס לייקים?')) db.ref('likes').set(0)">איפוס לייקים ❤️</button>
-            <button class="btn-ctrl" style="background:red;" onclick="if(confirm('למחוק את כל התגובות?')) db.ref('comments').remove()">מחיקת כל התגובות 🗑️</button>
+        <div class="admin-section" style="border-color: red;">
+            <h3>🚨 ניהול הודעה קופצת (Popup)</h3>
+            <input type="text" id="new-popup-text" class="form-input" placeholder="כתוב הודעה שתקפוץ לכולם...">
+            <button class="btn-ctrl" style="background:red;" onclick="sendPopup()">שלח פופ-אפ עכשיו! 🚀</button>
         </div>
 
-        <div style="background:#f0f7ff; padding:15px; border-radius:20px; border:1px solid #cce3ff;">
-            <h3>🏆 ניהול טבלת מובילים:</h3>
+        <div class="admin-section">
+            <h3>🏆 טבלת מובילים</h3>
             <div id="adm-winners-list"></div>
-            <h3>🎵 ניהול שירים (MP3):</h3>
+        </div>
+
+        <div class="admin-section">
+            <h3>🎵 רשימת השמעה (MP3)</h3>
             <div id="adm-mp3-list"></div>
-            <h3>❓ ניהול שאלות חידון:</h3>
+        </div>
+
+        <div class="admin-section">
+            <h3>❓ שאלות החידון</h3>
             <div id="adm-q-list"></div>
         </div>
 
-        <button class="btn-ctrl" style="width:100%; background:#333; margin-top:20px; padding:15px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור פאנל ניהול X</button>
+        <div class="admin-section">
+            <h3>📢 ניהול חדשות (פס צהוב)</h3>
+            <div id="adm-news-list"></div>
+        </div>
+
+        <button class="btn-ctrl" style="width:100%; background:#333; padding:15px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור אדמין X</button>
     </div>
 
     <div id="home" class="container active">
-        <img src="logo.png" style="width:200px; margin-bottom:20px;" alt="לוגו קול פופר">
+        <img src="logo.png" style="width:200px; margin-bottom:20px;" alt="לוגו">
         
-        <div class="video-box">
-            <video id="main-video" style="width:100%;" controls></video>
+        <div class="section-box" style="background:#000; padding:0;">
+            <video id="main-video" class="video-player" controls></video>
         </div>
-        <div style="margin-bottom:20px;">
-            <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
-            <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
-        </div>
+        <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
+        <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
 
-        <div class="mp3-player-box">
-            <div id="mp3-title" style="font-weight:bold; color:var(--popper-light);">בחר שיר להשמעה...</div>
+        <div class="mp3-player">
+            <div id="mp3-title" style="font-weight:bold; color:var(--popper-light);">טוען שיר...</div>
             <audio id="main-audio" style="width:100%; margin-top:10px;" controls></audio>
-            <div id="playlist-home" style="font-size:12px; margin-top:10px; max-height:100px; overflow-y:auto; border-top:1px solid #555; padding-top:5px;"></div>
+            <div id="playlist-home" style="font-size:13px; margin-top:10px; max-height:120px; overflow-y:auto; border-top:1px solid #555; padding-top:10px;"></div>
         </div>
 
         <div style="margin-top:25px;">
-            <button class="btn-ctrl" style="font-size:45px; background:none;" onclick="addLike()">❤️</button>
-            <p style="font-size:18px; font-weight:bold;"><span id="likes-number">0</span> לייקים לרדיו</p>
+            <button class="btn-ctrl" style="font-size:50px; background:none;" onclick="addLike()">❤️</button>
+            <p style="font-size:20px;"><b><span id="likes-number">0</span></b> לייקים</p>
         </div>
 
         <div class="section-box" style="text-align:right; background:#f1f8ff; border-color:#90caf9;">
-            <h4 style="margin:0 0 10px 0;">💬 תגובות מאזינים:</h4>
-            <div id="comments-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px;"></div>
-            <input type="text" id="comm-name" placeholder="שם" style="width:30%; padding:8px; border-radius:10px; border:1px solid #ccc;">
-            <input type="text" id="comm-text" placeholder="תגובה..." style="width:50%; padding:8px; border-radius:10px; border:1px solid #ccc;">
-            <button onclick="postComment()" class="btn-ctrl" style="padding:8px 15px;">שלח</button>
+            <div id="comments-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px; background:white; padding:10px; border-radius:15px;"></div>
+            <input type="text" id="comm-name" placeholder="שם" style="width:30%;">
+            <input type="text" id="comm-text" placeholder="תגובה..." style="width:55%;">
+            <button onclick="postComment()" class="btn-ctrl" style="padding:5px 15px;">שלח</button>
         </div>
 
         <div class="section-box" style="background:#f3e5f5; border-color:#9c27b0;">
-            <h3 style="color:#7b1fa2; margin:0 0 10px 0;">🏆 טבלת האלופים:</h3>
+            <h3 style="color:#7b1fa2;">🏆 טבלת האלופים:</h3>
             <div id="leaderboard"></div>
         </div>
 
-        <button class="btn-ctrl" style="background: linear-gradient(45deg, #ff0080, #ff8c00); width:100%; padding:20px; font-size:20px;" onclick="togglePartyMode()">🎊 מסיבת קול פופר! 🎊</button>
+        <button class="btn-ctrl" style="background: linear-gradient(45deg, #ff0080, #ff8c00); width:100%; padding:15px; font-size:18px;" onclick="toggleParty()">🎊 מסיבת קול פופר! 🎊</button>
     </div>
 
     <div id="riddles" class="container">
         <h2>🧩 חידות וחידון הפרסים</h2>
-        <div class="section-box" style="background:#e0f2f1; border-color:#009688;">
-            <p id="quiz-question" style="font-weight:bold; font-size:18px;">טוען חידון...</p>
+        <div class="section-box" style="background:#e0f2f1;">
+            <p id="quiz-question" style="font-weight:bold; font-size:20px;"></p>
             <div id="quiz-options"></div>
         </div>
-        <div class="section-box" style="background:#fff8e1; border-color:#ffc107;">
-            <h3>החידה היומית:</h3>
-            <p id="riddle-display" style="font-size:18px; font-weight:bold;"></p>
-            <button class="btn-ctrl" onclick="changeRiddle(1)">חידה אחרת 🎲</button>
+        <div class="section-box" style="background:#fff8e1; border:2px dashed #ffc107;">
+            <h3>🤔 החידה היומית:</h3>
+            <p id="riddle-text" style="font-size:18px; font-weight:bold; color:#f57f17;"></p>
+            <input type="text" id="riddle-answer" class="form-input" placeholder="התשובה שלכם...">
+            <button class="btn-ctrl" style="background:#f57f17;" onclick="submitRiddle()">שלח תשובה ✅</button>
         </div>
     </div>
 
     <div id="jokes" class="container">
         <h2>😂 פינת הצחוק</h2>
-        <div id="joke-display" class="section-box" style="font-size:20px; font-weight:bold; min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
+        <div id="joke-display" class="section-box" style="font-size:22px; font-weight:bold; color:#1565c0; min-height:100px; display:flex; align-items:center; justify-content:center;"></div>
         <button class="btn-ctrl" style="width:100%; background:#ff9800;" onclick="changeJoke(1)">בדיחה הבאה 🤣</button>
     </div>
 
     <div id="contact" class="container">
-        <h2>📱 צור קשר עם האולפן</h2>
-        <div class="section-box" style="background:#e8f5e9; text-align:right;">
-            <p>שלחו לנו הודעה, בקשת שיר או בדיחה משלכם:</p>
+        <h2>📱 צור קשר</h2>
+        <div class="section-box" style="background:#e8f5e9;">
+            <p style="font-weight:bold;">הודעה לאולפן (וואטסאפ):</p>
             <input type="text" id="contact-name" class="form-input" placeholder="השם שלכם">
-            <textarea id="contact-msg" class="form-input" placeholder="מה תרצו להגיד לנו?" style="height:100px;"></textarea>
-            <button class="btn-ctrl" style="background:#25d366; width:100%;" onclick="sendContactWA()">שלח לוואטסאפ האולפן 💬</button>
-        </div>
-        <div class="section-box">
-            <p style="font-weight:bold;">📞 טלפון המערכת: 053-4314202</p>
+            <textarea id="contact-msg" class="form-input" placeholder="מה תרצו להגיד?" style="height:100px;"></textarea>
+            <button class="btn-ctrl" style="background:#25d366; width:100%;" onclick="sendWA()">שלח לוואטסאפ 💬</button>
         </div>
     </div>
 
@@ -174,88 +179,110 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let dataStore = { jokes_list:[], video_list:[], mp3_list:[], quiz_questions:[], winners:[], news_list:[] };
-        let currentIdx = { video:0, joke:0, mp3:0, riddle:0 };
+        let store = { jokes_list:[], video_list:[], mp3_list:[], quiz_questions:[], winners:[], news_list:[], riddles_list:[] };
+        let cur = { video:0, joke:0, mp3:0, riddle:0 };
 
         function sync(path) {
             db.ref(path).on('value', s => {
                 const v = s.val();
-                dataStore[path] = v ? Object.values(v) : [];
-                dataStore[path + '_keys'] = v ? Object.keys(v) : [];
-                renderAll();
+                store[path] = v ? Object.values(v) : [];
+                store[path + '_keys'] = v ? Object.keys(v) : [];
+                render();
             });
         }
-        ['jokes_list','video_list','mp3_list','quiz_questions','winners','news_list','likes','riddles_list'].forEach(sync);
+        ['jokes_list','video_list','mp3_list','quiz_questions','winners','news_list','likes','riddles_list','popup_msg'].forEach(sync);
 
         db.ref('comments').on('value', s => {
-            const list = document.getElementById('comments-list'); list.innerHTML = "";
-            if(s.val()) Object.values(s.val()).forEach(c => list.innerHTML += `<div style="margin-bottom:5px;"><b>${c.name}:</b> ${c.text}</div>`);
+            const el = document.getElementById('comments-list'); el.innerHTML = "";
+            if(s.val()) Object.values(s.val()).forEach(c => el.innerHTML += `<div><b>${c.name}:</b> ${c.text}</div>`);
         });
 
-        function renderAll() {
-            document.getElementById('likes-number').innerText = dataStore.likes || 0;
-            document.getElementById('news-container').innerHTML = dataStore.news_list.map(n => `<div class="news-item">📢 ${n.text}</div>`).join('');
+        function render() {
+            document.getElementById('likes-number').innerText = store.likes || 0;
             
-            if(dataStore.video_list.length > 0) {
-                const v = dataStore.video_list[currentIdx.video % dataStore.video_list.length];
-                if(document.getElementById('main-video').src !== v.url) document.getElementById('main-video').src = v.url;
+            // פופ-אפ אוטומטי
+            if(store.popup_msg && store.popup_msg.length > 0) {
+                const p = store.popup_msg[store.popup_msg.length-1];
+                if(p.active && localStorage.getItem('last_pop') !== p.id) {
+                    document.getElementById('popup-msg').innerText = p.text;
+                    document.getElementById('popup-overlay').style.display = 'block';
+                    document.getElementById('special-popup').style.display = 'block';
+                    localStorage.setItem('last_pop', p.id);
+                }
             }
 
-            if(dataStore.mp3_list.length > 0) {
-                const m = dataStore.mp3_list[currentIdx.mp3 % dataStore.mp3_list.length];
-                document.getElementById('mp3-title').innerText = "מתנגן כעת: " + m.name;
+            // פס חדשות
+            document.getElementById('news-container').innerHTML = store.news_list.map(n => `<div style="background:#fff9c4; border:2px solid #fbc02d; padding:8px; border-radius:10px; margin-bottom:5px; font-weight:bold; color:#f57f17; text-align:right;">📢 ${n.text}</div>`).join('');
+            
+            // וידאו
+            if(store.video_list.length > 0) document.getElementById('main-video').src = store.video_list[cur.video % store.video_list.length].url;
+
+            // שירים
+            if(store.mp3_list.length > 0) {
+                const m = store.mp3_list[cur.mp3 % store.mp3_list.length];
+                document.getElementById('mp3-title').innerText = "מתנגן: " + m.name;
                 if(document.getElementById('main-audio').src !== m.url) document.getElementById('main-audio').src = m.url;
-                document.getElementById('playlist-home').innerHTML = dataStore.mp3_list.map((t,i) => `<div onclick="playSong(${i})" style="cursor:pointer; padding:3px;">🎵 ${t.name}</div>`).join('');
+                document.getElementById('playlist-home').innerHTML = store.mp3_list.map((t,i) => `<div onclick="playSong(${i})" style="cursor:pointer; padding:5px; border-bottom:1px solid #444;">🎵 ${t.name}</div>`).join('');
             }
 
-            if(dataStore.jokes_list.length > 0) document.getElementById('joke-display').innerText = dataStore.jokes_list[currentIdx.joke % dataStore.jokes_list.length].text;
-            if(dataStore.riddles_list && dataStore.riddles_list.length > 0) document.getElementById('riddle-display').innerText = dataStore.riddles_list[currentIdx.riddle % dataStore.riddles_list.length].text;
+            // חידות ובדיחות
+            if(store.jokes_list.length > 0) document.getElementById('joke-display').innerText = store.jokes_list[cur.joke % store.jokes_list.length].text;
+            if(store.riddles_list.length > 0) document.getElementById('riddle-text').innerText = store.riddles_list[cur.riddle % store.riddles_list.length].text;
 
-            document.getElementById('leaderboard').innerHTML = dataStore.winners.map(w => `<div style="font-weight:bold; margin-bottom:5px;">⭐ ${w.name} - ${w.score} נקודות</div>`).join('');
+            document.getElementById('leaderboard').innerHTML = store.winners.map(w => `<div>⭐ <b>${w.name}</b> - ${w.score}</div>`).join('');
 
-            // עדכון טבלאות ניהול
-            renderAdminTable('winners', 'adm-winners-list', i => `${i.name} (${i.score})`);
-            renderAdminTable('mp3_list', 'adm-mp3-list', i => i.name);
-            renderAdminTable('quiz_questions', 'adm-q-list', i => i.q);
+            // אדמין - טבלאות
+            renderAdmin('winners', 'adm-winners-list', i => i.name);
+            renderAdmin('mp3_list', 'adm-mp3-list', i => i.name);
+            renderAdmin('quiz_questions', 'adm-q-list', i => i.q);
+            renderAdmin('news_list', 'adm-news-list', i => i.text);
         }
 
-        function renderAdminTable(path, target, format) {
-            const list = dataStore[path], keys = dataStore[path+'_keys'];
-            let html = '<table class="admin-table">';
-            list.forEach((item, i) => { html += `<tr><td>${format(item)}</td><td style="width:40px"><button class="btn-del" onclick="db.ref('${path}/${keys[i]}').remove()">X</button></td></tr>`; });
-            document.getElementById(target).innerHTML = html + '</table>';
+        function renderAdmin(path, target, format) {
+            const list = store[path], keys = store[path+'_keys'];
+            let h = '<table class="admin-table">';
+            list.forEach((item, i) => { h += `<tr><td>${format(item)}</td><td style="text-align:left;"><button class="btn-del" onclick="db.ref('${path}/${keys[i]}').remove()">מחק</button></td></tr>`; });
+            document.getElementById(target).innerHTML = h + '</table>';
+        }
+
+        function sendPopup() {
+            const txt = document.getElementById('new-popup-text').value;
+            if(txt) db.ref('popup_msg').push({text: txt, active: true, id: Date.now()});
         }
 
         function addLike() { db.ref('likes').transaction(c => (c || 0) + 1); }
-        function postComment() { const n=document.getElementById('comm-name').value, t=document.getElementById('comm-text').value; if(n&&t) { db.ref('comments').push({name:n,text:t}); document.getElementById('comm-text').value=""; } }
-        function playSong(i) { currentIdx.mp3=i; renderAll(); document.getElementById('main-audio').play(); }
-        function changeVideo(d) { currentIdx.video=(currentIdx.video+d+dataStore.video_list.length)%dataStore.video_list.length; renderAll(); }
-        function changeJoke(d) { currentIdx.joke=(currentIdx.joke+d+dataStore.jokes_list.length)%dataStore.jokes_list.length; renderAll(); }
-        function changeRiddle(d) { currentIdx.riddle=(currentIdx.riddle+d+dataStore.riddles_list.length)%dataStore.riddles_list.length; renderAll(); }
+        function postComment() { const n=document.getElementById('comm-name').value, t=document.getElementById('comm-text').value; if(n&&t) db.ref('comments').push({name:n,text:t}); }
+        function playSong(i) { cur.mp3=i; render(); document.getElementById('main-audio').play(); }
+        function changeVideo(d) { cur.video=(cur.video+d+store.video_list.length)%store.video_list.length; render(); }
+        function changeJoke(d) { cur.joke=(cur.joke+d+store.jokes_list.length)%store.jokes_list.length; render(); }
         function showPage(p) { document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); document.getElementById(p).classList.add('active'); }
+        function closePopup() { document.getElementById('popup-overlay').style.display='none'; document.getElementById('special-popup').style.display='none'; }
         
-        function sendContactWA() {
-            const name = document.getElementById('contact-name').value;
-            const msg = document.getElementById('contact-msg').value;
-            if(!name || !msg) return alert("נא למלא שם והודעה");
-            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה מ: ' + name + '\n' + msg)}`);
+        function submitRiddle() {
+            const ans = document.getElementById('riddle-answer').value;
+            if(ans) { alert("התשובה נשלחה לאולפן! 🎉"); db.ref('answers').push({ans: ans}); }
         }
 
-        let clickCount = 0;
-        function handleAdminClick() { clickCount++; if(clickCount >= 3) { document.getElementById('admin-panel').style.display = 'block'; clickCount = 0; } setTimeout(() => clickCount = 0, 2000); }
+        function sendWA() {
+            const n=document.getElementById('contact-name').value, m=document.getElementById('contact-msg').value;
+            window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה מ: '+n+'\n'+m)}`);
+        }
 
-        function togglePartyMode() {
-            const isAct = document.body.classList.toggle('party-active');
-            if(isAct) {
-                partyInterval = setInterval(() => {
-                    const item = document.createElement('div');
-                    item.className = 'falling-item';
-                    item.innerText = ['🎈','🎵','✨','⭐'][Math.floor(Math.random()*4)];
-                    item.style.left = Math.random()*100 + 'vw';
-                    document.body.appendChild(item);
-                    setTimeout(() => item.remove(), 4000);
+        let cc = 0;
+        function handleAdminClick() { cc++; if(cc>=3) document.getElementById('admin-panel').style.display='block'; setTimeout(()=>cc=0,2000); }
+
+        let partyInt;
+        function toggleParty() {
+            const act = document.body.classList.toggle('party-active');
+            if(act) {
+                partyInt = setInterval(() => {
+                    const el = document.createElement('div'); el.className = 'falling-item';
+                    el.innerText = ['🎈','🎵','✨','🎊','⭐'][Math.floor(Math.random()*5)];
+                    el.style.left = Math.random()*100 + 'vw';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 4000);
                 }, 300);
-            } else clearInterval(partyInterval);
+            } else clearInterval(partyInt);
         }
     </script>
 </body>
