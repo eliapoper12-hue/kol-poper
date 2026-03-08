@@ -164,6 +164,13 @@
             <button class="btn-ctrl" onclick="addItem('riddles_list', {text: document.getElementById('new-riddle-txt').value}, 'new-riddle-txt')">הוסף חידה</button>
         </div>
 
+        <div class="admin-section" style="background:#ffebee; border-color:#ef5350;">
+            <span style="font-weight:bold; color:#c62828;">🧹 ניקוי נתונים מהיר:</span>
+            <br><br>
+            <button class="btn-ctrl" style="background:#e53935; width:45%;" onclick="if(confirm('לאפס את כל הלייקים?')) db.ref('likes').set(0)">איפוס לייקים ❤️</button>
+            <button class="btn-ctrl" style="background:#d32f2f; width:45%;" onclick="if(confirm('למחוק את כל התגובות?')) db.ref('comments').set(null)">איפוס תגובות 💬</button>
+        </div>
+
         <button class="btn-ctrl" style="background:#333; width:100%; height:50px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור ניהול X</button>
     </div>
 
@@ -302,14 +309,12 @@
             document.getElementById('news-container').innerHTML = dataStore.news_list.map(m => `<div class="news-item">📢 ${m.text}</div>`).join('');
             db.ref('likes').once('value', s => document.getElementById('likes-number').innerText = s.val() || 0);
 
-            // וידאו
             if(dataStore.video_list.length > 0) {
                 const v = dataStore.video_list[currentIdx.video % dataStore.video_list.length];
                 document.getElementById('vid-name-display').innerText = v.name;
                 if(document.getElementById('main-video').src !== v.url) document.getElementById('main-video').src = v.url;
             }
 
-            // נגן MP3
             if(dataStore.mp3_list.length > 0) {
                 const a = dataStore.mp3_list[currentIdx.mp3 % dataStore.mp3_list.length];
                 document.getElementById('mp3-name-display').innerText = "מתנגן כעת: " + a.name;
@@ -321,14 +326,13 @@
 
             document.getElementById('leaderboard').innerHTML = dataStore.winners.sort((a,b)=>b.score-a.score).slice(0,5).map(w => `<div class="winner-tag">⭐ ${w.name} - ${w.score} כוכבים</div>`).join('');
 
-            // אדמין טבלאות
             renderAdminTable('news_list', 'adm-news-list', i => i.text);
             renderAdminTable('jokes_list', 'adm-jokes-list', i => i.text);
             renderAdminTable('riddles_list', 'adm-riddles-list', i => i.text);
             renderAdminTable('video_list', 'adm-vids-list', i => i.name);
             renderAdminTable('mp3_list', 'adm-mp3-list', i => i.name);
             renderAdminTable('winners', 'adm-winners-list', i => `${i.name} (${i.score})`);
-            renderAdminTable('quiz_questions', 'adm-quiz-list', i => `<b>${i.q}</b> (נכון: ${i.options[0]})`);
+            renderAdminTable('quiz_questions', 'adm-quiz-list', i => `<b>${i.q}</b>`);
         }
 
         function renderAdminTable(path, targetId, formatter) {
@@ -362,7 +366,6 @@
         function adminUpdate(p, id) { const v = document.getElementById(id).value; if(v) { db.ref(p).set(v); document.getElementById(id).value=""; } }
         function adminUpdateSongs() { db.ref('song_list').set(document.getElementById('adm-songs').value); alert('עודכן!'); }
 
-        // חידון
         let qIndex = 0, starCount = 0;
         function displayQuiz() {
             const qEl = document.getElementById('quiz-question'), oEl = document.getElementById('quiz-options'), sEl = document.getElementById('stars-display');
@@ -396,7 +399,7 @@
 
         function sendRiddleAnswer() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('חידה: ' + document.getElementById('riddleKidName').value + ' - ' + document.getElementById('riddleAnswer').value)}`); }
         function sendSongRequest() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('בקשה: ' + document.getElementById('song-choice').value)}`); }
-        function sendGeneralContact() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה: ' + document.getElementById('contactMsg').value)}`); }
+        function sendGeneralContact() { window.open(`https://wa.me/972534314202?text=${encodeURIComponent('הודעה: ' + document.getElementById('contactName').value + ': ' + document.getElementById('contactMsg').value)}`); }
 
         let partyInt;
         function togglePartyMode() { const act = document.body.classList.toggle('party-active'); if(act) { partyInt = setInterval(() => { const item = document.createElement('div'); item.className = 'falling-item'; item.innerText = ['🎈','🎵','✨'][Math.floor(Math.random()*3)]; item.style.left = Math.random()*100 + 'vw'; document.body.appendChild(item); setTimeout(() => item.remove(), 4000); }, 300); } else clearInterval(partyInt); }
