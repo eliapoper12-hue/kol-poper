@@ -59,8 +59,8 @@
 
         /* עיצוב הלוגו */
         .logo-container {
-            width: 130px;
-            height: 130px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 15px;
             border-radius: 50%;
             overflow: hidden;
@@ -78,47 +78,49 @@
         }
         .party-active .logo-container img { animation: dance 0.5s infinite; }
 
-        .player-card { background: #f8f9fa; padding: 15px; border-radius: 20px; margin-bottom: 20px; }
-        
-        .riddle-box {
-            background-color: var(--riddle-bg);
-            border: 3px dashed #fbc02d;
+        /* נגן הוידאו */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
             border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: #000;
+            margin-bottom: 15px;
+            border: 3px solid #eee;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
 
-        .quiz-box {
-            background-color: var(--quiz-bg);
-            border: 3px solid #009688;
-            border-radius: 25px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+        .riddle-box { background-color: var(--riddle-bg); border: 3px dashed #fbc02d; border-radius: 25px; padding: 15px; margin-bottom: 20px; }
+        .quiz-box { background-color: var(--quiz-bg); border: 3px solid #009688; border-radius: 25px; padding: 15px; margin-bottom: 20px; }
         .stars-display { font-size: 24px; color: #fbc02d; margin-bottom: 10px; min-height: 35px; }
         
         .quiz-option {
-            background: white;
-            border: 2px solid #009688;
-            border-radius: 15px;
-            padding: 10px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: bold;
+            background: white; border: 2px solid #009688; border-radius: 15px; padding: 10px; margin: 8px 0;
+            cursor: pointer; transition: 0.2s; font-weight: bold;
         }
         .quiz-option:hover { background: #b2dfdb; transform: scale(1.02); }
         
-        #quiz-feedback { margin-top: 10px; font-weight: bold; font-size: 18px; }
-
-        .controls { display: flex; justify-content: center; gap: 15px; margin: 15px 0; }
-        .btn-ctrl { background: var(--primary); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
-
         .whatsapp-box { background: #e6ffed; padding: 20px; border-radius: 25px; border: 2px dashed #25d366; margin-top: 15px; }
-        input, textarea { width: 90%; padding: 10px; margin: 5px 0; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; font-size: 16px; }
-        .send-wa { background: #25d366; color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 18px; }
+        input, textarea { width: 90%; padding: 10px; margin: 5px 0; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; }
+        .send-wa { background: #25d366; color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 18px; }
+
+        .controls { display: flex; justify-content: center; gap: 15px; margin: 10px 0; }
+        .btn-ctrl { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
 
         .party-toggle { background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+
+        /* עיצוב זכויות שמורות */
+        footer {
+            margin: 20px 0;
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
     </style>
 </head>
 <body id="main-body">
@@ -132,16 +134,14 @@
             <img src="logo.png" alt="לוגו קול פופר">
         </div>
 
-        <div class="player-card">
-            <h3 id="song-name">טוען שיר...</h3>
-            <audio id="audio-player" onended="nextSong()">
-                <source id="audio-src" src="track1.mp3" type="audio/mpeg">
-            </audio>
-            <div class="controls">
-                <button class="btn-ctrl" onclick="prevSong()">⏮</button>
-                <button class="btn-ctrl" onclick="togglePlay()" id="play-btn" style="width:60px; height:60px; font-size:24px;">▶</button>
-                <button class="btn-ctrl" onclick="nextSong()">⏭</button>
-            </div>
+        <h3 id="video-title">טוען סרטון...</h3>
+        <div class="video-container">
+            <iframe id="youtube-player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <div class="controls">
+            <button class="btn-ctrl" onclick="changeVideo(-1)">⏮ הקודם</button>
+            <button class="btn-ctrl" onclick="changeVideo(1)">הבא ⏭</button>
         </div>
 
         <div class="riddle-box">
@@ -155,7 +155,6 @@
             <h2 style="color: #00796b; margin-top: 0; font-size: 20px;">🎧 חידון הטריוויה</h2>
             <p id="quiz-question" style="font-weight: bold; font-size: 17px;"></p>
             <div id="quiz-options"></div>
-            <div id="quiz-feedback"></div>
             <button onclick="loadNextQuestion()" style="background:none; border:none; color:#00796b; cursor:pointer; text-decoration:underline; margin-top:10px;">לשאלה הבאה ➔</button>
         </div>
 
@@ -169,47 +168,33 @@
         <button class="party-toggle" onclick="toggleParty()">⚡ מצב מסיבה! ⚡</button>
     </div>
 
+    <footer>
+        © כל הזכויות שמורות לרדיו קול פופר
+    </footer>
+
     <script>
-        // --- שירים (track) ---
-        const songs = [
-            { name: "ברוך שם - שמוליק קליין", file: "track1.mp3" },
-            { name: "אשרינו - סנדי דינקל", file: "track2.mp3" },
-            { name: "מי שאתה - סנדי דינקל", file: "track3.mp3" }
+        // רשימת סרטוני יוטיוב המבוקשת
+        const playlist = [
+            { title: "ברוך שם - שמוליק קליין", id: "5iC_hE-Y_24" },
+            { title: "סנדי דינקל - אשרינו", id: "0mKmsy30D9o" },
+            { title: "מי שאתה - סנדי דינקל", id: "C3qZ2G0V1V8" }
         ];
-        let index = 0;
-        const player = document.getElementById('audio-player');
-        
-        function loadSong() {
-            document.getElementById('song-name').innerText = songs[index].name;
-            document.getElementById('audio-src').src = songs[index].file;
-            player.load();
+
+        let currentVideoIndex = 0;
+
+        function updatePlayer() {
+            const video = playlist[currentVideoIndex];
+            document.getElementById('video-title').innerText = video.title;
+            // הוספת rel=0 מונעת הצגת סרטונים מומלצים מערוצים אחרים בסוף
+            document.getElementById('youtube-player').src = `https://www.youtube.com/embed/${video.id}?rel=0`;
         }
 
-        function togglePlay() { 
-            if (player.paused) { 
-                player.play(); 
-                document.getElementById('play-btn').innerText = '⏸'; 
-            } else { 
-                player.pause(); 
-                document.getElementById('play-btn').innerText = '▶'; 
-            } 
+        function changeVideo(direction) {
+            currentVideoIndex = (currentVideoIndex + direction + playlist.length) % playlist.length;
+            updatePlayer();
         }
 
-        function nextSong() { 
-            index = (index + 1) % songs.length; 
-            loadSong(); 
-            player.play(); 
-            document.getElementById('play-btn').innerText = '⏸';
-        }
-
-        function prevSong() { 
-            index = (index - 1 + songs.length) % songs.length; 
-            loadSong(); 
-            player.play(); 
-            document.getElementById('play-btn').innerText = '⏸';
-        }
-
-        // --- חידון ---
+        // --- שאלות מקוריות ---
         const quizData = [
             { q: "איזה כלי נגינה הכי נפוץ ברדיו?", options: ["פסנתר 🎹", "גיטרה 🎸", "חצוצרה 🎺"], correct: 1 },
             { q: "מי שר את 'אשרינו'?", options: ["סנדי דינקל", "שמוליק קליין", "אברהם פריד"], correct: 0 },
@@ -225,21 +210,18 @@
             document.getElementById('quiz-question').innerText = q.q;
             const optionsDiv = document.getElementById('quiz-options');
             optionsDiv.innerHTML = "";
-            document.getElementById('quiz-feedback').innerText = "";
 
             q.options.forEach((opt, i) => {
                 const b = document.createElement('div');
                 b.className = 'quiz-option';
                 b.innerText = opt;
                 b.onclick = () => {
-                    const fb = document.getElementById('quiz-feedback');
                     if(i === q.correct) {
-                        fb.innerText = "נכון מאוד! קיבלת כוכב! ⭐";
-                        fb.style.color = "green";
+                        alert("נכון מאוד! קיבלת כוכב! ⭐");
                         addStar();
+                        loadNextQuestion();
                     } else {
-                        fb.innerText = "לא נכון, נסה שוב 🤔";
-                        fb.style.color = "red";
+                        alert("לא נכון, נסה שוב 🤔");
                     }
                 };
                 optionsDiv.appendChild(b);
@@ -248,9 +230,7 @@
 
         function addStar() {
             starCount++;
-            let starsStr = "";
-            for(let i=0; i<starCount; i++) { starsStr += "⭐ "; }
-            document.getElementById('stars').innerText = starsStr;
+            document.getElementById('stars').innerText = "⭐ ".repeat(starCount);
         }
 
         function loadNextQuestion() {
@@ -262,7 +242,6 @@
             const name = document.getElementById('kidName').value;
             const msg = document.getElementById('msg').value;
             if(!name || !msg) return alert("מלאו שם והודעה!");
-            // אל תשכח לשנות את המספר למטה למספר האמיתי שלך
             window.open(`https://wa.me/972534314202?text=${encodeURIComponent('היי קול פופר! אני '+name+': '+msg)}`, '_blank');
         }
 
@@ -270,9 +249,8 @@
             document.getElementById('main-body').classList.toggle('party-active'); 
         }
 
-        loadSong();
+        updatePlayer();
         displayQuiz();
     </script>
 </body>
-
 </html>
