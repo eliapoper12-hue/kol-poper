@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>קול פופר | האתר הרשמי</title>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
@@ -11,142 +12,290 @@
         :root { --popper-blue: #4facfe; --secondary: #ff9d00; --bg: #f0faff; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 50px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
         
-        /* מסיבה */
-        @keyframes rainbow-party { 0% { background-color: #ffadad; } 50% { background-color: #9bf6ff; } 100% { background-color: #ffadad; } }
-        body.party-active { animation: rainbow-party 3s infinite linear; }
-        .falling-item { position: fixed; top: -50px; font-size: 32px; z-index: 9999; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+        /* סימון לייב ולוח מודעות */
+        .live-tag { background: red; color: white; padding: 2px 8px; border-radius: 5px; font-size: 14px; font-weight: bold; animation: blink 1s infinite; vertical-align: middle; margin-left: 10px; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        
+        .notice-board { background: #ffebee; color: #d32f2f; width: 100%; padding: 5px 0; font-weight: bold; border-bottom: 2px solid #ffcdd2; font-size: 16px; }
 
-        /* לוח מודעות */
-        #news-container-wrapper { width: 90%; max-width: 600px; margin: 15px auto; background: #fffde7; border: 4px solid #fbc02d; border-radius: 25px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .news-header { text-align: center; color: #f57f17; font-weight: bold; font-size: 22px; margin-bottom: 10px; border-bottom: 2px dashed #fbc02d; }
-        .news-item { background: #fff; padding: 8px; border-radius: 10px; margin-bottom: 5px; border-right: 5px solid #fbc02d; text-align: right; font-weight: bold; }
+        /* כותרת */
+        header { background: var(--secondary); width: 100%; padding: 15px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header-text { cursor: pointer; user-select: none; display: inline-block; }
+        .header-text h1 { margin: 0; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
-        /* עיצוב כללי */
-        nav { background: #333; width: 100%; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; }
-        nav a { color: white; padding: 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
-        header { background: var(--secondary); width: 100%; padding: 20px; text-align: center; color: white; cursor: pointer; }
+        /* לוגו מלבני מנצנץ */
+        @keyframes sparkle { 0% { box-shadow: 0 0 10px rgba(255,255,255,0.2), 0 0 20px rgba(255,255,255,0.1); } 50% { box-shadow: 0 0 25px rgba(255,255,255,0.8), 0 0 40px rgba(79,172,254,0.6); } 100% { box-shadow: 0 0 10px rgba(255,255,255,0.2), 0 0 20px rgba(255,255,255,0.1); } }
+        .player-logo-rect { width: 90%; max-width: 400px; border-radius: 15px; border: 4px solid var(--popper-blue); margin: 15px 0; display: block; animation: sparkle 2s infinite ease-in-out; }
+
+        /* ניווט ומבנה */
+        nav { background: #333; width: 100%; display: flex; justify-content: center; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; }
+        nav a { color: white; padding: 12px 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
+        nav a:hover { background: var(--popper-blue); }
+
         .container { width: 90%; max-width: 600px; background: white; margin: 20px auto; padding: 20px; border-radius: 30px; border: 4px solid var(--popper-blue); display: none; text-align: center; }
         .container.active { display: block; }
         .section-box { border: 2px solid #ddd; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
-        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; margin: 5px; }
-        .form-input { width: 80%; padding: 10px; margin: 5px; border-radius: 10px; border: 1px solid #ccc; }
+        .winners-box { background: #fff9c4; border: 2px solid #fbc02d; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .btn-ctrl { background: var(--popper-blue); color: white; border: none; padding: 10px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; margin: 5px; }
+        .form-input { width: 85%; padding: 10px; margin: 8px; border-radius: 10px; border: 1px solid #ccc; font-family: inherit; }
+
+        /* רשימות והערות */
+        .playlist { max-height: 150px; overflow-y: auto; background: #f9f9f9; border-radius: 15px; margin: 10px 0; border: 1px solid #eee; text-align: right; }
+        .playlist-item { padding: 8px; border-bottom: 1px solid #ddd; cursor: pointer; font-size: 14px; }
+        .playlist-item:hover { background: #e3f2fd; }
+        .comment-item { text-align: right; padding: 8px; border-bottom: 1px dashed #ccc; background: #fafafa; border-radius: 5px; margin-bottom: 5px; }
 
         /* אדמין */
-        #admin-panel { display: none; position: fixed; top: 2%; left: 2%; width: 96%; height: 96%; background: white; z-index: 10001; border: 5px solid var(--secondary); border-radius: 20px; padding: 20px; overflow-y: auto; direction: rtl; }
-        .admin-section { background: #f9f9f9; padding: 10px; margin-bottom: 15px; border-radius: 15px; border: 1px dashed #ccc; }
-        .admin-table { width: 100%; border-collapse: collapse; }
-        .admin-table td { padding: 5px; border-bottom: 1px solid #eee; text-align: right; }
-        .btn-del { background: red; color: white; border: none; padding: 5px; cursor: pointer; border-radius: 5px; }
-        .btn-reset { background: #ff5722; color: white; border: none; padding: 8px; border-radius: 10px; cursor: pointer; margin: 5px; font-weight: bold; }
+        #admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10001; padding: 20px; overflow-y: auto; direction: rtl; }
+        .admin-section { background: #f4f8fb; padding: 15px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #ccc; text-align: right; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        .admin-table td { border-bottom: 1px solid #eee; padding: 8px; font-size: 14px; }
+        .btn-edit { background: #ff9800; color: white; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; }
+        .btn-del { background: #ff4444; color: white; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; }
+        .btn-reset { background: #d32f2f; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; margin: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="admin-panel">
-    <h2 style="text-align:center;">ניהול "קול פופר" ⚙️</h2>
-    
-    <div class="admin-section" style="background: #fff3e0;">
-        <h3>🧹 ניקוי נתונים מהיר:</h3>
-        <button class="btn-reset" onclick="if(confirm('לאפס לייקים?')) db.ref('likes').set(0)">אפס לייקים ❤️</button>
-        <button class="btn-reset" onclick="if(confirm('למחוק את כל התגובות?')) db.ref('comments').set(null)">מחק כל התגובות 💬</button>
-        <button class="btn-reset" onclick="if(confirm('לנקות את תיבת ההודעות?')) db.ref('inbox').set(null)" style="background:red;">נקה הודעות אולפן 📥</button>
+<header>
+    <div class="header-text" onclick="adminCheck()">
+        <h1><span class="live-tag">LIVE</span> קול פופר 🎈</h1>
     </div>
-
-    <div class="admin-section"><h3>📥 הודעות מהילדים:</h3><div id="adm-inbox"></div></div>
-    <div class="admin-section"><h3>📢 מודעות:</h3><div id="adm-news"></div><input id="n-in" class="form-input" placeholder="מודעה..."><button class="btn-ctrl" onclick="addItem('news_list',{text:document.getElementById('n-in').value},'n-in')">הוסף</button></div>
-    <div class="admin-section"><h3>🎵 שירים (MP3):</h3><div id="adm-mp3"></div><input id="m-n" class="form-input" placeholder="שם"><input id="m-u" class="form-input" placeholder="לינק"><button class="btn-ctrl" onclick="addItem('mp3_list',{name:document.getElementById('m-n').value,url:document.getElementById('m-u').value},['m-n','m-u'])">הוסף</button></div>
-    <div class="admin-section"><h3>🎬 סרטונים (MP4):</h3><div id="adm-vids"></div><input id="v-n" class="form-input" placeholder="שם"><input id="v-u" class="form-input" placeholder="לינק"><button class="btn-ctrl" onclick="addItem('video_list',{name:document.getElementById('v-n').value,url:document.getElementById('v-u').value},['v-n','v-u'])">הוסף</button></div>
-    <div class="admin-section"><h3>😂 בדיחות:</h3><div id="adm-jokes"></div><input id="j-in" class="form-input" placeholder="בדיחה..."><button class="btn-ctrl" onclick="addItem('jokes_list',{text:document.getElementById('j-in').value},'j-in')">הוסף</button></div>
-    <div class="admin-section"><h3>🧠 חידון:</h3><div id="adm-quiz"></div><input id="q-i" type="number" style="width:50px" value="1"> <input id="q-t" placeholder="שאלה"> <input id="q-o1" placeholder="נכונה"> <input id="q-o2" placeholder="טעות"><button class="btn-ctrl" onclick="saveQuiz()">עדכן</button></div>
-    
-    <button class="btn-ctrl" onclick="document.getElementById('admin-panel').style.display='none'" style="width:100%; background:#333">סגור אדמין</button>
-</div>
+</header>
+<div class="notice-board"><marquee id="notice-display">ברוכים הבאים לקול פופר!</marquee></div>
 
 <nav>
-    <a onclick="showPage('home')">דף הבית</a>
-    <a onclick="showPage('riddles')">חידון</a>
-    <a onclick="showPage('jokes')">בדיחות</a>
-    <a onclick="showPage('contact')">צור קשר</a>
+    <a onclick="showPage('home')">🏠 הבית</a>
+    <a onclick="showPage('riddles')">🧩 חידות</a>
+    <a onclick="showPage('jokes')">🤣 בדיחות</a>
+    <a onclick="showPage('contact')">📱 צור קשר</a>
 </nav>
 
-<header onclick="adminCheck()"><h1>קול פופר 🎈</h1></header>
-
-<div id="news-container-wrapper">
-    <div class="news-header">📢 לוח מודעות</div>
-    <div id="news-container"></div>
-</div>
-
 <div id="home" class="container active">
-    <div class="section-box" style="background:black; padding:0;"><video id="main-video" style="width:100%" controls></video></div>
-    <button class="btn-ctrl" onclick="move('video',-1)">⏮ הקודם</button><button class="btn-ctrl" onclick="move('video',1)">הבא ⏭</button>
-    <div class="section-box" style="background:#333; color:white;"><audio id="main-audio" style="width:100%" controls></audio><br><button class="btn-ctrl" onclick="move('mp3',-1)">שיר קודם</button><button class="btn-ctrl" onclick="move('mp3',1)">שיר הבא</button></div>
-    <button onclick="addLike()" style="font-size:40px; background:none; border:none; cursor:pointer">❤️</button> <span id="likes" style="font-size:24px; font-weight:bold">0</span>
-    <div id="comm-list" style="margin:10px 0; text-align:right;"></div>
-    <input id="c-n" placeholder="שם" style="width:30%"><input id="c-t" placeholder="תגובה" style="width:50%"><button class="btn-ctrl" onclick="postComm()">שלח</button>
-    <button class="btn-ctrl" style="width:100%; background:orange; margin-top:20px" onclick="toggleParty()">🎊 מסיבת קול פופר! 🎊</button>
+    <img src="logo.png" class="player-logo-rect" alt="לוגו קול פופר מנצנץ">
+
+    <div class="section-box" style="background:black; padding:0;">
+        <video id="main-video" style="width:100%" controls></video>
+        <div style="background:#222;"><button class="btn-ctrl" onclick="move('video',-1)">⏮</button><button class="btn-ctrl" onclick="move('video',1)">⏭</button></div>
+    </div>
+    <div class="playlist" id="vid-list"></div>
+
+    <div class="section-box" style="background:#333; color:white;">
+        <audio id="main-audio" style="width:100%" controls></audio>
+        <div style="margin-top:5px;"><button class="btn-ctrl" onclick="move('mp3',-1)">⏮</button><button class="btn-ctrl" onclick="move('mp3',1)">⏭</button></div>
+    </div>
+    <div class="playlist" id="audio-list"></div>
+
+    <div style="margin: 20px 0;">
+        <button onclick="addLike()" style="font-size:40px; background:none; border:none; cursor:pointer;">❤️</button> <span id="likes" style="font-size:24px; font-weight:bold">0</span>
+        <span style="font-size:24px; margin-right:20px; color: #555;">👁️ <span id="views-fake">124</span></span>
+    </div>
+
+    <div class="winners-box">
+        <h3 style="margin:5px;">🏆 האלופים שלנו:</h3>
+        <div class="winners-list" style="font-weight:bold; color:#f57f17; font-size:18px;"></div>
+    </div>
+
+    <div class="section-box" style="background:#f1f8e9;">
+        <h3>💬 מה כולם אומרים?</h3>
+        <div id="comm-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px;"></div>
+        <input id="c-n" placeholder="שם" style="width:30%; padding:5px;"><input id="c-t" placeholder="תגובה..." style="width:45%; padding:5px;"><button class="btn-ctrl" onclick="postComm()">שלח</button>
+    </div>
 </div>
 
 <div id="riddles" class="container">
-    <h2>חידון</h2><div id="stars"></div><p id="q-display" style="font-weight:bold"></p><div id="q-opts"></div>
+    <div class="winners-box">
+        <h3 style="margin:5px;">🏆 היכל התהילה:</h3>
+        <div class="winners-list" style="font-weight:bold; color:#f57f17; font-size:18px;"></div>
+    </div>
+    
+    <div class="section-box" style="background:#e1f5fe;">
+        <h3>🔍 החידה היומית</h3>
+        <p id="daily-q-text" style="font-weight:bold"></p>
+        <input id="ans-n" placeholder="שם" style="width:30%; padding:5px;"><input id="ans-t" placeholder="פתרון" style="width:45%; padding:5px;"><button class="btn-ctrl" onclick="sendAns()">שלח</button>
+    </div>
+
+    <hr>
+    <div class="section-box" style="background:#fff3e0;">
+        <h3>🧠 חידון הכוכבים</h3>
+        <div id="stars" style="font-size:20px; margin-bottom:10px;"></div>
+        <p id="q-display" style="font-weight:bold; font-size:18px;"></p>
+        <div id="q-opts"></div>
+    </div>
 </div>
 
-<div id="jokes" class="container"><h2>בדיחות</h2><div id="j-display" class="section-box"></div><button class="btn-ctrl" onclick="move('joke',1)">עוד בדיחה</button></div>
+<div id="jokes" class="container">
+    <h3>🤣 דף בדיחות</h3>
+    <div id="j-display" class="section-box" style="font-size:22px; min-height:80px; display:flex; align-items:center; justify-content:center;"></div>
+    <button class="btn-ctrl" onclick="move('joke',1)">בדיחה הבאה ⏭</button>
+</div>
 
 <div id="contact" class="container">
-    <h2>שלח הודעה לאולפן</h2>
-    <input id="con-n" class="form-input" placeholder="שם"><br>
-    <textarea id="con-m" class="form-input" style="height:80px" placeholder="הודעה..."></textarea><br>
-    <button class="btn-ctrl" onclick="sendInb()">שלח לאולפן 📱</button>
+    <h3>📱 צור קשר לאולפן</h3>
+    <input id="con-n" class="form-input" placeholder="השם שלך"><br>
+    <p style="font-weight:bold; margin:5px;">בחר שיר לשידור:</p>
+    <select id="req-song-select" class="form-input"><option value="">-- בחר שיר --</option></select>
+    <textarea id="con-m" class="form-input" style="height:80px" placeholder="בקשות נוספות או ד"ש..."></textarea><br>
+    <button class="btn-ctrl" style="width:100%; padding:15px; font-size:18px;" onclick="sendInb()">שלח לשידור 🚀</button>
+</div>
+
+<div id="admin-panel">
+    <h2 style="text-align:center;">ניהול האתר - קול פופר ⚙️</h2>
+    
+    <div class="admin-section" style="background:#ffebee;">
+        <h3>🛑 1-3. איפוסי מערכת:</h3>
+        <button class="btn-reset" onclick="if(confirm('למחוק את כל התגובות הפומביות?')) db.ref('comments').remove()">💬 איפוס תגובות</button>
+        <button class="btn-reset" onclick="if(confirm('לרוקן את תיבת ההודעות (אינבוקס)?')) db.ref('inbox').remove()">📥 איפוס אינבוקס</button>
+        <button class="btn-reset" onclick="if(confirm('לאפס את מונה הלייקים ל-0?')) db.ref('likes').set(0)">❤️ איפוס לייקים</button>
+    </div>
+
+    <div class="admin-section"><h3>📥 4. תיבת הודעות (אינבוקס):</h3><div id="adm-inbox"></div></div>
+    
+    <div class="admin-section">
+        <h3>🧠 5. שאלות לחידון האמריקאי:</h3><div id="adm-quiz"></div>
+        <input id="qz-q" class="form-input" placeholder="השאלה..."><br>
+        <input id="qz-o" class="form-input" placeholder="תשובות (מופרדות בפסיק, הראשונה היא הנכונה)">
+        <button class="btn-ctrl" onclick="addQuiz()">הוסף שאלה</button>
+    </div>
+
+    <div class="admin-section">
+        <h3>🏆 6. ניהול זוכים:</h3>
+        <button class="btn-reset" onclick="if(confirm('לאפס את כל הזוכים?')) db.ref('winners').remove()">אפס את כל הזוכים</button>
+        <div id="adm-win"></div>
+    </div>
+
+    <div class="admin-section"><h3>🤣 7. בדיחות:</h3><div id="adm-jokes"></div><input id="j-in" class="form-input" placeholder="בדיחה..."><button class="btn-ctrl" onclick="addItem('jokes_list',{text:document.getElementById('j-in').value},'j-in')">הוסף</button></div>
+    
+    <div class="admin-section"><h3>🎬 8. סרטונים (MP4):</h3><div id="adm-vids"></div><input id="v-n" class="form-input" placeholder="שם סרטון"><input id="v-u" class="form-input" placeholder="קישור"><button class="btn-ctrl" onclick="addItem('video_list',{name:document.getElementById('v-n').value,url:document.getElementById('v-u').value},['v-n','v-u'])">הוסף</button></div>
+    
+    <div class="admin-section"><h3>🎧 9. שירים (MP3):</h3><div id="adm-mp3"></div><input id="m-n" class="form-input" placeholder="שם שיר"><input id="m-u" class="form-input" placeholder="קישור"><button class="btn-ctrl" onclick="addItem('mp3_list',{name:document.getElementById('m-n').value,url:document.getElementById('m-u').value},['m-n','m-u'])">הוסף</button></div>
+    
+    <div class="admin-section"><h3>🔍 10. חידה יומית:</h3><div id="adm-riddle"></div><input id="dr-in" class="form-input" placeholder="טקסט החידה..."><button class="btn-ctrl" onclick="addItem('daily_riddle',{text:document.getElementById('dr-in').value},'dr-in')">הוסף</button></div>
+    
+    <div class="admin-section"><h3>📢 11. לוח מודעות:</h3><div id="adm-notices"></div><input id="n-in" class="form-input" placeholder="הודעה ללוח..."><button class="btn-ctrl" onclick="addItem('notices',{text:document.getElementById('n-in').value},'n-in')">הוסף הודעה</button></div>
+    
+    <div class="admin-section"><h3>🎵 12. בחירת שירים (לצור קשר):</h3><div id="adm-req"></div><input id="r-n" class="form-input" placeholder="שם שיר לאישור..."><button class="btn-ctrl" onclick="addItem('request_songs_list',{name:document.getElementById('r-n').value},'r-n')">הוסף לרשימה</button></div>
+
+    <button class="btn-ctrl" style="width:100%; background:#333; padding:15px;" onclick="document.getElementById('admin-panel').style.display='none'">סגור ניהול וחזור לאתר</button>
 </div>
 
 <script>
+    // הגדרות Firebase
     const firebaseConfig = { apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA", databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com", projectId: "kolpopper-46", appId: "1:205439458089:web:54efeaaa1aae748fc7b538" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
-    let data = { news_list:[], video_list:[], mp3_list:[], jokes_list:[], quiz_questions:[], inbox:[] };
+    
+    let data = { mp3_list:[], video_list:[], jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], request_songs_list:[] };
     let cur = { video:0, mp3:0, joke:0 };
 
-    function sync(p) { db.ref(p).on('value', s => { let v = s.val(); data[p] = v ? Object.values(v) : []; data[p+'_k'] = v ? Object.keys(v) : []; render(); }); }
-    ['news_list','video_list','mp3_list','jokes_list','quiz_questions','inbox'].forEach(sync);
+    // סנכרון מידע
+    function sync(p) { db.ref(p).on('value', s => { let v = s.val(); data[p] = v ? Object.values(v) : []; data[p+'_k'] = v ? Object.keys(v) : []; render(); renderAdmin(); }); }
+    ['video_list','mp3_list','jokes_list','inbox','daily_riddle','quiz_questions','winners','notices','request_songs_list'].forEach(sync);
 
+    // תצוגת דפים ומונים
+    setInterval(() => document.getElementById('views-fake').innerText = 120 + Math.floor(Math.random()*15), 5000);
+    function showPage(p) { document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); document.getElementById(p).classList.add('active'); }
+    function move(p,d) { let l = data[p+'_list']; if(l.length){ cur[p]=(cur[p]+d+l.length)%l.length; render(); } }
+
+    // רינדור הלקוח (האתר)
     function render() {
-        document.getElementById('news-container').innerHTML = data.news_list.map(m=>`<div class="news-item">${m.text}</div>`).join('');
+        document.getElementById('vid-list').innerHTML = data.video_list.map((v,i)=>`<div class="playlist-item" onclick="cur.video=${i};render()">🎬 ${v.name}</div>`).join('');
+        document.getElementById('audio-list').innerHTML = data.mp3_list.map((m,i)=>`<div class="playlist-item" onclick="cur.mp3=${i};render()">🎵 ${m.name}</div>`).join('');
         if(data.video_list.length) document.getElementById('main-video').src = data.video_list[cur.video % data.video_list.length].url;
         if(data.mp3_list.length) document.getElementById('main-audio').src = data.mp3_list[cur.mp3 % data.mp3_list.length].url;
         if(data.jokes_list.length) document.getElementById('j-display').innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
         
-        db.ref('likes').on('value', s => document.getElementById('likes').innerText = s.val() || 0);
-        db.ref('comments').limitToLast(5).on('value', s => { let h=""; if(s.val()) Object.values(s.val()).forEach(c=>h+=`<div style="border-bottom:1px solid #eee; padding:5px;"><b>${c.name}:</b> ${c.text}</div>`); document.getElementById('comm-list').innerHTML=h; });
-
-        tbl('news_list','adm-news',i=>i.text); tbl('mp3_list','adm-mp3',i=>i.name); tbl('video_list','adm-vids',i=>i.name); tbl('jokes_list','adm-jokes',i=>i.text); tbl('inbox','adm-inbox',i=>`<b>${i.sender}:</b> ${i.content}`); tbl('quiz_questions','adm-quiz',i=>i.q);
+        let rSelect = document.getElementById('req-song-select');
+        rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+        
+        document.getElementById('notice-display').innerText = data.notices.map(n=>n.text).join(' ✨ ') || "ברוכים הבאים לקול פופר!";
+        if(data.daily_riddle.length) document.getElementById('daily-q-text').innerText = data.daily_riddle[data.daily_riddle.length-1].text;
+        
+        let wText = data.winners.map(w=>w.name).join(' 🏆 ') || "ענו על החידון כדי להופיע כאן!";
+        document.querySelectorAll('.winners-list').forEach(el => el.innerText = wText);
     }
 
-    function tbl(p,t,f) { let h="<table class='admin-table'>"; if(data[p]) data[p].forEach((item,i)=>h+=`<tr><td>${f(item)}</td><td><button class='btn-del' onclick="del('${p}','${data[p+'_k'][i]}')">X</button></td></tr>`); document.getElementById(t).innerHTML=h+"</table>"; }
-    function del(p,k) { if(confirm('למחוק?')) db.ref(p+'/'+k).remove(); }
-    function addItem(p,d,c) { if(!d.text && !d.name) return; db.ref(p).push(d); if(Array.isArray(c)) c.forEach(id=>document.getElementById(id).value=""); else document.getElementById(c).value=""; }
-    function sendInb() { let s=document.getElementById('con-n').value, m=document.getElementById('con-m').value; if(s&&m) { db.ref('inbox').push({sender:s, content:m}); alert('נשלח!'); document.getElementById('con-n').value=""; document.getElementById('con-m').value=""; } }
-    function saveQuiz() { let i=document.getElementById('q-i').value-1; db.ref('quiz_questions/'+i).set({q:document.getElementById('q-t').value, options:[document.getElementById('q-o1').value, document.getElementById('q-o2').value], correct:0}); }
-    function move(p,d) { if(data[p+'_list'].length) { cur[p] = (cur[p]+d+data[p+'_list'].length)%data[p+'_list'].length; render(); } }
+    // לייקים ותגובות
+    db.ref('likes').on('value', s => document.getElementById('likes').innerText = s.val() || 0);
+    function addLike() { db.ref('likes').transaction(c=>(c||0)+1); }
+    db.ref('comments').on('value', s => { let h=""; if(s.val()) Object.values(s.val()).reverse().forEach(c=>h+=`<div class="comment-item"><b>${c.name}:</b> ${c.text}</div>`); document.getElementById('comm-list').innerHTML=h; });
+    function postComm() { let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value; if(n&&t) { db.ref('comments').push({name:n, text:t}); document.getElementById('c-t').value=""; } }
 
+    // טפסים וחידון
+    function sendInb() { let n=document.getElementById('con-n').value, m=document.getElementById('con-m').value, s=document.getElementById('req-song-select').value; if(n) { db.ref('inbox').push({sender:n, content: "שיר: "+s+" | בקשה: "+m}); alert('נשלח!'); } }
+    function sendAns() { let n=document.getElementById('ans-n').value, t=document.getElementById('ans-t').value; if(n&&t) { db.ref('inbox').push({sender:n, content: "תשובה לחידה: "+t}); alert('נשלח!'); } }
+    
     let qIdx=0, stars=0;
     function doQuiz() {
-        let qEl=document.getElementById('q-display'), oEl=document.getElementById('q-opts'); if(!data.quiz_questions[qIdx]) { qEl.innerText="סיימת!"; return; }
-        let q=data.quiz_questions[qIdx]; qEl.innerText=q.q; document.getElementById('stars').innerText="⭐".repeat(stars);
-        oEl.innerHTML=q.options.map((o,i)=>`<button class="btn-ctrl" onclick="ans(${i})">${o}</button>`).join('');
+        if(!data.quiz_questions.length) return;
+        let qEl=document.getElementById('q-display'), oEl=document.getElementById('q-opts');
+        if(qIdx >= data.quiz_questions.length) { 
+            if(stars > 0) { let n=prompt("סיימת! מה השם שלך לטבלת הזוכים?"); if(n) db.ref('winners').push({name:n}); }
+            qEl.innerText="סיימת את החידון!"; oEl.innerHTML=""; return; 
+        }
+        let q = data.quiz_questions[qIdx]; qEl.innerText = q.q; document.getElementById('stars').innerText = "⭐".repeat(stars);
+        oEl.innerHTML = q.options.map((o,i)=>`<button class="btn-ctrl" onclick="ans(${i===0})">${o}</button>`).sort(()=>Math.random()-0.5).join('');
     }
-    function ans(i) { if(i===0) stars++; qIdx++; doQuiz(); }
-    db.ref('quiz_questions').on('value', () => { qIdx=0; stars=0; doQuiz(); });
+    function ans(isCorrect) { if(isCorrect) stars++; qIdx++; doQuiz(); }
+    db.ref('quiz_questions').on('value', () => { qIdx=0; stars=0; setTimeout(doQuiz, 1000); });
 
-    function addLike() { db.ref('likes').transaction(c=>(c||0)+1); }
-    function postComm() { let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value; if(n&&t) { db.ref('comments').push({name:n, text:t}); document.getElementById('c-t').value=""; } }
-    function showPage(p) { document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); document.getElementById(p).classList.add('active'); }
-    function adminCheck() { aC++; if(aC>=3) document.getElementById('admin-panel').style.display='block'; setTimeout(()=>aC=0,2000); } let aC=0;
+    // ================= ניהול עם הגנת סיסמה =================
+    let aC=0; 
+    function adminCheck() { 
+        aC++; 
+        if(aC>=3) { 
+            let pass = prompt("הכנס סיסמת מנהל:");
+            if(pass === "1234") { // כאן תוכל לשנות את הסיסמה למה שתרצה
+                document.getElementById('admin-panel').style.display='block'; 
+            } else {
+                alert("סיסמה שגויה! הגישה נדחתה.");
+            }
+        } 
+        setTimeout(()=>aC=0,2000); 
+    }
+    
+    function renderAdmin() {
+        tbl('inbox', 'adm-inbox', i=>`<b>${i.sender}:</b> ${i.content}`, null);
+        tbl('winners', 'adm-win', i=>i.name, null);
+        tbl('jokes_list', 'adm-jokes', i=>i.text, 'text');
+        tbl('video_list', 'adm-vids', i=>i.name, 'media');
+        tbl('mp3_list', 'adm-mp3', i=>i.name, 'media');
+        tbl('daily_riddle', 'adm-riddle', i=>i.text, 'text');
+        tbl('notices', 'adm-notices', i=>i.text, 'text');
+        tbl('request_songs_list', 'adm-req', i=>i.name, 'nameOnly');
+        
+        let qH="<table class='admin-table'>";
+        data.quiz_questions.forEach((q,i) => { let k=data.quiz_questions_k[i]; qH+=`<tr><td><b>${q.q}</b><br><small>${q.options.join(', ')}</small></td><td style='width:70px'><button class='btn-edit' onclick="editItem('quiz_questions','${k}','quiz')">✏️</button> <button class='btn-del' onclick="del('quiz_questions','${k}')">X</button></td></tr>`; });
+        document.getElementById('adm-quiz').innerHTML=qH+"</table>";
+    }
 
-    let pInt;
-    function toggleParty() {
-        if(document.body.classList.toggle('party-active')) {
-            pInt = setInterval(() => { let i=document.createElement('div'); i.className='falling-item'; i.innerText=['🎈','✨','🎊','🌟'][Math.floor(Math.random()*4)]; i.style.left=Math.random()*100+'vw'; document.body.appendChild(i); setTimeout(()=>i.remove(),4000); },200);
-        } else clearInterval(pInt);
+    function tbl(p,t,f,eType) {
+        let h="<table class='admin-table'>";
+        if(data[p]) data[p].forEach((item,i)=>{
+            let k = data[p+'_k'][i];
+            h+=`<tr><td>${f(item)}</td><td style='width:70px'>
+                ${eType ? `<button class='btn-edit' onclick="editItem('${p}','${k}','${eType}')">✏️</button>` : ''}
+                <button class='btn-del' onclick="del('${p}','${k}')">X</button>
+            </td></tr>`;
+        }); document.getElementById(t).innerHTML=h+"</table>";
+    }
+
+    function del(p,k) { if(confirm('למחוק?')) db.ref(p+'/'+k).remove(); }
+    function addItem(p,d,c) { if(!d.name && !d.text && !d.url) return; db.ref(p).push(d); if(Array.isArray(c)) c.forEach(id=>document.getElementById(id).value=""); else document.getElementById(c).value=""; }
+    function addQuiz() { let q=document.getElementById('qz-q').value, o=document.getElementById('qz-o').value; if(q&&o) { db.ref('quiz_questions').push({q:q, options:o.split(',')}); document.getElementById('qz-q').value=""; document.getElementById('qz-o').value=""; } }
+
+    function editItem(p, k, type) {
+        let i = data[p].find((_, idx) => data[p+'_k'][idx] === k);
+        if(type === 'media') {
+            let n = prompt("שם חדש:", i.name); if(n===null) return;
+            let u = prompt("קישור חדש:", i.url); if(u!==null) db.ref(p+'/'+k).update({name:n, url:u});
+        } else if(type === 'text') {
+            let t = prompt("ערוך טקסט:", i.text); if(t!==null) db.ref(p+'/'+k).update({text:t});
+        } else if(type === 'nameOnly') {
+            let n = prompt("ערוך שם:", i.name); if(n!==null) db.ref(p+'/'+k).update({name:n});
+        } else if(type === 'quiz') {
+            let q = prompt("ערוך שאלה:", i.q); if(q===null) return;
+            let o = prompt("ערוך אפשרויות (פסיק ביניהן, הראשונה נכונה):", i.options.join(',')); if(o!==null) db.ref(p+'/'+k).update({q:q, options:o.split(',')});
+        }
     }
 </script>
 </body>
