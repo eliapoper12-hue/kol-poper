@@ -2,509 +2,572 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <title>קול פופר 🎈</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קול פופר | האתר הרשמי</title>
-    
+
     <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <style>
-        :root { 
-            --popper-blue: #0093E9; 
-            --popper-gradient: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
-            --secondary: #FF9800; 
-            --bg: #0f172a;
-            --white: #ffffff;
-            --shadow: 0 10px 40px rgba(15,23,42,0.6);
-            --radius: 24px;
-            --glass-bg: rgba(15,23,42,0.7);
-            --glass-border: rgba(148,163,184,0.4);
+        body {
+            margin:0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:#020617;
+            color:#e5e7eb;
+            direction:rtl;
         }
+        * { box-sizing:border-box; }
 
-        body { 
-            font-family: 'Assistant', 'Segoe UI', sans-serif; 
-            background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
-            margin: 0; 
-            padding-bottom: 60px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            color: #e2e8f0;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        /* SPLASH */
-        #splash {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at top, #0ea5e9 0, #020617 60%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            color: white;
-        }
-        .splash-logo {
-            font-size: 90px;
-            animation: splashPop 1.4s ease-in-out infinite;
-            filter: drop-shadow(0 0 25px rgba(56,189,248,0.9));
-        }
-        .splash-title {
-            font-size: 40px;
-            font-weight: 800;
-            margin-top: 10px;
-            text-shadow: 0 4px 18px rgba(15,23,42,0.9);
-        }
-        .splash-sub {
-            margin-top: 8px;
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        @keyframes splashPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.12); }
-            100% { transform: scale(1); }
-        }
-
-        header { 
-            background: linear-gradient(135deg, #0f172a, #020617);
-            width: 100%; 
-            padding: 18px 12px; 
-            color: white; 
-            box-shadow: 0 18px 40px rgba(15,23,42,0.9);
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-            position: sticky;
-            top: 0;
-            z-index: 1500;
-            transition: background 0.3s ease, color 0.3s ease;
+        header {
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color:white;
+            padding:15px 20px;
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+            position:sticky;
+            top:0;
+            z-index:1500;
         }
         .header-inner {
-            max-width: 950px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:10px;
         }
-        header h1 { margin: 0; font-size: 32px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.6); display:flex; align-items:center; gap:10px;}
-
-        .live-tag { 
-            background: linear-gradient(135deg,#f97316,#ef4444); 
-            color: white; padding: 5px 15px; border-radius: 50px; 
-            font-size: 14px; animation: pulse 2s infinite; vertical-align: middle;
-            box-shadow: 0 0 18px rgba(248,113,113,0.9);
+        .live-tag {
+            background:#ef4444;
+            color:white;
+            padding:3px 10px;
+            border-radius:999px;
+            font-size:12px;
+            margin-left:8px;
         }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
-
         .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .btn-small {
+            background:linear-gradient(135deg,#4f46e5,#06b6d4);
+            border:none;
+            color:white;
+            padding:6px 10px;
+            border-radius:999px;
+            cursor:pointer;
+            font-size:13px;
+        }
+        .btn-small:hover { opacity:0.9; }
+
+        nav {
+            position:sticky;
+            top:70px;
+            z-index:1400;
+            background:rgba(15,23,42,0.96);
+            border-bottom:1px solid rgba(148,163,184,0.5);
+            padding:8px 10px;
+            display:flex;
+            gap:10px;
+            overflow-x:auto;
+            white-space:nowrap;
+        }
+        nav a {
+            color:#e5e7eb;
+            text-decoration:none;
+            padding:6px 12px;
+            border-radius:999px;
+            border:1px solid transparent;
+            cursor:pointer;
+            font-size:14px;
+        }
+        nav a:hover {
+            border-color:#38bdf8;
+            background:rgba(15,23,42,0.9);
+        }
+        .btn-admin-open {
+            background:rgba(248,250,252,0.05);
+            border-color:#f97316;
+        }
+
+        .container {
+            max-width:1000px;
+            margin:20px auto;
+            padding:0 12px 40px;
+            display:none;
+        }
+        .container.active { display:block; }
+
+        .section-box {
+            background:rgba(15,23,42,0.96);
+            border-radius:18px;
+            padding:18px;
+            margin-bottom:20px;
+            border:1px solid rgba(148,163,184,0.7);
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+        }
+
+        .player-logo-rect {
+            display:block;
+            max-width:220px;
+            margin:15px auto 5px;
+            border-radius:18px;
+            box-shadow:0 12px 30px rgba(0,0,0,0.7);
+        }
+
+        .notice-board {
+            background:linear-gradient(90deg,#0ea5e9,#38bdf8);
+            color:#111827;
+            padding:6px 10px;
+            font-weight:600;
+            box-shadow:0 10px 25px rgba(15,23,42,0.8);
         }
 
         .user-info {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            background: rgba(15,23,42,0.8);
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(148,163,184,0.6);
+            display:none;
+            align-items:center;
+            gap:6px;
+            background:rgba(15,23,42,0.9);
+            padding:4px 8px;
+            border-radius:999px;
+            border:1px solid rgba(148,163,184,0.7);
         }
         .user-avatar {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: radial-gradient(circle at top, #38bdf8, #0f172a);
-            border: 1px solid rgba(148,163,184,0.8);
+            width:26px;
+            height:26px;
+            border-radius:50%;
+            background:radial-gradient(circle at top, #38bdf8, #0f172a);
+            border:1px solid rgba(148,163,184,0.9);
+            background-size:cover;
+            background-position:center;
         }
-        .user-name-label {
-            font-weight: 600;
-            font-size: 13px;
-        }
+        .user-name-label { font-size:13px; }
 
-        .btn-small {
-            border-radius: 999px;
-            border: 1px solid rgba(148,163,184,0.7);
-            padding: 6px 12px;
-            background: radial-gradient(circle at top, rgba(15,23,42,0.9), rgba(15,23,42,0.7));
-            color: #e5e7eb;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: 0.2s;
+        .btn-ctrl {
+            background:linear-gradient(135deg,#4f46e5,#06b6d4);
+            border:none;
+            color:white;
+            padding:10px 16px;
+            border-radius:999px;
+            cursor:pointer;
+            font-size:14px;
+            box-shadow:0 10px 25px rgba(15,23,42,0.9);
         }
-        .btn-small:hover {
-            background: radial-gradient(circle at top, #0ea5e9, #0369a1);
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 0 18px rgba(56,189,248,0.7);
-        }
+        .btn-ctrl:hover { opacity:0.9; }
 
-        .player-logo-rect { 
-            width: 95%; 
-            max-width: 520px; 
-            border-radius: var(--radius); 
-            border: 2px solid rgba(148,163,184,0.6); 
-            margin: 18px 0 20px 0; 
-            box-shadow: 0 18px 45px rgba(15,23,42,0.9);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .player-logo-rect:hover { 
-            transform: translateY(-4px) scale(1.01); 
-            box-shadow: 0 25px 60px rgba(15,23,42,1);
-        }
-
-        .notice-board { 
-            width: 100%; 
-            background: radial-gradient(circle at left, #0ea5e9, #020617); 
-            color: #fef9c3; 
-            padding: 10px 0; 
-            font-weight: bold; 
-            overflow: hidden; 
-            border-top: 1px solid rgba(148,163,184,0.4);
-            border-bottom: 1px solid rgba(148,163,184,0.4);
-            box-shadow: 0 10px 30px rgba(15,23,42,0.9);
-        }
-
-        nav { 
-            background: rgba(15,23,42,0.85); 
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(148,163,184,0.5);
-            width: 95%; 
-            max-width: 900px;
-            display: flex; 
-            justify-content: space-around; 
-            padding: 10px;
-            border-radius: 30px;
-            position: sticky; 
-            top: 90px; 
-            z-index: 1200; 
-            box-shadow: 0 18px 40px rgba(15,23,42,0.9);
-            margin-top: 10px;
-            flex-wrap: wrap;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-        nav a { 
-            color: #e5e7eb; padding: 10px 15px; text-decoration: none; font-weight: 700; 
-            border-radius: 20px; transition: all 0.2s; cursor: pointer;
-            font-size: 14px;
-        }
-        nav a:hover { 
-            background: radial-gradient(circle at top, #0ea5e9, #0369a1); 
-            color: white; 
-            box-shadow: 0 0 18px rgba(56,189,248,0.7);
-        }
-        .btn-admin-open { background: linear-gradient(135deg,#f97316,#ea580c); color: #fff !important; }
-
-        .container { 
-            width: 92%; max-width: 850px; 
-            background: rgba(15,23,42,0.85); 
-            margin: 30px auto; 
-            padding: 30px; 
-            border-radius: var(--radius); 
-            box-shadow: var(--shadow);
-            display: none; 
-            text-align: center; 
-            animation: slideUp 0.6s ease;
-            border: 1px solid rgba(148,163,184,0.5);
-            backdrop-filter: blur(18px);
-            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-        .container.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .section-box { 
-            background: rgba(15,23,42,0.9); 
-            border: 1px solid rgba(148,163,184,0.4); 
-            border-radius: var(--radius); 
-            padding: 25px; 
-            margin-bottom: 25px; 
-            transition: 0.3s;
-            box-shadow: 0 12px 30px rgba(15,23,42,0.9);
-        }
-
-        .section-box:hover {
-            transform: translateY(-2px);
-        }
-
-        .article-card {
-            background: rgba(15,23,42,0.95); 
-            border-right: 6px solid var(--popper-blue);
-            padding: 25px; margin-bottom: 25px; text-align: right;
-            border-radius: 18px; box-shadow: 0 12px 30px rgba(15,23,42,0.9);
-            transition: 0.3s;
-        }
-        .article-card h3 { margin-top: 0; color: #e5e7eb; font-size: 24px; border-bottom: 1px solid rgba(148,163,184,0.4); padding-bottom: 12px; }
-        .article-text { font-size: 18px; line-height: 1.8; color: #cbd5f5; white-space: pre-wrap; }
-
-        .winners-container { 
-            background: radial-gradient(circle at top, #facc15, #f97316); 
-            border: 2px solid #facc15; 
-            border-radius: 25px; 
-            padding: 20px; 
-            margin: 20px 0;
-            box-shadow: 0 18px 40px rgba(250,204,21,0.5);
-            color: #1f2933;
-        }
-        .winner-card {
-            display: flex; align-items: center; justify-content: space-between;
-            background: white; padding: 12px 20px; margin: 8px 0;
-            border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .rank-icon { font-size: 24px; margin-left: 10px; }
-        .winner-name { font-weight: 800; color: #5d4037; font-size: 18px; }
-        .winner-score { background: #f59e0b; color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
-
-        .btn-ctrl { 
-            background: linear-gradient(135deg,#0ea5e9,#22c55e); 
-            color: white; border: none; padding: 14px 25px; 
-            border-radius: 15px; cursor: pointer; font-weight: bold; margin: 5px; transition: 0.2s;
-            box-shadow: 0 10px 25px rgba(34,197,94,0.5);
-        }
-        .btn-ctrl:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 35px rgba(34,197,94,0.7);
-        }
-        .btn-ctrl:active { transform: translateY(1px); box-shadow: 0 6px 18px rgba(34,197,94,0.6); }
-
-        .form-input { 
-            width: 90%; padding: 12px 14px; margin: 10px 0; border-radius: 12px; 
-            border: 1px solid rgba(148,163,184,0.7); 
-            font-family: inherit; outline: none; transition: 0.2s;
-            background: rgba(15,23,42,0.9);
-            color: #e5e7eb;
+        .form-input {
+            width:90%;
+            padding:12px 14px;
+            margin:10px 0;
+            border-radius:12px;
+            border:1px solid rgba(148,163,184,0.7);
+            font-family:inherit;
+            outline:none;
+            transition:0.2s;
+            background:rgba(15,23,42,0.9);
+            color:#e5e7eb;
         }
         .form-input:focus {
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 1px rgba(56,189,248,0.7);
+            border-color:#0ea5e9;
+            box-shadow:0 0 0 1px rgba(56,189,248,0.7);
         }
 
-        #admin-panel { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: radial-gradient(circle at top, #020617, #020617); 
-            z-index: 2000; 
-            overflow-y: auto; 
-            color: #e5e7eb;
+        .winners-container {
+            background:linear-gradient(135deg,#f97316,#fb923c);
+            padding:16px;
+            border-radius:18px;
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+            margin-bottom:20px;
         }
-        .admin-header { 
-            background: radial-gradient(circle at top, #0f172a, #020617); 
-            color: white; 
-            padding: 25px; 
-            text-align: center; 
-            box-shadow: 0 18px 40px rgba(15,23,42,1);
-            position: sticky;
-            top: 0;
-            z-index: 2100;
-        }
-        .admin-section { 
-            background: rgba(15,23,42,0.9); 
-            padding: 30px; 
-            margin: 20px auto; 
-            max-width: 950px; 
-            border-radius: 20px; 
-            box-shadow: 0 18px 40px rgba(15,23,42,1); 
-            border: 1px solid rgba(148,163,184,0.6);
-        }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        .admin-table td { padding: 10px; border-bottom: 1px solid rgba(148,163,184,0.4); text-align: right; }
-
-        .btn-del { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-        .btn-edit { background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer; margin-left: 5px; font-size: 12px; }
-
-        video, audio, iframe { border-radius: 18px; width: 100%; box-shadow: 0 12px 30px rgba(0,0,0,0.6); }
-        .playlist { max-height: 220px; overflow-y: auto; margin-bottom: 20px; text-align: right; }
-
-        .playlist-item {
-            padding: 10px;
-            border-bottom: 1px solid rgba(148,163,184,0.4);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .playlist-item:hover {
-            background: rgba(15,23,42,0.8);
-        }
-        .playlist-item.active {
-            background: rgba(56,189,248,0.15);
-            border-right: 4px solid #0ea5e9;
-        }
-        .playlist-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            background: radial-gradient(circle at top, #38bdf8, #0f172a);
+        .winner-card {
             display:flex;
             align-items:center;
-            justify-content:center;
-            font-size:18px;
+            justify-content:space-between;
+            background:rgba(255,255,255,0.12);
+            padding:8px 10px;
+            border-radius:12px;
+            margin-bottom:6px;
         }
-        .playlist-text {
-            flex:1;
+        .winner-name { font-weight:600; }
+        .winner-score { font-size:13px; }
+        .rank-icon { font-size:18px; margin-left:6px; }
+
+        /* HOME NOTICE BOARD (לוח מודעות בדף הבית) */
+        .home-board-item {
+            background:rgba(15,23,42,0.95);
+            padding:10px;
+            border-radius:10px;
+            margin-bottom:8px;
+            border:1px solid rgba(148,163,184,0.5);
+            font-size:14px;
+        }
+
+        /* ADMIN PANEL */
+        #admin-panel {
+            display:none;
+            position:fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background:radial-gradient(circle at top, #020617, #020617);
+            z-index:2000;
+            overflow-y:auto;
+            color:#e5e7eb;
+        }
+        .admin-header {
+            background:radial-gradient(circle at top, #0f172a, #020617);
+            color:white;
+            padding:25px;
+            text-align:center;
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+            position:sticky;
+            top:0;
+            z-index:2100;
+        }
+        .admin-section {
+            background:rgba(15,23,42,0.9);
+            padding:30px;
+            margin:20px auto;
+            max-width:950px;
+            border-radius:20px;
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+            border:1px solid rgba(148,163,184,0.6);
+        }
+        .admin-table {
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+            font-size:14px;
+        }
+        .admin-table td {
+            padding:10px;
+            border-bottom:1px solid rgba(148,163,184,0.4);
+            text-align:right;
+        }
+        .btn-del {
+            background:#ef4444;
+            color:white;
+            border:none;
+            padding:6px 10px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:12px;
+        }
+        .btn-edit {
+            background:#3b82f6;
+            color:white;
+            border:none;
+            padding:6px 10px;
+            border-radius:8px;
+            cursor:pointer;
+            margin-left:5px;
+            font-size:12px;
         }
 
         /* MODALS */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15,23,42,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2500;
+            position:fixed;
+            inset:0;
+            background:rgba(15,23,42,0.85);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            z-index:2500;
         }
         .modal-box {
-            background: rgba(15,23,42,0.98);
-            padding: 18px 16px;
-            border-radius: 18px;
-            width: 90%;
-            max-width: 380px;
-            box-shadow: 0 18px 40px rgba(15,23,42,1);
-            text-align: center;
-            border: 1px solid rgba(148,163,184,0.7);
-        }
-        .modal-box h2 {
-            margin-top: 0;
-            margin-bottom: 10px;
+            background:rgba(15,23,42,0.98);
+            padding:18px 16px;
+            border-radius:18px;
+            width:90%;
+            max-width:380px;
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+            text-align:center;
+            border:1px solid rgba(148,163,184,0.7);
         }
 
         /* TOAST */
         .toast {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120%);
-            background: rgba(15,23,42,0.98);
-            color: #f9fafb;
-            padding: 8px 14px;
-            border-radius: 999px;
-            font-size: 13px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-            opacity: 0;
-            transition: 0.3s;
-            z-index: 2600;
-            border: 1px solid rgba(148,163,184,0.7);
+            position:fixed;
+            bottom:16px;
+            left:50%;
+            transform:translateX(-50%) translateY(120%);
+            background:rgba(15,23,42,0.98);
+            color:#f9fafb;
+            padding:8px 14px;
+            border-radius:999px;
+            font-size:13px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.7);
+            opacity:0;
+            transition:0.3s;
+            z-index:2600;
+            border:1px solid rgba(148,163,184,0.7);
         }
         .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
+            transform:translateX(-50%) translateY(0);
+            opacity:1;
         }
 
-        /* USER PROFILE CARD */
+        /* PROFILE / PLAYERS */
         .profile-row {
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-            flex-wrap: wrap;
+            display:flex;
+            gap:16px;
+            align-items:flex-start;
+            flex-wrap:wrap;
         }
         .profile-card {
-            flex: 1 1 220px;
-            background: rgba(15,23,42,0.95);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid rgba(148,163,184,0.7);
+            flex:1 1 220px;
+            background:rgba(15,23,42,0.95);
+            border-radius:16px;
+            padding:16px;
+            border:1px solid rgba(148,163,184,0.7);
         }
         .profile-avatar-big {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: radial-gradient(circle at top, #38bdf8, #0f172a);
-            border: 2px solid rgba(148,163,184,0.9);
-            margin-bottom: 8px;
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:radial-gradient(circle at top, #38bdf8, #0f172a);
+            border:2px solid rgba(148,163,184,0.9);
+            margin-bottom:8px;
+            background-size:cover;
+            background-position:center;
         }
         .profile-history {
-            flex: 2 1 260px;
-            max-height: 260px;
-            overflow-y: auto;
-            background: rgba(15,23,42,0.95);
-            border-radius: 16px;
-            padding: 12px;
-            border: 1px solid rgba(148,163,184,0.7);
-            font-size: 13px;
+            flex:2 1 260px;
+            max-height:260px;
+            overflow-y:auto;
+            background:rgba(15,23,42,0.95);
+            border-radius:16px;
+            padding:12px;
+            border:1px solid rgba(148,163,184,0.7);
+            font-size:13px;
         }
         .history-item {
-            padding: 8px 10px;
-            border-radius: 10px;
-            background: rgba(15,23,42,0.9);
-            margin-bottom: 6px;
-            border: 1px solid rgba(148,163,184,0.5);
+            padding:8px 10px;
+            border-radius:10px;
+            background:rgba(15,23,42,0.9);
+            margin-bottom:6px;
+            border:1px solid rgba(148,163,184,0.5);
         }
 
-        /* PLAYERS GRID */
         .players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-            gap: 16px;
-            margin-top: 20px;
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+            gap:16px;
+            margin-top:20px;
         }
         .player-card {
-            background: rgba(15,23,42,0.95);
-            border-radius: 16px;
-            padding: 14px;
-            border: 1px solid rgba(148,163,184,0.7);
-            box-shadow: 0 10px 25px rgba(15,23,42,0.9);
-            text-align: center;
+            background:rgba(15,23,42,0.95);
+            border-radius:16px;
+            padding:14px;
+            border:1px solid rgba(148,163,184,0.7);
+            box-shadow:0 10px 25px rgba(15,23,42,0.9);
+            text-align:center;
         }
         .player-card .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 8px;
-            background: radial-gradient(circle at top, #38bdf8, #0f172a);
-            border: 2px solid rgba(148,163,184,0.9);
+            width:60px;
+            height:60px;
+            border-radius:50%;
+            margin:0 auto 8px;
+            background:radial-gradient(circle at top, #38bdf8, #0f172a);
+            border:2px solid rgba(148,163,184,0.9);
+            background-size:cover;
+            background-position:center;
         }
-        .player-card .name {
-            font-weight: 700;
-            margin-bottom: 4px;
+        .player-card .name { font-weight:700; margin-bottom:4px; }
+        .player-card .score { font-size:13px; color:#a5b4fc; }
+
+        /* ARTICLES */
+        .article-card {
+            background:rgba(15,23,42,0.96);
+            border-radius:16px;
+            padding:14px;
+            margin-bottom:12px;
+            border-right:4px solid #0ea5e9;
+            border:1px solid rgba(148,163,184,0.7);
         }
-        .player-card .score {
-            font-size: 13px;
-            color: #a5b4fc;
+        .article-card h3 { margin:0 0 6px; }
+        .article-text { font-size:14px; color:#e5e7eb; }
+
+        /* MUSIC PLAYER PAGE */
+        .music-layout {
+            display:grid;
+            grid-template-columns: minmax(0,2fr) minmax(0,3fr);
+            gap:18px;
+        }
+        @media (max-width:800px) {
+            .music-layout { grid-template-columns:1fr; }
+        }
+        .music-playlists {
+            background:rgba(15,23,42,0.96);
+            border-radius:18px;
+            padding:14px;
+            border:1px solid rgba(148,163,184,0.7);
+            max-height:420px;
+            overflow-y:auto;
+        }
+        .playlist-item-row {
+            padding:8px 10px;
+            border-radius:10px;
+            margin-bottom:6px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            background:rgba(15,23,42,0.9);
+            border:1px solid transparent;
+        }
+        .playlist-item-row.active {
+            border-color:#38bdf8;
+            background:rgba(15,23,42,0.95);
+        }
+        .playlist-name {
+            font-weight:600;
+            font-size:14px;
+        }
+        .playlist-count {
+            font-size:12px;
+            color:#9ca3af;
         }
 
-        /* LIGHT MODE OVERRIDES */
+        .music-player-box {
+            background:radial-gradient(circle at top, #0b1120, #020617);
+            border-radius:18px;
+            padding:18px;
+            border:1px solid rgba(148,163,184,0.7);
+            box-shadow:0 18px 40px rgba(15,23,42,1);
+        }
+        .music-main {
+            display:flex;
+            gap:16px;
+            flex-wrap:wrap;
+            align-items:center;
+        }
+        .music-cover {
+            width:140px;
+            height:140px;
+            border-radius:18px;
+            background:radial-gradient(circle at top, #38bdf8, #0f172a);
+            box-shadow:0 12px 30px rgba(0,0,0,0.8);
+            background-size:cover;
+            background-position:center;
+        }
+        .music-info {
+            flex:1 1 200px;
+        }
+        .music-title {
+            font-size:20px;
+            font-weight:700;
+            margin-bottom:4px;
+        }
+        .music-sub {
+            font-size:13px;
+            color:#9ca3af;
+            margin-bottom:10px;
+        }
+        .music-controls {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .music-btn-round {
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            border:none;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,#4f46e5,#06b6d4);
+            color:white;
+            box-shadow:0 10px 25px rgba(15,23,42,0.9);
+            font-size:18px;
+        }
+        .music-btn-small {
+            border-radius:999px;
+            border:none;
+            padding:6px 10px;
+            font-size:12px;
+            cursor:pointer;
+            background:rgba(15,23,42,0.9);
+            color:#e5e7eb;
+            border:1px solid rgba(148,163,184,0.7);
+        }
+        .music-progress {
+            margin-top:12px;
+        }
+        .music-progress input[type="range"] {
+            width:100%;
+        }
+        .music-tracklist {
+            margin-top:16px;
+            max-height:220px;
+            overflow-y:auto;
+        }
+        .music-track-row {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:8px 10px;
+            border-radius:10px;
+            margin-bottom:6px;
+            cursor:pointer;
+            background:rgba(15,23,42,0.9);
+            border:1px solid transparent;
+        }
+        .music-track-row.active {
+            border-color:#38bdf8;
+            background:rgba(15,23,42,0.95);
+        }
+        .music-track-thumb {
+            width:40px;
+            height:40px;
+            border-radius:10px;
+            background:radial-gradient(circle at top, #38bdf8, #0f172a);
+            background-size:cover;
+            background-position:center;
+        }
+        .music-track-title {
+            font-size:14px;
+            font-weight:500;
+        }
+        .music-track-type {
+            font-size:11px;
+            color:#9ca3af;
+        }
+
+        video, audio {
+            border-radius:18px;
+            width:100%;
+            box-shadow:0 12px 30px rgba(0,0,0,0.6);
+        }
+
+        /* LIGHT MODE */
         body.light-mode {
-            background: #f4f4f4;
-            color: #1a1a1a;
+            background:#f4f4f4;
+            color:#1a1a1a;
         }
         body.light-mode header {
-            background: linear-gradient(135deg,#ffffff,#e5e7eb);
+            background:linear-gradient(135deg,#ffffff,#e5e7eb);
             color:#111827;
             box-shadow:0 10px 25px rgba(15,23,42,0.25);
         }
-        body.light-mode .live-tag {
-            box-shadow:0 0 12px rgba(248,113,113,0.6);
-        }
         body.light-mode nav {
-            background: rgba(255,255,255,0.9);
-            border-color: rgba(148,163,184,0.4);
+            background:rgba(255,255,255,0.9);
+            border-color:rgba(148,163,184,0.4);
         }
-        body.light-mode nav a {
-            color:#111827;
-        }
+        body.light-mode nav a { color:#111827; }
         body.light-mode .container,
         body.light-mode .section-box {
-            background: rgba(255,255,255,0.9) !important;
-            color: #111827 !important;
-            border-color: rgba(148,163,184,0.4) !important;
+            background:rgba(255,255,255,0.9) !important;
+            color:#111827 !important;
+            border-color:rgba(148,163,184,0.4) !important;
         }
         body.light-mode .article-card {
             background:#ffffff !important;
             border-right-color:#0ea5e9;
             color:#111827;
         }
-        body.light-mode .article-text {
-            color:#1f2937;
-        }
+        body.light-mode .article-text { color:#1f2937; }
         body.light-mode .profile-card,
         body.light-mode .profile-history,
         body.light-mode .player-card {
@@ -517,10 +580,10 @@
             border-color:rgba(148,163,184,0.7);
         }
         body.light-mode .btn-ctrl {
-            background: linear-gradient(135deg,#4f46e5,#06b6d4);
+            background:linear-gradient(135deg,#4f46e5,#06b6d4);
         }
         body.light-mode .user-info {
-            background: rgba(255,255,255,0.9);
+            background:rgba(255,255,255,0.9);
             border-color:rgba(148,163,184,0.7);
         }
         body.light-mode .modal-box {
@@ -532,19 +595,54 @@
             color:#f9fafb;
         }
         body.light-mode .notice-board {
-            background: linear-gradient(90deg,#0ea5e9,#38bdf8);
+            background:linear-gradient(90deg,#0ea5e9,#38bdf8);
             color:#111827;
         }
+        body.light-mode .music-player-box {
+            background:#ffffff;
+        }
+        body.light-mode .music-playlists {
+            background:#ffffff;
+        }
+        body.light-mode .music-track-row,
+        body.light-mode .playlist-item-row {
+            background:#f9fafb;
+        }
 
-        @media (max-width: 600px) {
-            .header-inner { flex-direction: column; align-items: flex-start; }
-            nav { top: 110px; }
+        @media (max-width:600px) {
+            .header-inner { flex-direction:column; align-items:flex-start; }
+            nav { top:110px; }
+        }
+
+        /* SPLASH */
+        #splash {
+            position:fixed;
+            inset:0;
+            background:radial-gradient(circle at top, #0f172a, #020617);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            z-index:3000;
+            color:white;
+        }
+        .splash-logo {
+            font-size:60px;
+            margin-bottom:10px;
+        }
+        .splash-title {
+            font-size:32px;
+            font-weight:700;
+            margin-bottom:6px;
+        }
+        .splash-sub {
+            font-size:14px;
+            color:#cbd5f5;
         }
     </style>
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
     <div class="splash-logo">🎈</div>
     <div class="splash-title">קול פופר</div>
@@ -570,7 +668,6 @@
 
 <img src="logo.png" class="player-logo-rect" alt="לוגו קול פופר">
 
-<!-- פס מודעות רץ בכל האתר -->
 <div class="notice-board">
     <marquee id="notice-display" scrollamount="8">טוען הודעות...</marquee>
 </div>
@@ -580,83 +677,120 @@
     <a onclick="showPage('torah')">📜 דברי תורה</a>
     <a onclick="showPage('riddles')">🧩 חידות</a>
     <a onclick="showPage('jokes')">🤣 בדיחות</a>
+    <a onclick="showPage('player')">🎵 נגן מוזיקה</a>
     <a onclick="showPage('contact')">📱 צור קשר</a>
     <a onclick="showPage('players-page')">🎮 לוח שחקנים</a>
     <a onclick="adminCheck()" class="btn-admin-open">⚙️ ניהול</a>
 </nav>
 
+<!-- HOME -->
 <div id="home" class="container active">
-    <!-- נגן מוזיקה מאוחד -->
-    <div class="section-box" style="background:#020617;">
-        <h3 style="margin-top:0; margin-bottom:10px;">🎵 נגן קול פופר</h3>
-        <div id="media-player-main" style="margin-bottom:15px; min-height:220px; display:flex; align-items:center; justify-content:center; background:rgba(15,23,42,0.9); border-radius:18px; padding:10px;">
-            טוען נגן...
-        </div>
-        <div style="margin-top:10px;">
-            <button class="btn-ctrl" onclick="moveMedia(-1)">⏮ הקודם</button>
-            <button class="btn-ctrl" onclick="moveMedia(1)">הבא ⏭</button>
-        </div>
-    </div>
-    <div class="playlist" id="media-list"></div>
-
-    <!-- לוח מודעות בדף הבית בלבד -->
-    <div class="section-box" id="notice-board-box" style="background:#0b1120;">
-        <h3 style="margin-top:0;">📢 לוח מודעות</h3>
-        <div id="notice-board-list" style="text-align:right;"></div>
-    </div>
-
     <div class="winners-container">
-        <h3 style="color: #1f2937; margin-top:0;">🏆 אלופי קול פופר</h3>
+        <h3 style="color:#1f2937;margin-top:0;">🏆 אלופי קול פופר</h3>
         <div id="winners-list-home"></div>
     </div>
 
-    <div style="margin: 30px 0;">
-        <button onclick="addLike()" style="font-size:55px; background:none; border:none; cursor:pointer; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));">❤️</button> 
-        <div id="likes" style="font-size:32px; font-weight:bold; color: #f97316;">0</div>
+    <div style="margin:30px 0; text-align:center;">
+        <button onclick="addLike()" style="font-size:55px; background:none; border:none; cursor:pointer; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));">❤️</button>
+        <div id="likes" style="font-size:32px; font-weight:bold; color:#f97316;">0</div>
     </div>
 
     <div class="section-box" style="background:#022c22;">
-        <h3 style="color: #bbf7d0;">💬 תגובות הגולשים</h3>
+        <h3 style="color:#bbf7d0;">💬 תגובות הגולשים</h3>
         <div id="comm-list" style="max-height:250px; overflow-y:auto; margin-bottom:20px;"></div>
         <input id="c-n" class="form-input" placeholder="השם שלך" style="width:40%;">
         <input id="c-t" class="form-input" placeholder="מה תרצה לכתוב?" style="width:90%;">
         <button class="btn-ctrl" onclick="postComm()" style="width:90%;">שלח תגובה 🚀</button>
     </div>
+
+    <div class="section-box">
+        <h3>📢 לוח מודעות</h3>
+        <div id="home-board-list"></div>
+    </div>
 </div>
 
+<!-- TORAH -->
 <div id="torah" class="container">
-    <h2 style="font-size: 35px; color: #38bdf8; margin-bottom: 25px;">📜 דברי תורה וכתבות</h2>
+    <h2 style="font-size:35px; color:#38bdf8; margin-bottom:25px;">📜 דברי תורה וכתבות</h2>
     <div id="articles-display">טוען תוכן...</div>
 </div>
 
+<!-- RIDDLES -->
 <div id="riddles" class="container">
     <div class="section-box" style="background:#0b1120;">
-        <h2 style="color: #38bdf8;">🔍 החידה היומית</h2>
-        <p id="daily-q-text" style="font-size:22px; font-weight:bold; color: #e5e7eb;"></p>
+        <h2 style="color:#38bdf8;">🔍 החידה היומית</h2>
+        <p id="daily-q-text" style="font-size:22px; font-weight:bold; color:#e5e7eb;"></p>
         <input id="ans-n" class="form-input" placeholder="שם">
         <input id="ans-t" class="form-input" placeholder="הפתרון שלך">
         <button class="btn-ctrl" onclick="sendAns()" style="width:100%;">שלח פתרון</button>
     </div>
-    
+
     <div class="section-box" style="background:#111827;">
-        <h2 style="color: #f97316;">🧠 חידון הכוכבים</h2>
+        <h2 style="color:#f97316;">🧠 חידון הכוכבים</h2>
         <div id="stars" style="font-size:30px;"></div>
         <p id="q-display" style="font-size:24px; min-height:60px;"></p>
         <div id="q-opts"></div>
     </div>
 
     <div class="winners-container">
-        <h3 style="color: #1f2937; margin-top:0;">🏆 טבלת המנצחים</h3>
+        <h3 style="color:#1f2937;margin-top:0;">🏆 טבלת המנצחים</h3>
         <div id="winners-list-riddles"></div>
     </div>
 </div>
 
+<!-- JOKES -->
 <div id="jokes" class="container">
-    <h2 style="font-size: 35px;">🤣 רגע של צחוק</h2>
+    <h2 style="font-size:35px;">🤣 רגע של צחוק</h2>
     <div id="j-display" class="section-box" style="font-size:28px; line-height:1.6; min-height:150px; display:flex; align-items:center; justify-content:center;">טוען בדיחה...</div>
-    <button class="btn-ctrl" onclick="moveJoke(1)" style="padding: 20px 40px; font-size: 20px;">הבא בתור! ⏭</button>
+    <button class="btn-ctrl" onclick="move('joke',1)" style="padding:20px 40px; font-size:20px;">הבא בתור! ⏭</button>
 </div>
 
+<!-- MUSIC PLAYER PAGE -->
+<div id="player" class="container">
+    <h2 style="font-size:32px; margin-bottom:10px;">🎵 נגן המוזיקה של קול פופר</h2>
+    <p style="font-size:14px; color:#a5b4fc; margin-bottom:18px;">בחר פלייליסט, בחר שיר, ותן למוזיקה לעבוד.</p>
+
+    <div class="music-layout">
+        <div class="music-playlists">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-weight:600;">📚 פלייליסטים</span>
+            </div>
+            <div id="music-playlists-list"></div>
+        </div>
+
+        <div class="music-player-box">
+            <div class="music-main">
+                <div class="music-cover" id="music-cover"></div>
+                <div class="music-info">
+                    <div class="music-title" id="music-title">בחר שיר להתחלה</div>
+                    <div class="music-sub" id="music-sub">אין שיר מנוגן כרגע</div>
+                    <div class="music-controls">
+                        <button class="music-btn-round" onclick="musicPrev()">⏮</button>
+                        <button class="music-btn-round" onclick="musicTogglePlay()" id="music-play-btn">▶️</button>
+                        <button class="music-btn-round" onclick="musicNext()">⏭</button>
+                        <button class="music-btn-small" onclick="musicToggleShuffle()" id="music-shuffle-btn">🔀 רגיל</button>
+                        <button class="music-btn-small" onclick="musicToggleRepeat()" id="music-repeat-btn">🔁 רגיל</button>
+                    </div>
+                    <div class="music-progress">
+                        <input type="range" min="0" max="100" value="0" id="music-progress-range" oninput="musicSeek(this.value)">
+                        <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; margin-top:2px;">
+                            <span id="music-time-current">00:00</span>
+                            <span id="music-time-total">00:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:14px;">
+                <div id="music-media-container"></div>
+            </div>
+
+            <div class="music-tracklist" id="music-tracklist"></div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACT -->
 <div id="contact" class="container">
     <h2>📱 דברו איתנו</h2>
     <div class="section-box">
@@ -675,7 +809,7 @@
 
 <!-- PROFILE PAGE -->
 <div id="profile-page" class="container">
-    <h2 style="font-size: 32px; margin-bottom: 20px;">👤 הפרופיל שלי</h2>
+    <h2 style="font-size:32px; margin-bottom:20px;">👤 הפרופיל שלי</h2>
     <div id="profile-page-content">
         <div>טוען פרופיל...</div>
     </div>
@@ -683,11 +817,12 @@
 
 <!-- PLAYERS PAGE -->
 <div id="players-page" class="container">
-    <h2 style="font-size: 32px; margin-bottom: 10px;">🎮 לוח שחקנים</h2>
+    <h2 style="font-size:32px; margin-bottom:10px;">🎮 לוח שחקנים</h2>
     <p style="font-size:14px; color:#a5b4fc;">רשימת כל השחקנים הרשומים וניקוד החידונים שלהם</p>
     <div id="players-page-content"></div>
 </div>
 
+<!-- ADMIN PANEL -->
 <div id="admin-panel">
     <div class="admin-header">
         <h1>⚙️ מרכז השליטה - קול פופר</h1>
@@ -739,13 +874,28 @@
             <div id="adm-jokes"></div>
         </div>
 
-        <!-- ניהול מוזיקה מאוחד -->
+        <!-- NEW: MUSIC PLAYLISTS + MEDIA -->
         <div class="admin-section">
-            <h3>🎵 ניהול מוזיקה / וידאו / YouTube (מאוחד)</h3>
-            <input id="adm-m-name" class="form-input" placeholder="שם השיר / הסרטון">
-            <input id="adm-m-url" class="form-input" placeholder="קישור (MP3 / MP4 / YouTube)">
-            <button class="btn-ctrl" onclick="addMusicItem()">הוסף לרשימת הנגן</button>
-            <div id="adm-music"></div>
+            <h3>🎚 ניהול פלייליסטים לנגן (MP3 / MP4 / YouTube)</h3>
+            <input id="adm-pl-name" class="form-input" placeholder="שם פלייליסט חדש">
+            <button class="btn-ctrl" onclick="addPlaylist()">הוסף פלייליסט</button>
+            <div id="adm-playlists"></div>
+        </div>
+
+        <div class="admin-section">
+            <h3>🎵 ניהול שירים / סרטונים לנגן</h3>
+            <select id="adm-media-pl-select" class="form-input" style="width:95%;"></select>
+            <input id="adm-media-title" class="form-input" placeholder="שם השיר / הסרטון">
+            <select id="adm-media-type" class="form-input" style="width:95%;">
+                <option value="">סוג מדיה</option>
+                <option value="audio">MP3 / אודיו</option>
+                <option value="video">MP4 / וידאו</option>
+                <option value="youtube">YouTube</option>
+            </select>
+            <input id="adm-media-url" class="form-input" placeholder="קישור (URL) למדיה">
+            <input id="adm-media-img" class="form-input" placeholder="קישור לתמונת קאבר (לא חובה)">
+            <button class="btn-ctrl" onclick="addMediaItem()">הוסף למדיה</button>
+            <div id="adm-media-items"></div>
         </div>
 
         <div class="admin-section">
@@ -755,30 +905,28 @@
             <div id="adm-riddles"></div>
         </div>
 
-        <!-- פס מודעות -->
         <div class="admin-section">
-            <h3>📢 פס מודעות (רץ בכל האתר)</h3>
-            <input id="adm-nbar-t" class="form-input" placeholder="תוכן המודעה לפס הרץ">
-            <button class="btn-ctrl" onclick="addItem('notices_bar', {text: document.getElementById('adm-nbar-t').value}, 'adm-nbar-t')">הוסף לפס מודעות</button>
-            <div id="adm-notices-bar"></div>
-        </div>
-
-        <!-- לוח מודעות -->
-        <div class="admin-section">
-            <h3>📋 לוח מודעות (בדף הבית)</h3>
-            <input id="adm-nboard-t" class="form-input" placeholder="תוכן המודעה ללוח">
-            <button class="btn-ctrl" onclick="addItem('notices_board', {text: document.getElementById('adm-nboard-t').value}, 'adm-nboard-t')">הוסף ללוח מודעות</button>
-            <div id="adm-notices-board"></div>
+            <h3>📢 פס מודעות רץ (11 - למעלה בכל האתר)</h3>
+            <input id="adm-n-t" class="form-input" placeholder="תוכן המודעה">
+            <button class="btn-ctrl" onclick="addItem('notices', {text: document.getElementById('adm-n-t').value}, 'adm-n-t')">הוסף לפס מודעות</button>
+            <div id="adm-notices"></div>
         </div>
 
         <div class="admin-section">
-            <h3>🎵 רשימת שירים לבחירה (12)</h3>
+            <h3>📋 לוח מודעות בדף הבית</h3>
+            <input id="adm-hb-t" class="form-input" placeholder="תוכן מודעה ללוח בדף הבית">
+            <button class="btn-ctrl" onclick="addItem('home_board', {text: document.getElementById('adm-hb-t').value}, 'adm-hb-t')">הוסף ללוח הבית</button>
+            <div id="adm-home-board"></div>
+        </div>
+
+        <div class="admin-section">
+            <h3>🎵 רשימת שירים לבקשות מאזינים (12)</h3>
             <input id="adm-rs-n" class="form-input" placeholder="שם שיר להוספה לרשימה">
             <button class="btn-ctrl" onclick="addItem('request_songs_list', {name: document.getElementById('adm-rs-n').value}, 'adm-rs-n')">הוסף שיר לרשימה</button>
             <div id="adm-req"></div>
         </div>
 
-        <!-- ניהול משתמשים -->
+        <!-- USERS -->
         <div class="admin-section" style="border-color:#22c55e;">
             <h3>👥 ניהול משתמשים</h3>
             <div id="admin-users-table"></div>
@@ -830,32 +978,45 @@
 <div class="toast" id="toast"></div>
 
 <script>
-    const firebaseConfig = { 
-        apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA", 
-        databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com", 
-        projectId: "kolpopper-46", 
-        appId: "1:205439458089:web:54efeaaa1aae748fc7b538" 
+    const firebaseConfig = {
+        apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
+        databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
+        projectId: "kolpopper-46",
+        appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
     };
-    firebase.initializeApp(firebaseConfig); 
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const auth = firebase.auth();
-    
-    let data = { 
-        music_list:[], 
-        jokes_list:[], 
-        inbox:[], 
-        daily_riddle:[], 
-        quiz_questions:[], 
-        winners:[], 
-        notices_bar:[], 
-        notices_board:[], 
-        request_songs_list:[], 
-        articles_list:[] 
+
+    let data = {
+        jokes_list:[],
+        inbox:[],
+        daily_riddle:[],
+        quiz_questions:[],
+        winners:[],
+        notices:[],
+        home_board:[],
+        request_songs_list:[],
+        articles_list:[],
+        playlists:[],
+        media_items:[]
     };
-    let cur = { media:0, joke:0 };
+    let cur = { joke:0 };
     let sitePassword = "1234";
     let currentUser = null;
     let usersMap = {};
+
+    // MUSIC STATE
+    let musicState = {
+        playlistId: null,
+        trackIndex: 0,
+        shuffle: false,
+        repeat: false,
+        currentList: [],
+        audioEl: null,
+        videoEl: null,
+        type: null
+    };
 
     // SPLASH
     window.addEventListener("load", () => {
@@ -865,7 +1026,7 @@
         }, 2500);
     });
 
-    // THEME LOAD
+    // THEME
     document.addEventListener("DOMContentLoaded", () => {
         const savedTheme = localStorage.getItem("theme");
         const btn = document.getElementById("theme-toggle");
@@ -891,16 +1052,16 @@
         }
     }
 
-    function sync(p) { 
-        db.ref(p).on('value', s => { 
-            let v = s.val(); 
-            data[p] = v ? Object.values(v) : []; 
-            data[p+'_k'] = v ? Object.keys(v) : []; 
-            render(); 
-            renderAdmin(); 
-        }); 
+    function sync(p) {
+        db.ref(p).on('value', s => {
+            let v = s.val();
+            data[p] = v ? Object.values(v) : [];
+            data[p + '_k'] = v ? Object.keys(v) : [];
+            render();
+            renderAdmin();
+        });
     }
-    ['music_list','jokes_list','inbox','daily_riddle','quiz_questions','winners','notices_bar','notices_board','request_songs_list','articles_list'].forEach(sync);
+    ['jokes_list','inbox','daily_riddle','quiz_questions','winners','notices','home_board','request_songs_list','articles_list','playlists','media_items'].forEach(sync);
 
     db.ref('users').on('value', s => {
         usersMap = s.val() || {};
@@ -915,153 +1076,69 @@
         if(el) el.innerText = s.val() || 0;
     });
 
-    function showPage(p) { 
-        document.querySelectorAll('.container').forEach(c=>c.classList.remove('active')); 
-        document.getElementById(p).classList.add('active'); 
-        window.scrollTo(0,0); 
+    function showPage(p) {
+        document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
+        const el = document.getElementById(p);
+        if(el) el.classList.add('active');
+        window.scrollTo(0,0);
         if(p === 'profile-page') renderProfilePage();
         if(p === 'players-page') renderPlayersPage();
+        if(p === 'player') renderMusicPage();
     }
 
-    function detectMediaType(url) {
-        if(!url) return 'mp3';
-        const u = url.toLowerCase();
-        if(u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
-        if(u.match(/\.mp4(\?|$)/)) return 'mp4';
-        if(u.match(/\.mp3(\?|$)/)) return 'mp3';
-        return 'mp3';
-    }
-
-    function moveMedia(d) {
-        const l = data.music_list;
+    function move(p,d) {
+        let l = data[p+'_list'] || data[p+'s_list'];
         if(l && l.length){
-            cur.media = (cur.media + d + l.length) % l.length;
-            renderMediaPlayer();
-        }
-    }
-
-    function moveJoke(d) {
-        const l = data.jokes_list;
-        if(l && l.length){
-            cur.joke = (cur.joke + d + l.length) % l.length;
+            cur[p]=(cur[p]+d+l.length)%l.length;
             render();
         }
     }
 
-    function renderMediaPlayer() {
-        const list = data.music_list || [];
-        const main = document.getElementById('media-player-main');
-        const listEl = document.getElementById('media-list');
-        if(!main || !listEl) return;
-
-        if(!list.length) {
-            main.innerHTML = "אין פריטים בנגן כרגע.";
-            listEl.innerHTML = "";
-            return;
-        }
-
-        if(cur.media >= list.length) cur.media = 0;
-        const item = list[cur.media];
-        const type = item.type || detectMediaType(item.url);
-
-        let html = "";
-        if(type === 'youtube') {
-            const vidId = extractYouTubeId(item.url);
-            if(vidId) {
-                html = `<iframe src="https://www.youtube.com/embed/${vidId}" frameborder="0" allowfullscreen></iframe>`;
-            } else {
-                html = "קישור YouTube לא תקין.";
-            }
-        } else if(type === 'mp4') {
-            html = `<video controls src="${item.url}"></video>`;
-        } else {
-            html = `<audio controls src="${item.url}"></audio>`;
-        }
-        main.innerHTML = html;
-
-        listEl.innerHTML = list.map((m,i)=>{
-            const t = m.type || detectMediaType(m.url);
-            let icon = '🎵';
-            if(t === 'youtube') icon = '▶️';
-            else if(t === 'mp4') icon = '🎬';
-            else if(t === 'mp3') icon = '🎧';
-            return `
-                <div class="playlist-item ${i===cur.media?'active':''}" onclick="cur.media=${i};renderMediaPlayer()">
-                    <div class="playlist-icon">${icon}</div>
-                    <div class="playlist-text">${m.name || 'ללא שם'}</div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function extractYouTubeId(url) {
-        if(!url) return "";
-        try {
-            const u = new URL(url);
-            if(u.hostname.includes('youtu.be')) {
-                return u.pathname.replace('/','');
-            }
-            if(u.searchParams.get('v')) {
-                return u.searchParams.get('v');
-            }
-            if(u.pathname.startsWith('/embed/')) {
-                return u.pathname.split('/embed/')[1];
-            }
-        } catch(e) {}
-        return "";
-    }
-
     function render() {
-        // נגן מוזיקה
-        renderMediaPlayer();
-
-        // בדיחות
+        // JOKES
         if(data.jokes_list.length) {
-            const j = document.getElementById('j-display');
-            if(j) j.innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
+            const jd = document.getElementById('j-display');
+            if(jd) jd.innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
         }
 
-        // פס מודעות
-        const barText = data.notices_bar.length ? data.notices_bar.map(n=>n.text).join('   ★   ') : "ברוכים הבאים לקול פופר!";
+        // TOP NOTICE BAR
         const nd = document.getElementById('notice-display');
-        if(nd) nd.innerText = barText;
+        if(nd) nd.innerText = data.notices.length ? data.notices.map(n=>n.text).join('   ★   ') : "ברוכים הבאים לקול פופר!";
 
-        // לוח מודעות בדף הבית
-        const boardEl = document.getElementById('notice-board-list');
-        if(boardEl) {
-            if(data.notices_board.length) {
-                boardEl.innerHTML = data.notices_board.map(n=>`
-                    <div style="background:rgba(15,23,42,0.95); padding:10px; border-radius:10px; margin-bottom:8px; border:1px solid rgba(148,163,184,0.5);">
-                        ${n.text}
-                    </div>
-                `).join('');
-            } else {
-                boardEl.innerHTML = "<div>אין מודעות כרגע.</div>";
-            }
-        }
-
-        // רשימת שירים לבקשות
+        // REQUEST SONGS SELECT
         let rSelect = document.getElementById('req-song-select');
         if(rSelect) {
             rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
         }
 
-        // חידה יומית
+        // DAILY RIDDLE
         if(data.daily_riddle.length) {
             const dq = document.getElementById('daily-q-text');
             if(dq) dq.innerText = data.daily_riddle[data.daily_riddle.length-1].text;
         }
 
-        // כתבות
-        const art = document.getElementById('articles-display');
-        if(art) {
-            art.innerHTML = data.articles_list.length ? 
-                data.articles_list.map(a => `<div class="article-card"><h3>${a.title}</h3><div class="article-text">${a.text}</div></div>`).reverse().join('') : 
+        // ARTICLES
+        const ad = document.getElementById('articles-display');
+        if(ad) {
+            ad.innerHTML = data.articles_list.length ?
+                data.articles_list.map(a => `<div class="article-card"><h3>${a.title}</h3><div class="article-text">${a.text}</div></div>`).reverse().join('') :
                 "אין תוכן כרגע.";
         }
 
+        // WINNERS
         renderWinners('winners-list-home');
         renderWinners('winners-list-riddles');
+
+        // HOME BOARD
+        const hb = document.getElementById('home-board-list');
+        if(hb) {
+            hb.innerHTML = data.home_board.length ?
+                data.home_board.map(n=>`<div class="home-board-item">${n.text}</div>`).join('') :
+                "<div class='home-board-item'>אין הודעות כרגע.</div>";
+        }
+
+        // MUSIC PAGE
+        renderMusicPage();
     }
 
     function renderWinners(id) {
@@ -1079,41 +1156,41 @@
 
     function addLike() { db.ref('likes').transaction(c=>(c||0)+1); }
 
-    function postComm() { 
-        let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value; 
-        if(n&&t){ 
-            db.ref('comments').push({name:n, text:t, time:Date.now()}); 
-            document.getElementById('c-t').value=""; 
-        } 
+    function postComm() {
+        let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value;
+        if(n&&t){
+            db.ref('comments').push({name:n, text:t, time:Date.now()});
+            document.getElementById('c-t').value="";
+        }
     }
 
     function sendInb(type) {
         let n = document.getElementById(type==='message'?'con-n':'req-n').value;
         let c = type==='message'?document.getElementById('con-m').value:document.getElementById('req-song-select').value;
-        if(n && c) { 
-            db.ref('inbox').push({sender:n, content: (type==='message'?"הודעה: ":"בקשת שיר: ")+c, time:Date.now()}); 
-            showToast('נשלח לאולפן 🎙️'); 
+        if(n && c) {
+            db.ref('inbox').push({sender:n, content: (type==='message'?"הודעה: ":"בקשת שיר: ")+c, time:Date.now()});
+            showToast('נשלח לאולפן 🎙️');
             if(type==='message') document.getElementById('con-m').value = "";
         }
     }
 
-    function sendAns() { 
-        let n=document.getElementById('ans-n').value, t=document.getElementById('ans-t').value; 
-        if(n&&t){ 
-            db.ref('inbox').push({sender:n, content:"פתרון חידה: "+t, time:Date.now()}); 
-            showToast('הפתרון נשלח! 🧠'); 
-            document.getElementById('ans-t').value=""; 
-        } 
+    function sendAns() {
+        let n=document.getElementById('ans-n').value, t=document.getElementById('ans-t').value;
+        if(n&&t){
+            db.ref('inbox').push({sender:n, content:"פתרון חידה: "+t, time:Date.now()});
+            showToast('הפתרון נשלח! 🧠');
+            document.getElementById('ans-t').value="";
+        }
     }
 
     let qIdx=0, stars=0;
     function doQuiz() {
         if(!data.quiz_questions.length) return;
         let q = data.quiz_questions[qIdx];
-        if(!q) { 
+        if(!q) {
             let nameForTable = currentUser ? currentUser.username : prompt("כל הכבוד! שמך לטבלת הזוכים:");
             if(nameForTable) db.ref('winners').push({name:nameForTable, score:stars});
-            
+
             if(currentUser && auth.currentUser) {
                 const uid = auth.currentUser.uid;
                 const entry = {
@@ -1129,30 +1206,28 @@
                 renderPlayersPage();
             }
 
-            qIdx=0; 
-            stars=0; 
+            qIdx=0;
+            stars=0;
             document.getElementById('stars').innerText = "";
             document.getElementById('q-display').innerText = "לחץ על שאלה חדשה כדי להתחיל שוב!";
             document.getElementById('q-opts').innerHTML = `<button class="btn-ctrl" onclick="doQuiz()">התחל חידון מחדש</button>`;
-            return; 
+            return;
         }
         document.getElementById('stars').innerText = "⭐".repeat(stars);
         document.getElementById('q-display').innerText = q.q;
         document.getElementById('q-opts').innerHTML = q.options.map((o,i)=>`<button class="btn-ctrl" style="width:100%" onclick="ansQuiz(${i===0})">${o}</button>`).sort(()=>Math.random()-0.5).join('');
     }
 
-    function ansQuiz(isC) { 
-        if(isC) {
-            stars++;
-        }
-        qIdx++; 
-        doQuiz(); 
+    function ansQuiz(isC) {
+        if(isC) stars++;
+        qIdx++;
+        doQuiz();
     }
     setTimeout(doQuiz, 2000);
 
-    function adminCheck() { 
-        let p = prompt("סיסמת מנהל:"); 
-        if(p===sitePassword) document.getElementById('admin-panel').style.display='block'; 
+    function adminCheck() {
+        let p = prompt("סיסמת מנהל:");
+        if(p===sitePassword) document.getElementById('admin-panel').style.display='block';
     }
 
     function renderAdmin() {
@@ -1160,12 +1235,14 @@
         tbl('quiz_questions', 'adm-quiz', i => i.q);
         tbl('winners', 'adm-winners', i => `${i.name} (${i.score})`);
         tbl('jokes_list', 'adm-jokes', i => i.text.substring(0,30));
-        tbl('music_list', 'adm-music', i => `${i.name} (${detectMediaType(i.url)})`);
         tbl('daily_riddle', 'adm-riddles', i => i.text);
-        tbl('notices_bar', 'adm-notices-bar', i => i.text);
-        tbl('notices_board', 'adm-notices-board', i => i.text);
+        tbl('notices', 'adm-notices', i => i.text);
+        tbl('home_board', 'adm-home-board', i => i.text);
         tbl('request_songs_list', 'adm-req', i => i.name);
         tbl('articles_list', 'adm-articles', i => i.title);
+
+        renderAdminPlaylists();
+        renderAdminMediaItems();
     }
 
     function tbl(path, target, formatFn) {
@@ -1182,12 +1259,11 @@
 
     function delItem(p,k) { if(confirm('למחוק?')) db.ref(p+'/'+k).remove(); }
 
-    function addItem(p,d,ids) { 
+    function addItem(p,d,ids) {
         if(!d) return;
-        if(!d.text && !d.name && !d.url && !d.title) return;
-        db.ref(p).push(d); 
-        if(Array.isArray(ids)) ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; }); 
-        else { const el=document.getElementById(ids); if(el) el.value=""; } 
+        db.ref(p).push(d);
+        if(Array.isArray(ids)) ids.forEach(id=>document.getElementById(id).value="");
+        else document.getElementById(ids).value="";
     }
 
     function resetData(p,l) { if(confirm('לאפס את '+l+'?')) db.ref(p).remove(); }
@@ -1204,67 +1280,42 @@
         }
     }
 
-    function addMusicItem() {
-        const name = document.getElementById('adm-m-name').value.trim();
-        const url = document.getElementById('adm-m-url').value.trim();
-        if(!name || !url) {
-            showToast("נא למלא שם וקישור");
-            return;
-        }
-        const type = detectMediaType(url);
-        db.ref('music_list').push({name, url, type});
-        document.getElementById('adm-m-name').value = "";
-        document.getElementById('adm-m-url').value = "";
-    }
-
     function editItem(p, k) {
         let ref = db.ref(p+'/'+k);
         ref.once('value', s => {
             let v = s.val();
-            if(p === 'music_list') {
-                let n = prompt("שם:", v.name || "");
-                let u = prompt("קישור:", v.url || "");
-                if(n && u) {
-                    ref.update({name:n, url:u, type: detectMediaType(u)});
-                }
-                return;
+            if(v.title && v.text) {
+                let t=prompt("כותרת:",v.title), txt=prompt("תוכן:",v.text);
+                if(t&&txt) ref.update({title:t, text:txt});
             }
-            if(v.title && v.text) { 
-                let t=prompt("כותרת:",v.title), txt=prompt("תוכן:",v.text); 
-                if(t&&txt) ref.update({title:t, text:txt}); 
+            else if(v.text) {
+                let t=prompt("טקסט:",v.text);
+                if(t) ref.update({text:t});
             }
-            else if(v.name && v.url) { 
-                let n=prompt("שם:",v.name), u=prompt("URL:",v.url); 
-                if(n&&u) ref.update({name:n, url:u}); 
-            }
-            else if(v.text) { 
-                let t=prompt("טקסט:",v.text); 
-                if(t) ref.update({text:t}); 
-            }
-            else if(v.name) { 
-                let n=prompt("שם:",v.name); 
-                if(n) ref.update({name:n}); 
+            else if(v.name) {
+                let n=prompt("שם:",v.name);
+                if(n) ref.update({name:n});
             }
         });
     }
 
     function sendPopup() {
         let t = document.getElementById('pop-txt').value;
-        if(t) { 
-            db.ref('current_popup').set({ text: t, time: Date.now() }); 
-            showToast('הפופ-אפ נשלח! 📢'); 
-            document.getElementById('pop-txt').value = ""; 
+        if(t) {
+            db.ref('current_popup').set({ text: t, time: Date.now() });
+            showToast('הפופ-אפ נשלח! 📢');
+            document.getElementById('pop-txt').value = "";
         }
     }
 
     db.ref('current_popup').on('value', s => {
-        let v = s.val(); 
+        let v = s.val();
         if(v && (Date.now() - v.time < 30000)) showToast("הודעה חשובה מקול פופר: " + v.text);
     });
 
     db.ref('comments').on('value', s => {
-        let h = ""; 
-        if(s.val()) Object.values(s.val()).sort((a,b)=>(b.time||0)-(a.time||0)).forEach(c => 
+        let h = "";
+        if(s.val()) Object.values(s.val()).sort((a,b)=>(b.time||0)-(a.time||0)).forEach(c =>
             h += `<div style="background:rgba(15,23,42,0.95); padding:10px; border-radius:10px; margin-bottom:10px; text-align:right; box-shadow:0 2px 5px rgba(0,0,0,0.4); border:1px solid rgba(148,163,184,0.5)"><b>${c.name}:</b> ${c.text}</div>`
         );
         const cl = document.getElementById('comm-list');
@@ -1275,7 +1326,6 @@
     let toastTimeout = null;
     function showToast(msg) {
         const t = document.getElementById('toast');
-        if(!t) return;
         t.innerText = msg;
         t.classList.add('show');
         if(toastTimeout) clearTimeout(toastTimeout);
@@ -1309,8 +1359,6 @@
         const avatar = document.getElementById('profile-avatar');
         if(currentUser.avatarUrl) {
             avatar.style.backgroundImage = "url('"+currentUser.avatarUrl+"')";
-            avatar.style.backgroundSize = "cover";
-            avatar.style.backgroundPosition = "center";
         } else {
             avatar.style.backgroundImage = "";
         }
@@ -1507,7 +1555,7 @@
         });
     }
 
-    // PROFILE PAGE RENDER
+    // PROFILE PAGE
     function renderProfilePage() {
         const container = document.getElementById('profile-page-content');
         if(!container) return;
@@ -1717,7 +1765,364 @@
         db.ref('users/'+uid).remove();
         showToast("המשתמש נמחק ממערכת הניהול");
     }
+
+    // ADMIN PLAYLISTS
+    function addPlaylist() {
+        const name = document.getElementById('adm-pl-name').value.trim();
+        if(!name) return;
+        db.ref('playlists').push({name});
+        document.getElementById('adm-pl-name').value = "";
+    }
+
+    function renderAdminPlaylists() {
+        const container = document.getElementById('adm-playlists');
+        const select = document.getElementById('adm-media-pl-select');
+        if(!container || !select) return;
+
+        let rows = "";
+        data.playlists.forEach((pl,i)=>{
+            const k = data.playlists_k[i];
+            rows += `<tr>
+                        <td>${pl.name || ''}</td>
+                        <td style="text-align:left;">
+                            <button class="btn-edit" onclick="editPlaylist('${k}','${pl.name || ''}')">✏️</button>
+                            <button class="btn-del" onclick="delItem('playlists','${k}')">🗑️</button>
+                        </td>
+                    </tr>`;
+        });
+        container.innerHTML = `
+            <table class="admin-table">
+                <tr><td><b>שם פלייליסט</b></td><td></td></tr>
+                ${rows || '<tr><td colspan="2">אין פלייליסטים עדיין</td></tr>'}
+            </table>
+        `;
+
+        select.innerHTML = '<option value="">בחר פלייליסט</option>' +
+            data.playlists.map((pl,i)=>`<option value="${data.playlists_k[i]}">${pl.name}</option>`).join('');
+    }
+
+    function editPlaylist(k, oldName) {
+        const n = prompt("שם פלייליסט:", oldName || "");
+        if(n) db.ref('playlists/'+k).update({name:n});
+    }
+
+    function addMediaItem() {
+        const plId = document.getElementById('adm-media-pl-select').value;
+        const title = document.getElementById('adm-media-title').value.trim();
+        const type = document.getElementById('adm-media-type').value;
+        const url = document.getElementById('adm-media-url').value.trim();
+        const img = document.getElementById('adm-media-img').value.trim();
+        if(!plId || !title || !type || !url) {
+            showToast("נא למלא פלייליסט, שם, סוג וקישור");
+            return;
+        }
+        db.ref('media_items').push({
+            playlistId: plId,
+            title,
+            type,
+            url,
+            imageUrl: img || ""
+        });
+        document.getElementById('adm-media-title').value = "";
+        document.getElementById('adm-media-type').value = "";
+        document.getElementById('adm-media-url').value = "";
+        document.getElementById('adm-media-img').value = "";
+    }
+
+    function renderAdminMediaItems() {
+        const container = document.getElementById('adm-media-items');
+        if(!container) return;
+        let rows = "";
+        data.media_items.forEach((m,i)=>{
+            const k = data.media_items_k[i];
+            const pl = data.playlists.find((p,idx)=>data.playlists_k[idx]===m.playlistId);
+            rows += `<tr>
+                        <td>${m.title || ''}</td>
+                        <td>${m.type || ''}</td>
+                        <td>${pl ? pl.name : ''}</td>
+                        <td style="text-align:left;">
+                            <button class="btn-del" onclick="delItem('media_items','${k}')">🗑️</button>
+                        </td>
+                    </tr>`;
+        });
+        container.innerHTML = `
+            <table class="admin-table">
+                <tr>
+                    <td><b>שם</b></td>
+                    <td><b>סוג</b></td>
+                    <td><b>פלייליסט</b></td>
+                    <td></td>
+                </tr>
+                ${rows || '<tr><td colspan="4">אין מדיה עדיין</td></tr>'}
+            </table>
+        `;
+    }
+
+    // MUSIC PAGE RENDER
+    function renderMusicPage() {
+        const plListEl = document.getElementById('music-playlists-list');
+        const trackListEl = document.getElementById('music-tracklist');
+        if(!plListEl || !trackListEl) return;
+
+        // playlists list
+        let plHtml = "";
+        data.playlists.forEach((pl,i)=>{
+            const id = data.playlists_k[i];
+            const count = data.media_items.filter(m=>m.playlistId===id).length;
+            const active = (musicState.playlistId === id) ? "active" : "";
+            plHtml += `
+                <div class="playlist-item-row ${active}" onclick="musicSelectPlaylist('${id}')">
+                    <div class="playlist-name">${pl.name || ''}</div>
+                    <div class="playlist-count">${count} שירים</div>
+                </div>
+            `;
+        });
+        plListEl.innerHTML = plHtml || "<div style='font-size:13px;color:#9ca3af;'>אין פלייליסטים עדיין</div>";
+
+        // tracks list
+        if(!musicState.playlistId) {
+            trackListEl.innerHTML = "<div style='font-size:13px;color:#9ca3af;'>בחר פלייליסט כדי לראות שירים</div>";
+            return;
+        }
+        const list = data.media_items.filter(m=>m.playlistId===musicState.playlistId);
+        musicState.currentList = list;
+        let tHtml = "";
+        list.forEach((m,idx)=>{
+            const active = (idx === musicState.trackIndex) ? "active" : "";
+            const typeLabel = m.type === 'audio' ? 'אודיו' : (m.type === 'video' ? 'וידאו' : 'YouTube');
+            const img = m.imageUrl || getMediaDefaultImage(m);
+            tHtml += `
+                <div class="music-track-row ${active}" onclick="musicPlayIndex(${idx})">
+                    <div class="music-track-thumb" style="background-image:url('${img}')"></div>
+                    <div>
+                        <div class="music-track-title">${m.title || ''}</div>
+                        <div class="music-track-type">${typeLabel}</div>
+                    </div>
+                </div>
+            `;
+        });
+        trackListEl.innerHTML = tHtml || "<div style='font-size:13px;color:#9ca3af;'>אין שירים בפלייליסט זה</div>";
+
+        // if nothing playing yet but playlist selected, auto-select first
+        if(list.length && musicState.type == null) {
+            musicState.trackIndex = 0;
+            musicStartCurrent();
+        }
+    }
+
+    function getMediaDefaultImage(m) {
+        if(m.type === 'youtube') {
+            const id = extractYouTubeId(m.url);
+            if(id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+        }
+        if(m.type === 'audio') return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Audio";
+        if(m.type === 'video') return "https://via.placeholder.com/300x300/0f172a/f97316?text=Video";
+        return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Media";
+    }
+
+    function extractYouTubeId(url) {
+        try {
+            const u = new URL(url);
+            if(u.hostname.includes('youtu.be')) {
+                return u.pathname.replace('/','');
+            }
+            if(u.searchParams.get('v')) return u.searchParams.get('v');
+        } catch(e) {}
+        return null;
+    }
+
+    function musicSelectPlaylist(id) {
+        musicState.playlistId = id;
+        musicState.trackIndex = 0;
+        musicState.type = null;
+        musicStopAll();
+        renderMusicPage();
+    }
+
+    function musicPlayIndex(idx) {
+        musicState.trackIndex = idx;
+        musicStartCurrent();
+        renderMusicPage();
+    }
+
+    function musicStartCurrent() {
+        const list = musicState.currentList || [];
+        if(!list.length) return;
+        const m = list[musicState.trackIndex];
+        if(!m) return;
+
+        musicStopAll();
+        musicState.type = m.type;
+
+        const cover = document.getElementById('music-cover');
+        const titleEl = document.getElementById('music-title');
+        const subEl = document.getElementById('music-sub');
+        const mediaContainer = document.getElementById('music-media-container');
+        const playBtn = document.getElementById('music-play-btn');
+        const totalEl = document.getElementById('music-time-total');
+        const currentEl = document.getElementById('music-time-current');
+        const range = document.getElementById('music-progress-range');
+
+        const img = m.imageUrl || getMediaDefaultImage(m);
+        cover.style.backgroundImage = "url('"+img+"')";
+        titleEl.innerText = m.title || "";
+        subEl.innerText = m.type === 'audio' ? "אודיו" : (m.type === 'video' ? "וידאו" : "YouTube");
+        mediaContainer.innerHTML = "";
+        currentEl.innerText = "00:00";
+        totalEl.innerText = "00:00";
+        range.value = 0;
+
+        if(m.type === 'audio') {
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = m.url;
+            audio.addEventListener('timeupdate', ()=>musicSyncProgress(audio));
+            audio.addEventListener('ended', ()=>musicOnEnded());
+            mediaContainer.appendChild(audio);
+            musicState.audioEl = audio;
+            audio.play();
+            playBtn.innerText = "⏸️";
+        } else if(m.type === 'video') {
+            const video = document.createElement('video');
+            video.controls = true;
+            video.src = m.url;
+            video.addEventListener('timeupdate', ()=>musicSyncProgress(video));
+            video.addEventListener('ended', ()=>musicOnEnded());
+            mediaContainer.appendChild(video);
+            musicState.videoEl = video;
+            video.play();
+            playBtn.innerText = "⏸️";
+        } else if(m.type === 'youtube') {
+            const id = extractYouTubeId(m.url);
+            const iframe = document.createElement('iframe');
+            iframe.width = "100%";
+            iframe.height = "260";
+            iframe.style.borderRadius = "18px";
+            iframe.style.border = "none";
+            iframe.src = id ? `https://www.youtube.com/embed/${id}?autoplay=1` : m.url;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            mediaContainer.appendChild(iframe);
+            playBtn.innerText = "▶️"; // אין שליטה מלאה
+            totalEl.innerText = "--:--";
+            currentEl.innerText = "--:--";
+        }
+    }
+
+    function musicStopAll() {
+        if(musicState.audioEl) {
+            musicState.audioEl.pause();
+            musicState.audioEl = null;
+        }
+        if(musicState.videoEl) {
+            musicState.videoEl.pause();
+            musicState.videoEl = null;
+        }
+    }
+
+    function musicTogglePlay() {
+        const playBtn = document.getElementById('music-play-btn');
+        if(musicState.type === 'audio' && musicState.audioEl) {
+            if(musicState.audioEl.paused) {
+                musicState.audioEl.play();
+                playBtn.innerText = "⏸️";
+            } else {
+                musicState.audioEl.pause();
+                playBtn.innerText = "▶️";
+            }
+        } else if(musicState.type === 'video' && musicState.videoEl) {
+            if(musicState.videoEl.paused) {
+                musicState.videoEl.play();
+                playBtn.innerText = "⏸️";
+            } else {
+                musicState.videoEl.pause();
+                playBtn.innerText = "▶️";
+            }
+        } else if(musicState.type === 'youtube') {
+            // אין שליטה ישירה, פשוט נטען מחדש
+            musicStartCurrent();
+        } else {
+            // אם עדיין לא נבחר שיר
+            if(musicState.currentList && musicState.currentList.length) {
+                musicStartCurrent();
+            }
+        }
+    }
+
+    function musicNext() {
+        const list = musicState.currentList || [];
+        if(!list.length) return;
+        if(musicState.shuffle) {
+            musicState.trackIndex = Math.floor(Math.random()*list.length);
+        } else {
+            musicState.trackIndex = (musicState.trackIndex+1) % list.length;
+        }
+        musicStartCurrent();
+        renderMusicPage();
+    }
+
+    function musicPrev() {
+        const list = musicState.currentList || [];
+        if(!list.length) return;
+        if(musicState.shuffle) {
+            musicState.trackIndex = Math.floor(Math.random()*list.length);
+        } else {
+            musicState.trackIndex = (musicState.trackIndex-1+list.length) % list.length;
+        }
+        musicStartCurrent();
+        renderMusicPage();
+    }
+
+    function musicOnEnded() {
+        const list = musicState.currentList || [];
+        if(!list.length) return;
+        if(musicState.repeat) {
+            musicStartCurrent();
+        } else {
+            musicNext();
+        }
+    }
+
+    function musicSyncProgress(el) {
+        const currentEl = document.getElementById('music-time-current');
+        const totalEl = document.getElementById('music-time-total');
+        const range = document.getElementById('music-progress-range');
+        if(!el.duration || isNaN(el.duration)) return;
+        const cur = el.currentTime;
+        const dur = el.duration;
+        range.value = (cur/dur)*100;
+        currentEl.innerText = formatTime(cur);
+        totalEl.innerText = formatTime(dur);
+    }
+
+    function musicSeek(val) {
+        const v = parseFloat(val);
+        if(musicState.audioEl && musicState.audioEl.duration) {
+            musicState.audioEl.currentTime = (v/100)*musicState.audioEl.duration;
+        }
+        if(musicState.videoEl && musicState.videoEl.duration) {
+            musicState.videoEl.currentTime = (v/100)*musicState.videoEl.duration;
+        }
+    }
+
+    function formatTime(sec) {
+        sec = Math.floor(sec || 0);
+        const m = Math.floor(sec/60);
+        const s = sec%60;
+        return (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+    }
+
+    function musicToggleShuffle() {
+        musicState.shuffle = !musicState.shuffle;
+        const btn = document.getElementById('music-shuffle-btn');
+        btn.innerText = musicState.shuffle ? "🔀 אקראי" : "🔀 רגיל";
+    }
+
+    function musicToggleRepeat() {
+        musicState.repeat = !musicState.repeat;
+        const btn = document.getElementById('music-repeat-btn');
+        btn.innerText = musicState.repeat ? "🔁 חזרה" : "🔁 רגיל";
+    }
 </script>
 </body>
 </html>
-```
