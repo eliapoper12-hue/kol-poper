@@ -108,7 +108,7 @@
 
         .player-logo-rect {
             display:block;
-            max-width:220px;
+            max-width:300px;
             margin:15px auto 5px;
             border-radius:18px;
             box-shadow:0 12px 30px rgba(0,0,0,0.7);
@@ -191,7 +191,6 @@
         .winner-score { font-size:13px; }
         .rank-icon { font-size:18px; margin-left:6px; }
 
-        /* HOME NOTICE BOARD (לוח מודעות בדף הבית) */
         .home-board-item {
             background:rgba(15,23,42,0.95);
             padding:10px;
@@ -201,7 +200,6 @@
             font-size:14px;
         }
 
-        /* ADMIN PANEL */
         #admin-panel {
             display:none;
             position:fixed;
@@ -262,7 +260,6 @@
             font-size:12px;
         }
 
-        /* MODALS */
         .modal-overlay {
             position:fixed;
             inset:0;
@@ -283,7 +280,6 @@
             border:1px solid rgba(148,163,184,0.7);
         }
 
-        /* TOAST */
         .toast {
             position:fixed;
             bottom:16px;
@@ -305,7 +301,6 @@
             opacity:1;
         }
 
-        /* PROFILE / PLAYERS */
         .profile-row {
             display:flex;
             gap:16px;
@@ -374,7 +369,6 @@
         .player-card .name { font-weight:700; margin-bottom:4px; }
         .player-card .score { font-size:13px; color:#a5b4fc; }
 
-        /* ARTICLES */
         .article-card {
             background:rgba(15,23,42,0.96);
             border-radius:16px;
@@ -386,7 +380,6 @@
         .article-card h3 { margin:0 0 6px; }
         .article-text { font-size:14px; color:#e5e7eb; }
 
-        /* MUSIC PLAYER PAGE */
         .music-layout {
             display:grid;
             grid-template-columns: minmax(0,2fr) minmax(0,3fr);
@@ -448,6 +441,7 @@
             box-shadow:0 12px 30px rgba(0,0,0,0.8);
             background-size:cover;
             background-position:center;
+            overflow:hidden;
         }
         .music-info {
             flex:1 1 200px;
@@ -525,6 +519,7 @@
             background:radial-gradient(circle at top, #38bdf8, #0f172a);
             background-size:cover;
             background-position:center;
+            overflow:hidden;
         }
         .music-track-title {
             font-size:14px;
@@ -541,7 +536,6 @@
             box-shadow:0 12px 30px rgba(0,0,0,0.6);
         }
 
-        /* LIGHT MODE */
         body.light-mode {
             background:#f4f4f4;
             color:#1a1a1a;
@@ -609,12 +603,37 @@
             background:#f9fafb;
         }
 
+        /* מצב בהיר – תגובות ולוח מודעות */
+        body.light-mode #comm-list > div {
+            background:#ffffff !important;
+            color:#111827 !important;
+            border-color:#cbd5e1 !important;
+        }
+        body.light-mode .home-board-item {
+            background:#f3f4f6 !important;
+            color:#111827 !important;
+            border-color:#cbd5e1 !important;
+        }
+
+        /* תמונת ברירת מחדל עם אות ראשונה */
+        .fallback-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background: #0ea5e9;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
         @media (max-width:600px) {
             .header-inner { flex-direction:column; align-items:flex-start; }
             nav { top:110px; }
         }
 
-        /* SPLASH */
         #splash {
             position:fixed;
             inset:0;
@@ -755,7 +774,13 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-weight:600;">📚 פלייליסטים</span>
             </div>
-            <div class="playlist-item" onclick="showAllSongs()">🎵 כל השירים</div>
+
+            <!-- כל השירים -->
+            <div class="playlist-item-row" onclick="selectAllSongs()" id="all-songs-row">
+                <span class="playlist-name">🎼 כל השירים</span>
+                <span class="playlist-count" id="all-songs-count"></span>
+            </div>
+
             <div id="music-playlists-list"></div>
         </div>
 
@@ -875,7 +900,6 @@
             <div id="adm-jokes"></div>
         </div>
 
-        <!-- NEW: MUSIC PLAYLISTS + MEDIA -->
         <div class="admin-section">
             <h3>🎚 ניהול פלייליסטים לנגן (MP3 / MP4 / YouTube)</h3>
             <input id="adm-pl-name" class="form-input" placeholder="שם פלייליסט חדש">
@@ -927,7 +951,6 @@
             <div id="adm-req"></div>
         </div>
 
-        <!-- USERS -->
         <div class="admin-section" style="border-color:#22c55e;">
             <h3>👥 ניהול משתמשים</h3>
             <div id="admin-users-table"></div>
@@ -936,7 +959,6 @@
     </div>
 </div>
 
-<!-- LOGIN MODAL -->
 <div id="login-modal" class="modal-overlay">
     <div class="modal-box">
         <h2>התחברות</h2>
@@ -947,7 +969,6 @@
     </div>
 </div>
 
-<!-- REGISTER MODAL -->
 <div id="register-modal" class="modal-overlay">
     <div class="modal-box">
         <h2>הרשמה</h2>
@@ -959,7 +980,6 @@
     </div>
 </div>
 
-<!-- PROFILE MODAL -->
 <div id="profile-modal" class="modal-overlay">
     <div class="modal-box">
         <h2>הפרופיל שלי</h2>
@@ -1007,7 +1027,6 @@
     let currentUser = null;
     let usersMap = {};
 
-    // MUSIC STATE
     let musicState = {
         playlistId: null,
         trackIndex: 0,
@@ -1019,7 +1038,16 @@
         type: null
     };
 
-    // SPLASH
+    function safeCoverElement(el, url, name) {
+        if (!url) {
+            el.style.backgroundImage = "none";
+            el.innerHTML = `<div class="fallback-avatar">${(name || '?').trim().charAt(0) || '?'}</div>`;
+        } else {
+            el.innerHTML = "";
+            el.style.backgroundImage = `url('${url}')`;
+        }
+    }
+
     window.addEventListener("load", () => {
         setTimeout(() => {
             const s = document.getElementById("splash");
@@ -1027,7 +1055,6 @@
         }, 2500);
     });
 
-    // THEME
     document.addEventListener("DOMContentLoaded", () => {
         const savedTheme = localStorage.getItem("theme");
         const btn = document.getElementById("theme-toggle");
@@ -1096,29 +1123,24 @@
     }
 
     function render() {
-        // JOKES
         if(data.jokes_list.length) {
             const jd = document.getElementById('j-display');
             if(jd) jd.innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
         }
 
-        // TOP NOTICE BAR
         const nd = document.getElementById('notice-display');
         if(nd) nd.innerText = data.notices.length ? data.notices.map(n=>n.text).join('   ★   ') : "ברוכים הבאים לקול פופר!";
 
-        // REQUEST SONGS SELECT
         let rSelect = document.getElementById('req-song-select');
         if(rSelect) {
             rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
         }
 
-        // DAILY RIDDLE
         if(data.daily_riddle.length) {
             const dq = document.getElementById('daily-q-text');
             if(dq) dq.innerText = data.daily_riddle[data.daily_riddle.length-1].text;
         }
 
-        // ARTICLES
         const ad = document.getElementById('articles-display');
         if(ad) {
             ad.innerHTML = data.articles_list.length ?
@@ -1126,11 +1148,9 @@
                 "אין תוכן כרגע.";
         }
 
-        // WINNERS
         renderWinners('winners-list-home');
         renderWinners('winners-list-riddles');
 
-        // HOME BOARD
         const hb = document.getElementById('home-board-list');
         if(hb) {
             hb.innerHTML = data.home_board.length ?
@@ -1138,7 +1158,6 @@
                 "<div class='home-board-item'>אין הודעות כרגע.</div>";
         }
 
-        // MUSIC PAGE
         renderMusicPage();
     }
 
@@ -1323,7 +1342,6 @@
         if(cl) cl.innerHTML = h;
     });
 
-    // TOAST
     let toastTimeout = null;
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -1333,7 +1351,6 @@
         toastTimeout = setTimeout(()=>t.classList.remove('show'), 3000);
     }
 
-    // AUTH HELPERS
     function fakeEmailFromUsername(username) {
         return username.toLowerCase() + "@kolpopper.local";
     }
@@ -1530,129 +1547,11 @@
                 updateUserUI();
                 renderProfilePage();
                 renderPlayersPage();
-                openProfile();
                 showToast("הפרופיל עודכן");
             });
         }
     }
 
-    function deleteOwnAccount() {
-        if(!currentUser || !auth.currentUser) return;
-        if(!confirm("בטוח שתרצה למחוק את החשבון?")) return;
-        const uid = auth.currentUser.uid;
-        const username = currentUser.username;
-        db.ref('users/'+uid).remove();
-        db.ref('usernames/'+username).remove();
-        auth.currentUser.delete().then(()=>{
-            currentUser = null;
-            updateUserUI();
-            renderProfilePage();
-            renderPlayersPage();
-            closeProfile();
-            showToast("החשבון נמחק");
-        }).catch(err=>{
-            console.error(err);
-            showToast("לא ניתן למחוק כרגע (צריך התחברות מחדש)");
-        });
-    }
-
-    // PROFILE PAGE
-    function renderProfilePage() {
-        const container = document.getElementById('profile-page-content');
-        if(!container) return;
-        if(!currentUser) {
-            container.innerHTML = `
-                <div class="section-box">
-                    <h3>לא מחובר</h3>
-                    <p>כדי לראות את הפרופיל שלך, התחבר או הירשם.</p>
-                    <button class="btn-ctrl" onclick="openLogin()">התחברות</button>
-                    <button class="btn-ctrl" onclick="openRegister()">הרשמה</button>
-                </div>
-            `;
-            return;
-        }
-
-        const uid = currentUser.uid;
-        const u = usersMap[uid] || currentUser;
-        let historyHtml = "";
-        if(u.quiz_history) {
-            const entries = Object.values(u.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
-            entries.forEach(e=>{
-                historyHtml += `<div class="history-item">
-                    <div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
-                    <div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
-                    <div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
-                </div>`;
-            });
-        } else {
-            historyHtml = "<div>אין היסטוריית חידונים עדיין</div>";
-        }
-
-        container.innerHTML = `
-            <div class="profile-row">
-                <div class="profile-card">
-                    <div class="profile-avatar-big" style="${u.avatarUrl ? "background-image:url('"+u.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
-                    <div style="margin-bottom:4px;"><b>שם משתמש:</b> ${u.username || ''}</div>
-                    <div style="margin-bottom:4px;"><b>ניקוד:</b> ${u.score || 0}</div>
-                    <div style="margin-bottom:4px;"><b>נוצר:</b> ${u.createdAt ? new Date(u.createdAt).toLocaleString('he-IL') : ''}</div>
-                    <div style="margin-top:10px;">
-                        <input id="profile-page-username-input" class="form-input" placeholder="שם משתמש חדש" value="${u.username || ''}">
-                        <input id="profile-page-avatar-input" class="form-input" placeholder="קישור לתמונת פרופיל" value="${u.avatarUrl || ''}">
-                        <button class="btn-ctrl" onclick="updateProfileFromPage()">עדכון פרופיל</button>
-                        <button class="btn-del" style="margin-top:8px;" onclick="deleteOwnAccount()">מחיקת חשבון</button>
-                    </div>
-                </div>
-                <div class="profile-history">
-                    <b>היסטוריית חידונים:</b>
-                    <div style="margin-top:8px;">${historyHtml}</div>
-                </div>
-            </div>
-        `;
-    }
-
-    function updateProfileFromPage() {
-        if(!currentUser || !auth.currentUser) return;
-        const newUsername = document.getElementById('profile-page-username-input').value.trim();
-        const newAvatar = document.getElementById('profile-page-avatar-input').value.trim();
-        const uid = auth.currentUser.uid;
-
-        const updates = {};
-        if(newUsername && newUsername !== currentUser.username) {
-            if(!/^[a-zA-Z0-9._-]+$/.test(newUsername)) {
-                showToast("שם המשתמש חייב להיות באנגלית בלבד, ללא רווחים");
-                return;
-            }
-            db.ref('usernames/'+newUsername).once('value').then(snap => {
-                if(snap.exists()) {
-                    showToast("שם המשתמש כבר תפוס");
-                    return;
-                }
-                db.ref('usernames/'+currentUser.username).remove();
-                db.ref('usernames/'+newUsername).set(uid);
-                updates.username = newUsername;
-                updates.avatarUrl = newAvatar;
-                db.ref('users/'+uid).update(updates).then(()=>{
-                    currentUser.username = newUsername;
-                    currentUser.avatarUrl = newAvatar;
-                    updateUserUI();
-                    renderProfilePage();
-                    renderPlayersPage();
-                    showToast("הפרופיל עודכן");
-                });
-            });
-        } else {
-            updates.avatarUrl = newAvatar;
-            db.ref('users/'+uid).update(updates).then(()=>{
-                currentUser.avatarUrl = newAvatar;
-                updateUserUI();
-                renderProfilePage();
-                renderPlayersPage();
-                showToast("הפרופיל עודכן");
-            });
-        }
-    }
-
-    // PLAYERS PAGE
     function renderPlayersPage() {
         const container = document.getElementById('players-page-content');
         if(!container) return;
@@ -1683,7 +1582,6 @@
         `;
     }
 
-    // ADMIN USERS
     function renderAdminUsers() {
         const container = document.getElementById('admin-users-table');
         if(!container) return;
@@ -1767,7 +1665,6 @@
         showToast("המשתמש נמחק ממערכת הניהול");
     }
 
-    // ADMIN PLAYLISTS
     function addPlaylist() {
         const name = document.getElementById('adm-pl-name').value.trim();
         if(!name) return;
@@ -1817,8 +1714,17 @@
             showToast("נא למלא פלייליסט, שם, סוג וקישור");
             return;
         }
+
+        let playlistIds = [];
+        if (plId.includes(',')) {
+            playlistIds = plId.split(',').map(x=>x.trim()).filter(Boolean);
+        } else if (plId) {
+            playlistIds = [plId];
+        }
+
         db.ref('media_items').push({
             playlistId: plId,
+            playlistIds: playlistIds,
             title,
             type,
             url,
@@ -1836,11 +1742,22 @@
         let rows = "";
         data.media_items.forEach((m,i)=>{
             const k = data.media_items_k[i];
-            const pl = data.playlists.find((p,idx)=>data.playlists_k[idx]===m.playlistId);
+
+            let plName = "";
+            if (m.playlistIds && m.playlistIds.length) {
+                plName = m.playlistIds.map(id=>{
+                    const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===id);
+                    return p ? p.name : "";
+                }).filter(Boolean).join(", ");
+            } else {
+                const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===m.playlistId);
+                plName = p ? p.name : "";
+            }
+
             rows += `<tr>
                         <td>${m.title || ''}</td>
                         <td>${m.type || ''}</td>
-                        <td>${pl ? pl.name : ''}</td>
+                        <td>${plName}</td>
                         <td style="text-align:left;">
                             <button class="btn-del" onclick="delItem('media_items','${k}')">🗑️</button>
                         </td>
@@ -1859,17 +1776,35 @@
         `;
     }
 
-    // MUSIC PAGE RENDER
+    function getMediaByPlaylistId(plId) {
+        if (plId === "ALL_SONGS") {
+            return data.media_items;
+        }
+        return data.media_items.filter(m => {
+            if (m.playlistIds && Array.isArray(m.playlistIds)) {
+                return m.playlistIds.includes(plId);
+            }
+            return m.playlistId === plId;
+        });
+    }
+
+    function selectAllSongs() {
+        musicState.playlistId = "ALL_SONGS";
+        musicState.trackIndex = 0;
+        musicState.type = null;
+        musicStopAll();
+        renderMusicPage();
+    }
+
     function renderMusicPage() {
         const plListEl = document.getElementById('music-playlists-list');
         const trackListEl = document.getElementById('music-tracklist');
         if(!plListEl || !trackListEl) return;
 
-        // playlists list
         let plHtml = "";
         data.playlists.forEach((pl,i)=>{
             const id = data.playlists_k[i];
-            const count = data.media_items.filter(m=>m.playlistId===id).length;
+            const count = getMediaByPlaylistId(id).length;
             const active = (musicState.playlistId === id) ? "active" : "";
             plHtml += `
                 <div class="playlist-item-row ${active}" onclick="musicSelectPlaylist('${id}')">
@@ -1880,21 +1815,28 @@
         });
         plListEl.innerHTML = plHtml || "<div style='font-size:13px;color:#9ca3af;'>אין פלייליסטים עדיין</div>";
 
-        // tracks list
+        const allCount = data.media_items.length;
+        const allRow = document.getElementById('all-songs-row');
+        const allCountEl = document.getElementById('all-songs-count');
+        if (allCountEl) allCountEl.innerText = allCount + " שירים";
+        if (allRow) {
+            if (musicState.playlistId === "ALL_SONGS") allRow.classList.add('active');
+            else allRow.classList.remove('active');
+        }
+
         if(!musicState.playlistId) {
-            trackListEl.innerHTML = "<div style='font-size:13px;color:#9ca3af;'>בחר פלייליסט כדי לראות שירים</div>";
+            trackListEl.innerHTML = "<div style='font-size:13px;color:#9ca3af;'>בחר פלייליסט או 'כל השירים' כדי לראות שירים</div>";
             return;
         }
-        const list = data.media_items.filter(m=>m.playlistId===musicState.playlistId);
+        const list = getMediaByPlaylistId(musicState.playlistId);
         musicState.currentList = list;
         let tHtml = "";
         list.forEach((m,idx)=>{
             const active = (idx === musicState.trackIndex) ? "active" : "";
             const typeLabel = m.type === 'audio' ? 'אודיו' : (m.type === 'video' ? 'וידאו' : 'YouTube');
-            const img = m.imageUrl || getMediaDefaultImage(m);
             tHtml += `
                 <div class="music-track-row ${active}" onclick="musicPlayIndex(${idx})">
-                    <div class="music-track-thumb" style="background-image:url('${img}')"></div>
+                    <div class="music-track-thumb" id="track-thumb-${idx}"></div>
                     <div>
                         <div class="music-track-title">${m.title || ''}</div>
                         <div class="music-track-type">${typeLabel}</div>
@@ -1904,7 +1846,12 @@
         });
         trackListEl.innerHTML = tHtml || "<div style='font-size:13px;color:#9ca3af;'>אין שירים בפלייליסט זה</div>";
 
-        // if nothing playing yet but playlist selected, auto-select first
+        list.forEach((m,idx)=>{
+            const img = m.imageUrl || getMediaDefaultImage(m);
+            const thumb = document.getElementById('track-thumb-'+idx);
+            if (thumb) safeCoverElement(thumb, img, m.title || "");
+        });
+
         if(list.length && musicState.type == null) {
             musicState.trackIndex = 0;
             musicStartCurrent();
@@ -1965,7 +1912,7 @@
         const range = document.getElementById('music-progress-range');
 
         const img = m.imageUrl || getMediaDefaultImage(m);
-        cover.style.backgroundImage = "url('"+img+"')";
+        safeCoverElement(cover, img, m.title || "");
         titleEl.innerText = m.title || "";
         subEl.innerText = m.type === 'audio' ? "אודיו" : (m.type === 'video' ? "וידאו" : "YouTube");
         mediaContainer.innerHTML = "";
@@ -2004,7 +1951,7 @@
             iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
             iframe.allowFullscreen = true;
             mediaContainer.appendChild(iframe);
-            playBtn.innerText = "▶️"; // אין שליטה מלאה
+            playBtn.innerText = "▶️";
             totalEl.innerText = "--:--";
             currentEl.innerText = "--:--";
         }
@@ -2040,10 +1987,8 @@
                 playBtn.innerText = "▶️";
             }
         } else if(musicState.type === 'youtube') {
-            // אין שליטה ישירה, פשוט נטען מחדש
             musicStartCurrent();
         } else {
-            // אם עדיין לא נבחר שיר
             if(musicState.currentList && musicState.currentList.length) {
                 musicStartCurrent();
             }
@@ -2124,7 +2069,73 @@
         const btn = document.getElementById('music-repeat-btn');
         btn.innerText = musicState.repeat ? "🔁 חזרה" : "🔁 רגיל";
     }
+
+    function renderProfilePage() {
+        const container = document.getElementById('profile-page-content');
+        if(!container) return;
+        if(!currentUser) {
+            container.innerHTML = `<div class="section-box">כדי לראות את הפרופיל שלך, התחבר למערכת.</div>`;
+            return;
+        }
+        let historyHtml = "";
+        if(currentUser.quiz_history) {
+            const entries = Object.values(currentUser.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
+            entries.forEach(e=>{
+                historyHtml += `<div class="history-item">
+                    <div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
+                    <div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
+                    <div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
+                </div>`;
+            });
+        } else {
+            historyHtml = "<div>אין היסטוריית חידונים עדיין.</div>";
+        }
+
+        container.innerHTML = `
+            <div class="profile-row">
+                <div class="profile-card">
+                    <div class="profile-avatar-big" style="${currentUser.avatarUrl ? "background-image:url('"+currentUser.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
+                    <div><b>שם משתמש:</b> ${currentUser.username || ''}</div>
+                    <div><b>ניקוד:</b> ${currentUser.score || 0}</div>
+                    <div style="margin-top:10px;">
+                        <button class="btn-ctrl" onclick="openProfile()">עריכת פרופיל</button>
+                    </div>
+                </div>
+                <div class="profile-history">
+                    <b>היסטוריית חידונים:</b>
+                    <div style="margin-top:8px;">${historyHtml}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function adminResetScore(uid) {
+        if(!confirm("לאפס ניקוד למשתמש?")) return;
+        db.ref('users/'+uid+'/score').set(0);
+    }
+
+    function adminClearHistory(uid) {
+        if(!confirm("למחוק את כל היסטוריית החידונים?")) return;
+        db.ref('users/'+uid+'/quiz_history').remove();
+    }
+
+    function adminDeleteUser(uid) {
+        if(!confirm("למחוק את המשתמש? (לא מוחק את חשבון ה-Auth)")) return;
+        const u = usersMap[uid];
+        if(u && u.username) db.ref('usernames/'+u.username).remove();
+        db.ref('users/'+uid).remove();
+        showToast("המשתמש נמחק ממערכת הניהול");
+    }
+
+    function deleteOwnAccount() {
+        if(!currentUser || !auth.currentUser) return;
+        if(!confirm("למחוק את החשבון שלך? (לא מוחק את חשבון ה-Auth)")) return;
+        const uid = auth.currentUser.uid;
+        const u = currentUser;
+        if(u && u.username) db.ref('usernames/'+u.username).remove();
+        db.ref('users/'+uid).remove();
+        showToast("החשבון נמחק ממערכת הניהול");
+    }
 </script>
 </body>
 </html>
-
