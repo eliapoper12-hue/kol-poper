@@ -1,3 +1,6 @@
+**Planning code integration**
+
+The existing data only has name and URL, so I could treat playlists as a simple "favorites" list or group by the first word. A better idea might be to add a client-side playlist builder where users can add songs to "My playlist" stored in localStorage, but that’s more code. Alternatively, I could auto-generate playlists by source type (YouTube, MP3, MP4) with a filter dropdown. For the advanced design, I’ll tweak the CSS for the music page. For the MP4 frame, I’ll capture it when playing for the first time. Now, I need to merge everything into the existing script.
 ```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
@@ -443,6 +446,52 @@
             color: #a5b4fc;
         }
 
+        /* MUSIC PAGE */
+        .music-toolbar {
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:15px;
+        }
+        .music-search-input {
+            flex:1 1 180px;
+        }
+        .music-filter-select {
+            flex:0 0 160px;
+        }
+        .music-card {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:10px 12px;
+            margin-bottom:10px;
+            border-radius:16px;
+            background:rgba(15,23,42,0.95);
+            border:1px solid rgba(148,163,184,0.5);
+            cursor:pointer;
+            transition:0.2s;
+        }
+        .music-card:hover {
+            transform:translateY(-2px);
+            box-shadow:0 10px 25px rgba(15,23,42,0.9);
+        }
+        .music-card img {
+            width:60px;
+            height:60px;
+            border-radius:14px;
+            object-fit:cover;
+        }
+        .music-card-title {
+            font-weight:700;
+            font-size:15px;
+        }
+        .music-card-sub {
+            font-size:12px;
+            color:#9ca3af;
+        }
+
         /* LIGHT MODE OVERRIDES */
         body.light-mode {
             background: #f4f4f4;
@@ -544,6 +593,13 @@
 
 <div class="notice-board"><marquee id="notice-display" scrollamount="8">טוען הודעות...</marquee></div>
 
+<div class="section-box" id="notice-board-box" style="background:#0f172a; margin-top:20px;">
+    <h3 style="color:#38bdf8; margin-top:0;">📢 לוח מודעות</h3>
+    <div id="notice-board-content" style="font-size:18px; line-height:1.6; color:#e2e8f0;">
+        טוען מודעות...
+    </div>
+</div>
+
 <nav>
     <a onclick="showPage('home')">🏠 הבית</a>
     <a onclick="showPage('torah')">📜 דברי תורה</a>
@@ -551,6 +607,7 @@
     <a onclick="showPage('jokes')">🤣 בדיחות</a>
     <a onclick="showPage('contact')">📱 צור קשר</a>
     <a onclick="showPage('players-page')">🎮 לוח שחקנים</a>
+    <a onclick="showPage('music-page')">🎵 נגן מוזיקה</a>
     <a onclick="adminCheck()" class="btn-admin-open">⚙️ ניהול</a>
 </nav>
 
@@ -654,6 +711,37 @@
     <h2 style="font-size: 32px; margin-bottom: 10px;">🎮 לוח שחקנים</h2>
     <p style="font-size:14px; color:#a5b4fc;">רשימת כל השחקנים הרשומים וניקוד החידונים שלהם</p>
     <div id="players-page-content"></div>
+</div>
+
+<!-- MUSIC PAGE -->
+<div id="music-page" class="container">
+    <h2 style="font-size: 32px; margin-bottom: 10px; color:#38bdf8;">🎵 נגן מוזיקה</h2>
+    <p style="font-size:14px; color:#a5b4fc;">בחר שיר מהרשימה כדי לנגן, אפשר גם לחפש ולסנן</p>
+
+    <div class="music-toolbar">
+        <input id="music-search" class="form-input music-search-input" placeholder="חיפוש שיר לפי שם...">
+        <select id="music-filter" class="form-input music-filter-select">
+            <option value="all">כל השירים</option>
+            <option value="youtube">YouTube בלבד</option>
+            <option value="mp3">MP3 בלבד</option>
+            <option value="mp4">וידאו MP4 בלבד</option>
+        </select>
+    </div>
+
+    <div class="section-box" style="background:#020617; display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+        <div style="flex:1 1 220px; max-width:260px;">
+            <img id="music-main-image" src="" alt="" style="width:100%; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,0.6); object-fit:cover;">
+        </div>
+        <div style="flex:2 1 260px; text-align:right;">
+            <h3 id="music-main-title" style="margin-top:0; margin-bottom:10px;">לא נבחר שיר</h3>
+            <div id="music-main-player"></div>
+            <div id="music-main-youtube-btn" style="margin-top:10px; display:none;">
+                <button class="btn-ctrl" id="music-open-youtube-btn" target="_blank">🎥 פתח ביוטיוב</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="music-cards" style="margin-top:20px; text-align:right;"></div>
 </div>
 
 <div id="admin-panel">
@@ -803,6 +891,7 @@
     let sitePassword = "1234";
     let currentUser = null;
     let usersMap = {};
+    let mp4ThumbCache = {};
 
     // SPLASH
     window.addEventListener("load", () => {
@@ -821,6 +910,15 @@
             if(btn) btn.innerText = "☀️ בהיר";
         } else {
             if(btn) btn.innerText = "🌙 כהה";
+        }
+
+        const searchInput = document.getElementById('music-search');
+        const filterSelect = document.getElementById('music-filter');
+        if (searchInput) {
+            searchInput.addEventListener('input', renderMusicPage);
+        }
+        if (filterSelect) {
+            filterSelect.addEventListener('change', renderMusicPage);
         }
     });
 
@@ -865,6 +963,7 @@
         window.scrollTo(0,0); 
         if(p === 'profile-page') renderProfilePage();
         if(p === 'players-page') renderPlayersPage();
+        if(p === 'music-page') renderMusicPage();
     }
 
     function move(p,d) { 
@@ -887,6 +986,11 @@
         if(data.jokes_list.length) document.getElementById('j-display').innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
         document.getElementById('notice-display').innerText = data.notices.length ? data.notices.map(n=>n.text).join('   ★   ') : "ברוכים הבאים לקול פופר!";
 
+        document.getElementById('notice-board-content').innerHTML =
+            data.notices.length
+            ? data.notices.map(n => `<div style="margin-bottom:10px;">• ${n.text}</div>`).join('')
+            : "אין מודעות כרגע.";
+
         let rSelect = document.getElementById('req-song-select');
         rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
         if(data.daily_riddle.length) document.getElementById('daily-q-text').innerText = data.daily_riddle[data.daily_riddle.length-1].text;
@@ -896,6 +1000,7 @@
 
         renderWinners('winners-list-home');
         renderWinners('winners-list-riddles');
+        renderMusicPage();
     }
 
     function renderWinners(id) {
@@ -1524,6 +1629,189 @@
         if(u && u.username) db.ref('usernames/'+u.username).remove();
         db.ref('users/'+uid).remove();
         showToast("המשתמש נמחק ממערכת הניהול");
+    }
+
+    // MUSIC HELPERS
+    function isYouTubeUrl(url) {
+        return /youtube\.com\/watch\?v=|youtu\.be\//.test(url || "");
+    }
+
+    function getYouTubeId(url) {
+        try {
+            if (url.includes('youtu.be/')) {
+                return url.split('youtu.be/')[1].split(/[?&]/)[0];
+            }
+            const u = new URL(url);
+            return u.searchParams.get('v');
+        } catch(e) {
+            return null;
+        }
+    }
+
+    function getYouTubeThumb(url) {
+        const id = getYouTubeId(url);
+        if (!id) return null;
+        return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    }
+
+    function getMediaType(url) {
+        const u = (url || "").toLowerCase();
+        if (isYouTubeUrl(url)) return 'youtube';
+        if (u.endsWith('.mp4')) return 'mp4';
+        if (u.endsWith('.mp3')) return 'mp3';
+        return 'other';
+    }
+
+    function captureMp4Frame(url, callback) {
+        if (mp4ThumbCache[url]) {
+            callback(mp4ThumbCache[url]);
+            return;
+        }
+        const video = document.createElement('video');
+        video.src = url;
+        video.crossOrigin = "anonymous";
+        video.muted = true;
+        video.playsInline = true;
+        video.addEventListener('loadeddata', () => {
+            video.currentTime = 1;
+        }, { once:true });
+        video.addEventListener('seeked', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 320;
+            canvas.height = 180;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            mp4ThumbCache[url] = dataUrl;
+            callback(dataUrl);
+        }, { once:true });
+        video.addEventListener('error', () => {
+            callback(null);
+        }, { once:true });
+    }
+
+    function renderMusicPage() {
+        const list = data.mp3_list || [];
+        const wrap = document.getElementById('music-cards');
+        if (!wrap) return;
+
+        if (!list.length) {
+            wrap.innerHTML = '<div class="section-box">אין שירים כרגע.</div>';
+            return;
+        }
+
+        const searchVal = (document.getElementById('music-search')?.value || "").toLowerCase();
+        const filterVal = document.getElementById('music-filter')?.value || "all";
+
+        let filtered = list.filter(item => {
+            const name = (item.name || "").toLowerCase();
+            if (searchVal && !name.includes(searchVal)) return false;
+            const type = getMediaType(item.url || "");
+            if (filterVal === 'youtube' && type !== 'youtube') return false;
+            if (filterVal === 'mp3' && type !== 'mp3') return false;
+            if (filterVal === 'mp4' && type !== 'mp4') return false;
+            return true;
+        });
+
+        if (!filtered.length) {
+            wrap.innerHTML = '<div class="section-box">לא נמצאו שירים מתאימים לחיפוש/סינון.</div>';
+            return;
+        }
+
+        wrap.innerHTML = filtered.map((item, idx) => {
+            const url = item.url || "";
+            const type = getMediaType(url);
+            let thumb = "";
+            let sub = "";
+
+            if (type === 'youtube') {
+                thumb = getYouTubeThumb(url) || "audio-icon.png";
+                sub = "YouTube";
+            } else if (type === 'mp4') {
+                thumb = mp4ThumbCache[url] || "video-icon.png";
+                sub = "וידאו (MP4)";
+            } else if (type === 'mp3') {
+                thumb = "audio-icon.png";
+                sub = "אודיו (MP3)";
+            } else {
+                thumb = "audio-icon.png";
+                sub = "קובץ מדיה";
+            }
+
+            const realIndex = data.mp3_list.indexOf(item);
+
+            return `
+                <div class="music-card" onclick="playMusicItem(${realIndex})">
+                    <img src="${thumb}">
+                    <div>
+                        <div class="music-card-title">${item.name || 'ללא שם'}</div>
+                        <div class="music-card-sub">${sub}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function playMusicItem(idx) {
+        const list = data.mp3_list || [];
+        if (!list.length || !list[idx]) return;
+        const item = list[idx];
+        const url = item.url || "";
+
+        const titleEl = document.getElementById('music-main-title');
+        const imgEl = document.getElementById('music-main-image');
+        const playerWrap = document.getElementById('music-main-player');
+        const ytBtnWrap = document.getElementById('music-main-youtube-btn');
+        const ytBtn = document.getElementById('music-open-youtube-btn');
+
+        titleEl.innerText = item.name || 'שיר';
+
+        const type = getMediaType(url);
+        let thumb = "";
+
+        if (type === 'youtube') {
+            thumb = getYouTubeThumb(url) || "video-icon.png";
+        } else if (type === 'mp4') {
+            if (mp4ThumbCache[url]) {
+                thumb = mp4ThumbCache[url];
+            } else {
+                thumb = "video-icon.png";
+                captureMp4Frame(url, (dataUrl) => {
+                    if (dataUrl) {
+                        mp4ThumbCache[url] = dataUrl;
+                        if (imgEl) imgEl.src = dataUrl;
+                        renderMusicPage();
+                    }
+                });
+            }
+        } else {
+            thumb = "audio-icon.png";
+        }
+
+        imgEl.src = thumb;
+
+        if (type === 'youtube') {
+            const id = getYouTubeId(url);
+            playerWrap.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${id}" 
+                    style="width:100%;aspect-ratio:16/9;border-radius:18px;border:none;box-shadow:0 12px 30px rgba(0,0,0,0.6);" 
+                    allowfullscreen
+                ></iframe>
+            `;
+            ytBtnWrap.style.display = 'block';
+            ytBtn.onclick = () => window.open(url, '_blank');
+        } else if (type === 'mp4') {
+            playerWrap.innerHTML = `
+                <video controls src="${url}" style="width:100%;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,0.6);"></video>
+            `;
+            ytBtnWrap.style.display = 'none';
+        } else {
+            playerWrap.innerHTML = `
+                <audio controls src="${url}" style="width:100%;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,0.6);"></audio>
+            `;
+            ytBtnWrap.style.display = 'none';
+        }
     }
 </script>
 </body>
