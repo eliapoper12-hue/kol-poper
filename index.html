@@ -1905,8 +1905,11 @@ function musicStartCurrent() {
     iframe.height = "260";
     iframe.style.borderRadius = "18px";
     iframe.style.border = "none";
-    iframe.src = id ? `https://www.youtube.com/embed/${id}?autoplay=1` : m.url;
-    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    
+    // התיקון הוטמע כאן:
+    iframe.src = id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&enablejsapi=1&origin=${window.location.origin}` : m.url;
+    iframe.allow = "autoplay; encrypted-media; picture-in-picture";
+    
     iframe.allowFullscreen = true;
     mediaContainer.appendChild(iframe);
     playBtn.innerText = "▶️";
@@ -2082,4 +2085,4 @@ function deleteOwnAccount() {
 }
 </script>
 </body>
-</html>                                   
+</html>
