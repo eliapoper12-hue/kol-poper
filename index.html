@@ -9,2079 +9,2021 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <style>
 body {
-  margin:0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background:#020617;
-  color:#e5e7eb;
-  direction:rtl;
+margin:0;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+background:#020617;
+color:#e5e7eb;
+direction:rtl;
 }
 * { box-sizing:border-box; }
 header {
-  background: radial-gradient(circle at top, #0f172a, #020617);
-  color:white;
-  padding:15px 20px;
-  box-shadow:0 18px 40px rgba(15,23,42,1);
-  position:sticky;
-  top:0;
-  z-index:1500;
+background: radial-gradient(circle at top, #0f172a, #020617);
+color:white;
+padding:15px 20px;
+box-shadow:0 18px 40px rgba(15,23,42,1);
+position:sticky;
+top:0;
+z-index:1500;
 }
 .header-inner {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
 }
 .live-tag {
-  background:#ef4444;
-  color:white;
-  padding:3px 10px;
-  border-radius:999px;
-  font-size:12px;
-  margin-left:8px;
+background:#ef4444;
+color:white;
+padding:3px 10px;
+border-radius:999px;
+font-size:12px;
+margin-left:8px;
 }
 .header-right {
-  display:flex;
-  align-items:center;
-  gap:8px;
+display:flex;
+align-items:center;
+gap:8px;
 }
 .btn-small {
-  background:linear-gradient(135deg,#4f46e5,#06b6d4);
-  border:none;
-  color:white;
-  padding:6px 10px;
-  border-radius:999px;
-  cursor:pointer;
-  font-size:13px;
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:999px;
+cursor:pointer;
+font-size:13px;
 }
 .btn-small:hover { opacity:0.9; }
 nav {
-  position:sticky;
-  top:70px;
-  z-index:1400;
-  background:rgba(15,23,42,0.96);
-  border-bottom:1px solid rgba(148,163,184,0.5);
-  padding:8px 10px;
-  display:flex;
-  gap:10px;
-  overflow-x:auto;
-  white-space:nowrap;
+position:sticky;
+top:70px;
+z-index:1400;
+background:rgba(15,23,42,0.96);
+border-bottom:1px solid rgba(148,163,184,0.5);
+padding:8px 10px;
+display:flex;
+gap:10px;
+overflow-x:auto;
+white-space:nowrap;
 }
 nav a {
-  color:#e5e7eb;
-  text-decoration:none;
-  padding:6px 12px;
-  border-radius:999px;
-  border:1px solid transparent;
-  cursor:pointer;
-  font-size:14px;
+color:#e5e7eb;
+text-decoration:none;
+padding:6px 12px;
+border-radius:999px;
+border:1px solid transparent;
+cursor:pointer;
+font-size:14px;
 }
 nav a:hover {
-  border-color:#38bdf8;
-  background:rgba(15,23,42,0.9);
+border-color:#38bdf8;
+background:rgba(15,23,42,0.9);
 }
 .btn-admin-open {
-  background:rgba(248,250,252,0.05);
-  border-color:#f97316;
+background:rgba(248,250,252,0.05);
+border-color:#f97316;
 }
 .container {
-  max-width:1000px;
-  margin:20px auto;
-  padding:0 12px 40px;
-  display:none;
+max-width:1000px;
+margin:20px auto;
+padding:0 12px 40px;
+display:none;
 }
 .container.active { display:block; }
 .section-box {
-  background:rgba(15,23,42,0.96);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:20px;
-  border:1px solid rgba(148,163,184,0.7);
-  box-shadow:0 18px 40px rgba(15,23,42,1);
+background:rgba(15,23,42,0.96);
+border-radius:18px;
+padding:18px;
+margin-bottom:20px;
+border:1px solid rgba(148,163,184,0.7);
+box-shadow:0 18px 40px rgba(15,23,42,1);
 }
 .player-logo-rect {
-  display:block;
-  max-width:450px;
-  margin:15px auto 5px;
-  border-radius:18px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.7);
+display:block;
+max-width:450px;
+margin:15px auto 5px;
+border-radius:18px;
+box-shadow:0 12px 30px rgba(0,0,0,0.7);
 }
 .notice-board {
-  background:linear-gradient(90deg,#0ea5e9,#38bdf8);
-  color:#111827;
-  padding:6px 10px;
-  font-weight:600;
-  box-shadow:0 10px 25px rgba(15,23,42,0.8);
+background:linear-gradient(90deg,#0ea5e9,#38bdf8);
+color:#111827;
+padding:6px 10px;
+font-weight:600;
+box-shadow:0 10px 25px rgba(15,23,42,0.8);
 }
 .user-info {
-  display:none;
-  align-items:center;
-  gap:6px;
-  background:rgba(15,23,42,0.9);
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid rgba(148,163,184,0.7);
+display:none;
+align-items:center;
+gap:6px;
+background:rgba(15,23,42,0.9);
+padding:4px 8px;
+border-radius:999px;
+border:1px solid rgba(148,163,184,0.7);
 }
 .user-avatar {
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  background:radial-gradient(circle at top, #38bdf8, #0f172a);
-  border:1px solid rgba(148,163,184,0.9);
-  background-size:cover;
-  background-position:center;
+width:26px;
+height:26px;
+border-radius:50%;
+background:radial-gradient(circle at top, #38bdf8, #0f172a);
+border:1px solid rgba(148,163,184,0.9);
+background-size:cover;
+background-position:center;
 }
 .user-name-label { font-size:13px; }
 .btn-ctrl {
-  background:linear-gradient(135deg,#4f46e5,#06b6d4);
-  border:none;
-  color:white;
-  padding:10px 16px;
-  border-radius:999px;
-  cursor:pointer;
-  font-size:14px;
-  box-shadow:0 10px 25px rgba(15,23,42,0.9);
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:999px;
+cursor:pointer;
+font-size:14px;
+box-shadow:0 10px 25px rgba(15,23,42,0.9);
 }
 .btn-ctrl:hover { opacity:0.9; }
 .form-input {
-  width:90%;
-  padding:12px 14px;
-  margin:10px 0;
-  border-radius:12px;
-  border:1px solid rgba(148,163,184,0.7);
-  font-family:inherit;
-  outline:none;
-  transition:0.2s;
-  background:rgba(15,23,42,0.9);
-  color:#e5e7eb;
+width:90%;
+padding:12px 14px;
+margin:10px 0;
+border-radius:12px;
+border:1px solid rgba(148,163,184,0.7);
+font-family:inherit;
+outline:none;
+transition:0.2s;
+background:rgba(15,23,42,0.9);
+color:#e5e7eb;
 }
 .form-input:focus {
-  border-color:#0ea5e9;
-  box-shadow:0 0 0 1px rgba(56,189,248,0.7);
+border-color:#0ea5e9;
+box-shadow:0 0 0 1px rgba(56,189,248,0.7);
 }
 .winners-container {
-  background:linear-gradient(135deg,#f97316,#fb923c);
-  padding:16px;
-  border-radius:18px;
-  box-shadow:0 18px 40px rgba(15,23,42,1);
-  margin-bottom:20px;
+background:linear-gradient(135deg,#f97316,#fb923c);
+padding:16px;
+border-radius:18px;
+box-shadow:0 18px 40px rgba(15,23,42,1);
+margin-bottom:20px;
 }
 .winner-card {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(255,255,255,0.12);
-  padding:8px 10px;
-  border-radius:12px;
-  margin-bottom:6px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:rgba(255,255,255,0.12);
+padding:8px 10px;
+border-radius:12px;
+margin-bottom:6px;
 }
 .winner-name { font-weight:600; }
 .winner-score { font-size:13px; }
 .rank-icon { font-size:18px; margin-left:6px; }
 .home-board-item {
-  background:rgba(15,23,42,0.95);
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:8px;
-  border:1px solid rgba(148,163,184,0.5);
-  font-size:14px;
+background:rgba(15,23,42,0.95);
+padding:10px;
+border-radius:10px;
+margin-bottom:8px;
+border:1px solid rgba(148,163,184,0.5);
+font-size:14px;
 }
-
 /* עיצוב אחיד לתגובות גולשים */
 .comment-item {
-  background:rgba(15,23,42,0.95);
-  color:#e5e7eb;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-  text-align:right;
-  box-shadow:0 2px 5px rgba(0,0,0,0.4);
-  border:1px solid rgba(148,163,184,0.5);
+background:rgba(15,23,42,0.95);
+color:#e5e7eb;
+padding:10px;
+border-radius:10px;
+margin-bottom:10px;
+text-align:right;
+box-shadow:0 2px 5px rgba(0,0,0,0.4);
+border:1px solid rgba(148,163,184,0.5);
 }
-
 #admin-panel {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:radial-gradient(circle at top, #020617, #020617);
-  z-index:2000;
-  overflow-y:auto;
-  color:#e5e7eb;
+display:none;
+position:fixed;
+top:0; left:0;
+width:100%; height:100%;
+background:radial-gradient(circle at top, #020617, #020617);
+z-index:2000;
+overflow-y:auto;
+color:#e5e7eb;
 }
 .admin-header {
-  background:radial-gradient(circle at top, #0f172a, #020617);
-  color:white;
-  padding:25px;
-  text-align:center;
-  box-shadow:0 18px 40px rgba(15,23,42,1);
-  position:sticky;
-  top:0;
-  z-index:2100;
+background:radial-gradient(circle at top, #0f172a, #020617);
+color:white;
+padding:25px;
+text-align:center;
+box-shadow:0 18px 40px rgba(15,23,42,1);
+position:sticky;
+top:0;
+z-index:2100;
 }
 .admin-section {
-  background:rgba(15,23,42,0.9);
-  padding:30px;
-  margin:20px auto;
-  max-width:950px;
-  border-radius:20px;
-  box-shadow:0 18px 40px rgba(15,23,42,1);
-  border:1px solid rgba(148,163,184,0.6);
+background:rgba(15,23,42,0.9);
+padding:30px;
+margin:20px auto;
+max-width:950px;
+border-radius:20px;
+box-shadow:0 18px 40px rgba(15,23,42,1);
+border:1px solid rgba(148,163,184,0.6);
 }
 .admin-table {
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-  font-size:14px;
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+font-size:14px;
 }
 .admin-table td {
-  padding:10px;
-  border-bottom:1px solid rgba(148,163,184,0.4);
-  text-align:right;
+padding:10px;
+border-bottom:1px solid rgba(148,163,184,0.4);
+text-align:right;
 }
 .btn-del {
-  background:#ef4444;
-  color:white;
-  border:none;
-  padding:6px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:12px;
+background:#ef4444;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
 }
 .btn-edit {
-  background:#3b82f6;
-  color:white;
-  border:none;
-  padding:6px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  margin-left:5px;
-  font-size:12px;
+background:#3b82f6;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+margin-left:5px;
+font-size:12px;
 }
 .modal-overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,0.85);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2500;
+position:fixed;
+inset:0;
+background:rgba(15,23,42,0.85);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:2500;
 }
 .modal-box {
-  background:rgba(15,23,42,0.98);
-  padding:18px 16px;
-  border-radius:18px;
-  width:90%;
-  max-width:380px;
-  box-shadow:0 18px 40px rgba(15,23,42,1);
-  text-align:center;
-  border:1px solid rgba(148,163,184,0.7);
+background:rgba(15,23,42,0.98);
+padding:18px 16px;
+border-radius:18px;
+width:90%;
+max-width:380px;
+box-shadow:0 18px 40px rgba(15,23,42,1);
+text-align:center;
+border:1px solid rgba(148,163,184,0.7);
 }
 .toast {
-  position:fixed;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%) translateY(120%);
-  background:rgba(15,23,42,0.98);
-  color:#f9fafb;
-  padding:8px 14px;
-  border-radius:999px;
-  font-size:13px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.7);
-  opacity:0;
-  transition:0.3s;
-  z-index:2600;
-  border:1px solid rgba(148,163,184,0.7);
+position:fixed;
+bottom:16px;
+left:50%;
+transform:translateX(-50%) translateY(120%);
+background:rgba(15,23,42,0.98);
+color:#f9fafb;
+padding:8px 14px;
+border-radius:999px;
+font-size:13px;
+box-shadow:0 10px 25px rgba(0,0,0,0.7);
+opacity:0;
+transition:0.3s;
+z-index:2600;
+border:1px solid rgba(148,163,184,0.7);
 }
 .toast.show {
-  transform:translateX(-50%) translateY(0);
-  opacity:1;
+transform:translateX(-50%) translateY(0);
+opacity:1;
 }
 .profile-row {
-  display:flex;
-  gap:16px;
-  align-items:flex-start;
-  flex-wrap:wrap;
+display:flex;
+gap:16px;
+align-items:flex-start;
+flex-wrap:wrap;
 }
 .profile-card {
-  flex:1 1 220px;
-  background:rgba(15,23,42,0.95);
-  border-radius:16px;
-  padding:16px;
-  border:1px solid rgba(148,163,184,0.7);
+flex:1 1 220px;
+background:rgba(15,23,42,0.95);
+border-radius:16px;
+padding:16px;
+border:1px solid rgba(148,163,184,0.7);
 }
 .profile-avatar-big {
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:radial-gradient(circle at top, #38bdf8, #0f172a);
-  border:2px solid rgba(148,163,184,0.9);
-  margin-bottom:8px;
-  background-size:cover;
-  background-position:center;
+width:70px;
+height:70px;
+border-radius:50%;
+background:radial-gradient(circle at top, #38bdf8, #0f172a);
+border:2px solid rgba(148,163,184,0.9);
+margin-bottom:8px;
+background-size:cover;
+background-position:center;
 }
 .profile-history {
-  flex:2 1 260px;
-  max-height:260px;
-  overflow-y:auto;
-  background:rgba(15,23,42,0.95);
-  border-radius:16px;
-  padding:12px;
-  border:1px solid rgba(148,163,184,0.7);
-  font-size:13px;
+flex:2 1 260px;
+max-height:260px;
+overflow-y:auto;
+background:rgba(15,23,42,0.95);
+border-radius:16px;
+padding:12px;
+border:1px solid rgba(148,163,184,0.7);
+font-size:13px;
 }
 .history-item {
-  padding:8px 10px;
-  border-radius:10px;
-  background:rgba(15,23,42,0.9);
-  margin-bottom:6px;
-  border:1px solid rgba(148,163,184,0.5);
+padding:8px 10px;
+border-radius:10px;
+background:rgba(15,23,42,0.9);
+margin-bottom:6px;
+border:1px solid rgba(148,163,184,0.5);
 }
 .players-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:16px;
-  margin-top:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:16px;
+margin-top:20px;
 }
 .player-card {
-  background:rgba(15,23,42,0.95);
-  border-radius:16px;
-  padding:14px;
-  border:1px solid rgba(148,163,184,0.7);
-  box-shadow:0 10px 25px rgba(15,23,42,0.9);
-  text-align:center;
+background:rgba(15,23,42,0.95);
+border-radius:16px;
+padding:14px;
+border:1px solid rgba(148,163,184,0.7);
+box-shadow:0 10px 25px rgba(15,23,42,0.9);
+text-align:center;
 }
 .player-card .avatar {
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  margin:0 auto 8px;
-  background:radial-gradient(circle at top, #38bdf8, #0f172a);
-  border:2px solid rgba(148,163,184,0.9);
-  background-size:cover;
-  background-position:center;
+width:60px;
+height:60px;
+border-radius:50%;
+margin:0 auto 8px;
+background:radial-gradient(circle at top, #38bdf8, #0f172a);
+border:2px solid rgba(148,163,184,0.9);
+background-size:cover;
+background-position:center;
 }
 .player-card .name { font-weight:700; margin-bottom:4px; }
 .player-card .score { font-size:13px; color:#a5b4fc; }
 .article-card {
-  background:rgba(15,23,42,0.96);
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:12px;
-  border-right:4px solid #0ea5e9;
-  border:1px solid rgba(148,163,184,0.7);
+background:rgba(15,23,42,0.96);
+border-radius:16px;
+padding:14px;
+margin-bottom:12px;
+border-right:4px solid #0ea5e9;
+border:1px solid rgba(148,163,184,0.7);
 }
 .article-card h3 { margin:0 0 6px; }
 .article-text { font-size:14px; color:#e5e7eb; }
 .music-layout {
-  display:grid;
-  grid-template-columns: minmax(0,2fr) minmax(0,3fr);
-  gap:18px;
+display:grid;
+grid-template-columns: minmax(0,2fr) minmax(0,3fr);
+gap:18px;
 }
 @media (max-width:800px) {
-  .music-layout { grid-template-columns:1fr; }
+.music-layout { grid-template-columns:1fr; }
 }
 .music-playlists {
-  background:rgba(15,23,42,0.96);
-  border-radius:18px;
-  padding:14px;
-  border:1px solid rgba(148,163,184,0.7);
-  max-height:420px;
-  overflow-y:auto;
+background:rgba(15,23,42,0.96);
+border-radius:18px;
+padding:14px;
+border:1px solid rgba(148,163,184,0.7);
+max-height:420px;
+overflow-y:auto;
 }
 .playlist-item-row {
-  padding:8px 10px;
-  border-radius:10px;
-  margin-bottom:6px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(15,23,42,0.9);
-  border:1px solid transparent;
+padding:8px 10px;
+border-radius:10px;
+margin-bottom:6px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:rgba(15,23,42,0.9);
+border:1px solid transparent;
 }
 .playlist-item-row.active {
-  border-color:#38bdf8;
-  background:rgba(15,23,42,0.95);
+border-color:#38bdf8;
+background:rgba(15,23,42,0.95);
 }
 .playlist-name {
-  font-weight:600;
-  font-size:14px;
+font-weight:600;
+font-size:14px;
 }
 .playlist-count {
-  font-size:12px;
-  color:#9ca3af;
+font-size:12px;
+color:#9ca3af;
 }
 .music-player-box {
-  background:radial-gradient(circle at top, #0b1120, #020617);
-  border-radius:18px;
-  padding:18px;
-  border:1px solid rgba(148,163,184,0.7);
-  box-shadow:0 18px 40px rgba(15,23,42,1);
+background:radial-gradient(circle at top, #0b1120, #020617);
+border-radius:18px;
+padding:18px;
+border:1px solid rgba(148,163,184,0.7);
+box-shadow:0 18px 40px rgba(15,23,42,1);
 }
 .music-main {
-  display:flex;
-  gap:16px;
-  flex-wrap:wrap;
-  align-items:center;
+display:flex;
+gap:16px;
+flex-wrap:wrap;
+align-items:center;
 }
 .music-cover {
-  width:140px;
-  height:140px;
-  border-radius:18px;
-  background:radial-gradient(circle at top, #38bdf8, #0f172a);
-  box-shadow:0 12px 30px rgba(0,0,0,0.8);
-  background-size:cover;
-  background-position:center;
-  overflow:hidden;
+width:140px;
+height:140px;
+border-radius:18px;
+background:radial-gradient(circle at top, #38bdf8, #0f172a);
+box-shadow:0 12px 30px rgba(0,0,0,0.8);
+background-size:cover;
+background-position:center;
+overflow:hidden;
 }
 .music-info {
-  flex:1 1 200px;
+flex:1 1 200px;
 }
 .music-title {
-  font-size:20px;
-  font-weight:700;
-  margin-bottom:4px;
+font-size:20px;
+font-weight:700;
+margin-bottom:4px;
 }
 .music-sub {
-  font-size:13px;
-  color:#9ca3af;
-  margin-bottom:10px;
+font-size:13px;
+color:#9ca3af;
+margin-bottom:10px;
 }
 .music-controls {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
 }
 .music-btn-round {
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,#4f46e5,#06b6d4);
-  color:white;
-  box-shadow:0 10px 25px rgba(15,23,42,0.9);
-  font-size:18px;
+width:40px;
+height:40px;
+border-radius:50%;
+border:none;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+color:white;
+box-shadow:0 10px 25px rgba(15,23,42,0.9);
+font-size:18px;
 }
 .music-btn-small {
-  border-radius:999px;
-  border:none;
-  padding:6px 10px;
-  font-size:12px;
-  cursor:pointer;
-  background:rgba(15,23,42,0.9);
-  color:#e5e7eb;
-  border:1px solid rgba(148,163,184,0.7);
+border-radius:999px;
+border:none;
+padding:6px 10px;
+font-size:12px;
+cursor:pointer;
+background:rgba(15,23,42,0.9);
+color:#e5e7eb;
+border:1px solid rgba(148,163,184,0.7);
 }
 .music-progress {
-  margin-top:12px;
+margin-top:12px;
 }
 .music-progress input[type="range"] {
-  width:100%;
+width:100%;
 }
 .music-tracklist {
-  margin-top:16px;
-  max-height:220px;
-  overflow-y:auto;
+margin-top:16px;
+max-height:220px;
+overflow-y:auto;
 }
 .music-track-row {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:8px 10px;
-  border-radius:10px;
-  margin-bottom:6px;
-  cursor:pointer;
-  background:rgba(15,23,42,0.9);
-  border:1px solid transparent;
+display:flex;
+align-items:center;
+gap:10px;
+padding:8px 10px;
+border-radius:10px;
+margin-bottom:6px;
+cursor:pointer;
+background:rgba(15,23,42,0.9);
+border:1px solid transparent;
 }
 .music-track-row.active {
-  border-color:#38bdf8;
-  background:rgba(15,23,42,0.95);
+border-color:#38bdf8;
+background:rgba(15,23,42,0.95);
 }
 .music-track-thumb {
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  background:radial-gradient(circle at top, #38bdf8, #0f172a);
-  background-size:cover;
-  background-position:center;
-  overflow:hidden;
+width:40px;
+height:40px;
+border-radius:10px;
+background:radial-gradient(circle at top, #38bdf8, #0f172a);
+background-size:cover;
+background-position:center;
+overflow:hidden;
 }
 .music-track-title {
-  font-size:14px;
-  font-weight:500;
+font-size:14px;
+font-weight:500;
 }
 .music-track-type {
-  font-size:11px;
-  color:#9ca3af;
+font-size:11px;
+color:#9ca3af;
 }
 video, audio {
-  border-radius:18px;
-  width:100%;
-  box-shadow:0 12px 30px rgba(0,0,0,0.6);
+border-radius:18px;
+width:100%;
+box-shadow:0 12px 30px rgba(0,0,0,0.6);
 }
-
 /* מצב בהיר - עיצוב */
 body.light-mode {
-  background:#f4f4f4;
-  color:#1a1a1a;
+background:#f4f4f4;
+color:#1a1a1a;
 }
 body.light-mode header {
-  background:linear-gradient(135deg,#ffffff,#e5e7eb);
-  color:#111827;
-  box-shadow:0 10px 25px rgba(15,23,42,0.25);
+background:linear-gradient(135deg,#ffffff,#e5e7eb);
+color:#111827;
+box-shadow:0 10px 25px rgba(15,23,42,0.25);
 }
 body.light-mode nav {
-  background:rgba(255,255,255,0.9);
-  border-color:rgba(148,163,184,0.4);
+background:rgba(255,255,255,0.9);
+border-color:rgba(148,163,184,0.4);
 }
 body.light-mode nav a { color:#111827; }
 body.light-mode .container,
 body.light-mode .section-box {
-  background:rgba(255,255,255,0.9) !important;
-  color:#111827 !important;
-  border-color:rgba(148,163,184,0.4) !important;
+background:rgba(255,255,255,0.9) !important;
+color:#111827 !important;
+border-color:rgba(148,163,184,0.4) !important;
 }
 body.light-mode .article-card {
-  background:#ffffff !important;
-  border-right-color:#0ea5e9;
-  color:#111827;
+background:#ffffff !important;
+border-right-color:#0ea5e9;
+color:#111827;
 }
 body.light-mode .article-text { color:#1f2937; }
 body.light-mode .profile-card,
 body.light-mode .profile-history,
 body.light-mode .player-card {
-  background:#ffffff !important;
-  color:#111827 !important;
+background:#ffffff !important;
+color:#111827 !important;
 }
 body.light-mode .form-input {
-  background:#f9fafb;
-  color:#111827;
-  border-color:rgba(148,163,184,0.7);
+background:#f9fafb;
+color:#111827;
+border-color:rgba(148,163,184,0.7);
 }
 body.light-mode .btn-ctrl {
-  background:linear-gradient(135deg,#4f46e5,#06b6d4);
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
 }
 body.light-mode .user-info {
-  background:rgba(255,255,255,0.9);
-  border-color:rgba(148,163,184,0.7);
+background:rgba(255,255,255,0.9);
+border-color:rgba(148,163,184,0.7);
 }
 body.light-mode .modal-box {
-  background:#ffffff;
-  color:#111827;
+background:#ffffff;
+color:#111827;
 }
 body.light-mode .toast {
-  background:#111827;
-  color:#f9fafb;
+background:#111827;
+color:#f9fafb;
 }
 body.light-mode .notice-board {
-  background:linear-gradient(90deg,#0ea5e9,#38bdf8);
-  color:#111827;
+background:linear-gradient(90deg,#0ea5e9,#38bdf8);
+color:#111827;
 }
 body.light-mode .music-player-box {
-  background:#ffffff;
+background:#ffffff;
 }
 body.light-mode .music-playlists {
-  background:#ffffff;
+background:#ffffff;
 }
 body.light-mode .music-track-row,
 body.light-mode .playlist-item-row {
-  background:#f9fafb;
+background:#f9fafb;
 }
-
 body.light-mode .comment-item {
-  background:#ffffff !important;
-  color:#111827 !important;
-  border-color:#cbd5e1 !important;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+background:#ffffff !important;
+color:#111827 !important;
+border-color:#cbd5e1 !important;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
-
 body.light-mode .home-board-item {
-  background:#ffffff !important;
-  color:#111827 !important;
-  border-color:#cbd5e1 !important;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+background:#ffffff !important;
+color:#111827 !important;
+border-color:#cbd5e1 !important;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
 }
-
 /* תמונת ברירת מחדל עם אות ראשונה */
 .fallback-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  background: #0ea5e9;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: bold;
+width: 100%;
+height: 100%;
+border-radius: inherit;
+background: #0ea5e9;
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 28px;
+font-weight: bold;
 }
 @media (max-width:600px) {
-  .header-inner { flex-direction:column; align-items:flex-start; }
-  nav { top:110px; }
+.header-inner { flex-direction:column; align-items:flex-start; }
+nav { top:110px; }
 }
 #splash {
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at top, #0f172a, #020617);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:3000;
-  color:white;
+position:fixed;
+inset:0;
+background:radial-gradient(circle at top, #0f172a, #020617);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+z-index:3000;
+color:white;
 }
 .splash-logo {
-  font-size:60px;
-  margin-bottom:10px;
+font-size:60px;
+margin-bottom:10px;
 }
 .splash-title {
-  font-size:32px;
-  font-weight:700;
-  margin-bottom:6px;
+font-size:32px;
+font-weight:700;
+margin-bottom:6px;
 }
 .splash-sub {
-  font-size:14px;
-  color:#cbd5f5;
+font-size:14px;
+color:#cbd5f5;
 }
 </style>
 </head>
 <body>
 <div id="splash">
-  <div class="splash-logo">🎈</div>
-  <div class="splash-title">קול פופר</div>
-  <div class="splash-sub">טוען את הקסם...</div>
+<div class="splash-logo">🎈</div>
+<div class="splash-title">קול פופר</div>
+<div class="splash-sub">טוען את הקסם...</div>
 </div>
-
 <header>
-  <div class="header-inner">
-    <h1><span class="live-tag">LIVE</span> קול פופר 🎈</h1>
-    <div class="header-right">
-      <button class="btn-small" onclick="toggleTheme()" id="theme-toggle">🌙 כהה</button>
-      <div id="user-info" class="user-info">
-        <div class="user-avatar" id="user-avatar"></div>
-        <span class="user-name-label" id="user-name-label"></span>
-      </div>
-      <button class="btn-small" onclick="showPage('profile-page')" id="btn-profile" style="display:none;">הפרופיל שלי</button>
-      <button class="btn-small" onclick="openLogin()" id="btn-login">התחברות</button>
-      <button class="btn-small" onclick="openRegister()" id="btn-register">הרשמה</button>
-      <button class="btn-small" onclick="logoutUser()" id="btn-logout" style="display:none;">התנתקות</button>
-    </div>
-  </div>
+<div class="header-inner">
+<h1><span class="live-tag">LIVE</span> קול פופר 🎈</h1>
+<div class="header-right">
+<button class="btn-small" onclick="toggleTheme()" id="theme-toggle">🌙 כהה</button>
+<div id="user-info" class="user-info">
+<div class="user-avatar" id="user-avatar"></div>
+<span class="user-name-label" id="user-name-label"></span>
+</div>
+<button class="btn-small" onclick="showPage('profile-page')" id="btn-profile" style="display:none;">הפרופיל שלי</button>
+<button class="btn-small" onclick="openLogin()" id="btn-login">התחברות</button>
+<button class="btn-small" onclick="openRegister()" id="btn-register">הרשמה</button>
+<button class="btn-small" onclick="logoutUser()" id="btn-logout" style="display:none;">התנתקות</button>
+</div>
+</div>
 </header>
-
 <img src="logo.png" class="player-logo-rect" alt="לוגו קול פופר">
-
 <div class="notice-board">
-  <marquee id="notice-display" scrollamount="8">טוען הודעות...</marquee>
+<marquee id="notice-display" scrollamount="8">טוען הודעות...</marquee>
 </div>
-
 <nav>
-  <a onclick="showPage('home')">🏠 הבית</a>
-  <a onclick="showPage('torah')">📜 דברי תורה</a>
-  <a onclick="showPage('riddles')">🧩 חידות</a>
-  <a onclick="showPage('jokes')">🤣 בדיחות</a>
-  <a onclick="showPage('player')">🎵 נגן מוזיקה</a>
-  <a onclick="showPage('contact')">📱 צור קשר</a>
-  <a onclick="showPage('players-page')">🎮 לוח שחקנים</a>
-  <a onclick="adminCheck()" class="btn-admin-open">⚙️ ניהול</a>
+<a onclick="showPage('home')">🏠 הבית</a>
+<a onclick="showPage('torah')">📜 דברי תורה</a>
+<a onclick="showPage('riddles')">🧩 חידות</a>
+<a onclick="showPage('jokes')">🤣 בדיחות</a>
+<a onclick="showPage('player')">🎵 נגן מוזיקה</a>
+<a onclick="showPage('contact')">📱 צור קשר</a>
+<a onclick="showPage('players-page')">🎮 לוח שחקנים</a>
+<a onclick="adminCheck()" class="btn-admin-open">⚙️ ניהול</a>
 </nav>
-
 <div id="home" class="container active">
-  <div class="winners-container">
-    <h3 style="color:#1f2937;margin-top:0;">🏆 אלופי קול פופר</h3>
-    <div id="winners-list-home"></div>
-  </div>
-  
-  <div style="margin:30px 0; text-align:center;">
-    <button onclick="addLike()" style="font-size:55px; background:none; border:none; cursor:pointer; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));">❤️</button>
-    <div id="likes" style="font-size:32px; font-weight:bold; color:#f97316;">0</div>
-  </div>
-  
-  <div class="section-box" style="background:#022c22;">
-    <h3 style="color:#bbf7d0;">💬 תגובות הגולשים</h3>
-    <div id="comm-list" style="max-height:250px; overflow-y:auto; margin-bottom:20px;"></div>
-    <input id="c-n" class="form-input" placeholder="השם שלך" style="width:40%;">
-    <input id="c-t" class="form-input" placeholder="מה תרצה לכתוב?" style="width:90%;">
-    <button class="btn-ctrl" onclick="postComm()" style="width:90%;">שלח תגובה 🚀</button>
-  </div>
-  
-  <div class="section-box">
-    <h3>📢 לוח מודעות</h3>
-    <div id="home-board-list"></div>
-  </div>
+<div class="winners-container">
+<h3 style="color:#1f2937;margin-top:0;">🏆 אלופי קול פופר</h3>
+<div id="winners-list-home"></div>
 </div>
-
+<div style="margin:30px 0; text-align:center;">
+<button onclick="addLike()" style="font-size:55px; background:none; border:none; cursor:pointer; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));">❤️</button>
+<div id="likes" style="font-size:32px; font-weight:bold; color:#f97316;">0</div>
+</div>
+<div class="section-box" style="background:#022c22;">
+<h3 style="color:#bbf7d0;">💬 תגובות הגולשים</h3>
+<div id="comm-list" style="max-height:250px; overflow-y:auto; margin-bottom:20px;"></div>
+<input id="c-n" class="form-input" placeholder="השם שלך" style="width:40%;">
+<input id="c-t" class="form-input" placeholder="מה תרצה לכתוב?" style="width:90%;">
+<button class="btn-ctrl" onclick="postComm()" style="width:90%;">שלח תגובה 🚀</button>
+</div>
+<div class="section-box">
+<h3>📢 לוח מודעות</h3>
+<div id="home-board-list"></div>
+</div>
+</div>
 <div id="torah" class="container">
-  <h2 style="font-size:35px; color:#38bdf8; margin-bottom:25px;">📜 דברי תורה וכתבות</h2>
-  <div id="articles-display">טוען תוכן...</div>
+<h2 style="font-size:35px; color:#38bdf8; margin-bottom:25px;">📜 דברי תורה וכתבות</h2>
+<div id="articles-display">טוען תוכן...</div>
 </div>
-
 <div id="riddles" class="container">
-  <div class="section-box" style="background:#0b1120;">
-    <h2 style="color:#38bdf8;">🔍 החידה היומית</h2>
-    <p id="daily-q-text" style="font-size:22px; font-weight:bold; color:#e5e7eb;"></p>
-    <input id="ans-n" class="form-input" placeholder="שם">
-    <input id="ans-t" class="form-input" placeholder="הפתרון שלך">
-    <button class="btn-ctrl" onclick="sendAns()" style="width:100%;">שלח פתרון</button>
-  </div>
-  
-  <div class="section-box" style="background:#111827;">
-    <h2 style="color:#f97316;">🧠 חידון הכוכבים</h2>
-    <div id="stars" style="font-size:30px;"></div>
-    <p id="q-display" style="font-size:24px; min-height:60px;"></p>
-    <div id="q-opts"></div>
-  </div>
-  
-  <div class="winners-container">
-    <h3 style="color:#1f2937;margin-top:0;">🏆 טבלת המנצחים</h3>
-    <div id="winners-list-riddles"></div>
-  </div>
+<div class="section-box" style="background:#0b1120;">
+<h2 style="color:#38bdf8;">🔍 החידה היומית</h2>
+<p id="daily-q-text" style="font-size:22px; font-weight:bold; color:#e5e7eb;"></p>
+<input id="ans-n" class="form-input" placeholder="שם">
+<input id="ans-t" class="form-input" placeholder="הפתרון שלך">
+<button class="btn-ctrl" onclick="sendAns()" style="width:100%;">שלח פתרון</button>
 </div>
-
+<div class="section-box" style="background:#111827;">
+<h2 style="color:#f97316;">🧠 חידון הכוכבים</h2>
+<div id="stars" style="font-size:30px;"></div>
+<p id="q-display" style="font-size:24px; min-height:60px;"></p>
+<div id="q-opts"></div>
+</div>
+<div class="winners-container">
+<h3 style="color:#1f2937;margin-top:0;">🏆 טבלת המנצחים</h3>
+<div id="winners-list-riddles"></div>
+</div>
+</div>
 <div id="jokes" class="container">
-  <h2 style="font-size:35px;">🤣 רגע של צחוק</h2>
-  <div id="j-display" class="section-box" style="font-size:28px; line-height:1.6; min-height:150px; display:flex; align-items:center; justify-content:center;">טוען בדיחה...</div>
-  <button class="btn-ctrl" onclick="move('joke',1)" style="padding:20px 40px; font-size:20px;">הבא בתור! ⏭</button>
+<h2 style="font-size:35px;">🤣 רגע של צחוק</h2>
+<div id="j-display" class="section-box" style="font-size:28px; line-height:1.6; min-height:150px; display:flex; align-items:center; justify-content:center;">טוען בדיחה...</div>
+<button class="btn-ctrl" onclick="move('joke',1)" style="padding:20px 40px; font-size:20px;">הבא בתור! ⏭</button>
 </div>
-
 <div id="player" class="container">
-  <h2 style="font-size:32px; margin-bottom:10px;">🎵 נגן המוזיקה של קול פופר</h2>
-  <p style="font-size:14px; color:#a5b4fc; margin-bottom:18px;">בחר פלייליסט, בחר שיר, ותן למוזיקה לעבוד.</p>
-  
-  <div class="music-layout">
-    <div class="music-playlists">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-weight:600;">📚 פלייליסטים</span>
-      </div>
-      <div class="playlist-item-row" onclick="selectAllSongs()" id="all-songs-row" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-        <span class="playlist-name">🎼 כל השירים</span>
-        <span class="playlist-count" id="all-songs-count" style="color:#e0f2fe;"></span>
-      </div>
-      <div id="music-playlists-list"></div>
-    </div>
-    
-    <div class="music-player-box">
-      <div class="music-main">
-        <div class="music-cover" id="music-cover"></div>
-        <div class="music-info">
-          <div class="music-title" id="music-title">בחר שיר להתחלה</div>
-          <div class="music-sub" id="music-sub">אין שיר מנוגן כרגע</div>
-          <div class="music-controls">
-            <button class="music-btn-round" onclick="musicPrev()">⏮</button>
-            <button class="music-btn-round" onclick="musicTogglePlay()" id="music-play-btn">▶️</button>
-            <button class="music-btn-round" onclick="musicNext()">⏭</button>
-            <button class="music-btn-small" onclick="musicToggleShuffle()" id="music-shuffle-btn">🔀 רגיל</button>
-            <button class="music-btn-small" onclick="musicToggleRepeat()" id="music-repeat-btn">🔁 רגיל</button>
-          </div>
-          <div class="music-progress">
-            <input type="range" min="0" max="100" value="0" id="music-progress-range" oninput="musicSeek(this.value)">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; margin-top:2px;">
-              <span id="music-time-current">00:00</span>
-              <span id="music-time-total">00:00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:14px;">
-        <div id="music-media-container"></div>
-      </div>
-      <div class="music-tracklist" id="music-tracklist"></div>
-    </div>
-  </div>
+<h2 style="font-size:32px; margin-bottom:10px;">🎵 נגן המוזיקה של קול פופר</h2>
+<p style="font-size:14px; color:#a5b4fc; margin-bottom:18px;">בחר פלייליסט, בחר שיר, ותן למוזיקה לעבוד.</p>
+<div class="music-layout">
+<div class="music-playlists">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+<span style="font-weight:600;">📚 פלייליסטים</span>
 </div>
-
+<div class="playlist-item-row" onclick="selectAllSongs()" id="all-songs-row" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: white; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+<span class="playlist-name">🎼 כל השירים</span>
+<span class="playlist-count" id="all-songs-count" style="color:#e0f2fe;"></span>
+</div>
+<div id="music-playlists-list"></div>
+</div>
+<div class="music-player-box">
+<div class="music-main">
+<div class="music-cover" id="music-cover"></div>
+<div class="music-info">
+<div class="music-title" id="music-title">בחר שיר להתחלה</div>
+<div class="music-sub" id="music-sub">אין שיר מנוגן כרגע</div>
+<div class="music-controls">
+<button class="music-btn-round" onclick="musicPrev()">⏮</button>
+<button class="music-btn-round" onclick="musicTogglePlay()" id="music-play-btn">▶️</button>
+<button class="music-btn-round" onclick="musicNext()">⏭</button>
+<button class="music-btn-small" onclick="musicToggleShuffle()" id="music-shuffle-btn">🔀 רגיל</button>
+<button class="music-btn-small" onclick="musicToggleRepeat()" id="music-repeat-btn">🔁 רגיל</button>
+</div>
+<div class="music-progress">
+<input type="range" min="0" max="100" value="0" id="music-progress-range" oninput="musicSeek(this.value)">
+<div style="display:flex; justify-content:space-between; font-size:11px; color:#9ca3af; margin-top:2px;">
+<span id="music-time-current">00:00</span>
+<span id="music-time-total">00:00</span>
+</div>
+</div>
+</div>
+</div>
+<div style="margin-top:14px;">
+<div id="music-media-container"></div>
+</div>
+<div class="music-tracklist" id="music-tracklist"></div>
+</div>
+</div>
+</div>
 <div id="contact" class="container">
-  <h2>📱 דברו איתנו</h2>
-  <div class="section-box">
-    <h3>💌 שליחת דרישת שלום</h3>
-    <input id="con-n" class="form-input" placeholder="שם">
-    <textarea id="con-m" class="form-input" style="height:100px;" placeholder="ההודעה שלך..."></textarea>
-    <button class="btn-ctrl" style="width:100%;" onclick="sendInb('message')">שלח לאולפן ✉️</button>
-  </div>
-  <div class="section-box" style="background:#1f2937; border-color:#f97316;">
-    <h3>🎵 איזה שיר תרצו לשמוע?</h3>
-    <input id="req-n" class="form-input" placeholder="שם">
-    <select id="req-song-select" class="form-input" style="width:95%;"></select>
-    <button class="btn-ctrl" style="width:100%; background:linear-gradient(135deg,#f97316,#ea580c);" onclick="sendInb('song')">בקש שיר 🚀</button>
-  </div>
+<h2>📱 דברו איתנו</h2>
+<div class="section-box">
+<h3>💌 שליחת דרישת שלום</h3>
+<input id="con-n" class="form-input" placeholder="שם">
+<textarea id="con-m" class="form-input" style="height:100px;" placeholder="ההודעה שלך..."></textarea>
+<button class="btn-ctrl" style="width:100%;" onclick="sendInb('message')">שלח לאולפן ✉️</button>
 </div>
-
+<div class="section-box" style="background:#1f2937; border-color:#f97316;">
+<h3>🎵 איזה שיר תרצו לשמוע?</h3>
+<input id="req-n" class="form-input" placeholder="שם">
+<select id="req-song-select" class="form-input" style="width:95%;"></select>
+<button class="btn-ctrl" style="width:100%; background:linear-gradient(135deg,#f97316,#ea580c);" onclick="sendInb('song')">בקש שיר 🚀</button>
+</div>
+</div>
 <div id="profile-page" class="container">
-  <h2 style="font-size:32px; margin-bottom:20px;">👤 הפרופיל שלי</h2>
-  <div id="profile-page-content">
-    <div>טוען פרופיל...</div>
-  </div>
+<h2 style="font-size:32px; margin-bottom:20px;">👤 הפרופיל שלי</h2>
+<div id="profile-page-content">
+<div>טוען פרופיל...</div>
 </div>
-
+</div>
 <div id="players-page" class="container">
-  <h2 style="font-size:32px; margin-bottom:10px;">🎮 לוח שחקנים</h2>
-  <p style="font-size:14px; color:#a5b4fc;">רשימת כל השחקנים הרשומים וניקוד החידונים שלהם</p>
-  <div id="players-page-content"></div>
+<h2 style="font-size:32px; margin-bottom:10px;">🎮 לוח שחקנים</h2>
+<p style="font-size:14px; color:#a5b4fc;">רשימת כל השחקנים הרשומים וניקוד החידונים שלהם</p>
+<div id="players-page-content"></div>
 </div>
-
 <div id="admin-panel">
-  <div class="admin-header">
-    <h1>⚙️ מרכז השליטה - קול פופר</h1>
-    <button class="btn-ctrl" style="background:#f56565;" onclick="document.getElementById('admin-panel').style.display='none'">סגור ניהול ❌</button>
-  </div>
-  <div class="admin-content">
-    
-    <div class="admin-section" style="background:#451a03;">
-      <h3>📢 שלח הודעה קופצת (Popup) לכל המשתמשים</h3>
-      <input id="pop-txt" class="form-input" placeholder="הכנס את תוכן ההודעה...">
-      <button class="btn-ctrl" style="background:linear-gradient(135deg,#f97316,#ea580c); width:100%;" onclick="sendPopup()">שלח פופ-אפ עכשיו! 🚀</button>
-    </div>
-    
-    <div class="admin-section" style="border-color:#38bdf8;">
-      <h3>📜 ניהול דברי תורה וכתבות (13)</h3>
-      <input id="adm-art-title" class="form-input" placeholder="כותרת הכתבה">
-      <textarea id="adm-art-text" class="form-input" style="height:120px;" placeholder="תוכן הכתבה המלא..."></textarea>
-      <button class="btn-ctrl" onclick="addItem('articles_list', {title: document.getElementById('adm-art-title').value, text: document.getElementById('adm-art-text').value}, ['adm-art-title','adm-art-text'])">הוסף כתבה</button>
-      <div id="adm-articles"></div>
-    </div>
-    
-    <div class="admin-section" style="background:#450a0a;">
-      <h3>🛑 איפוסי מערכת (1,2,3,6,13)</h3>
-      <button class="btn-del" style="padding:10px;" onclick="resetData('comments','תגובות')">איפוס תגובות (1)</button>
-      <button class="btn-del" style="padding:10px;" onclick="resetData('inbox','הודעות')">איפוס אינבוקס (2)</button>
-      <button class="btn-del" style="padding:10px;" onclick="resetLikes()">איפוס לייקים (3)</button>
-      <button class="btn-del" style="padding:10px;" onclick="resetData('winners','זוכים')">איפוס טבלת זוכים (6)</button>
-      <button class="btn-del" style="padding:10px;" onclick="resetData('articles_list','כתבות')">איפוס כתבות (13)</button>
-    </div>
-    
-    <div class="admin-section"><h3>📥 תיבת הודעות (4)</h3><div id="adm-inbox"></div></div>
-    
-    <div class="admin-section">
-      <h3>🧠 שאלות חידון הכוכבים (5)</h3>
-      <input id="adm-q-t" class="form-input" placeholder="שאלה">
-      <input id="adm-q-a" class="form-input" placeholder="תשובה נכונה">
-      <input id="adm-q-o2" class="form-input" placeholder="אופציה 2">
-      <input id="adm-q-o3" class="form-input" placeholder="אופציה 3">
-      <button class="btn-ctrl" onclick="addQuiz()">הוסף שאלה לחידון</button>
-      <div id="adm-quiz"></div>
-    </div>
-    
-    <div class="admin-section"><h3>🏆 רשימת זוכים (6)</h3><div id="adm-winners"></div></div>
-    
-    <div class="admin-section">
-      <h3>🤣 ניהול בדיחות (7)</h3>
-      <textarea id="adm-j-t" class="form-input" placeholder="בדיחה חדשה..."></textarea>
-      <button class="btn-ctrl" onclick="addItem('jokes_list', {text: document.getElementById('adm-j-t').value}, 'adm-j-t')">הוסף בדיחה</button>
-      <div id="adm-jokes"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>🎚 ניהול פלייליסטים לנגן</h3>
-      <input id="adm-pl-name" class="form-input" placeholder="שם פלייליסט חדש">
-      <button class="btn-ctrl" onclick="addPlaylist()">הוסף פלייליסט</button>
-      <div id="adm-playlists"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>🎵 ניהול שירים / סרטונים לנגן</h3>
-      <select id="adm-media-pl-select" class="form-input" style="width:95%; height:100px;" multiple></select>
-      <div style="font-size:12px; margin-bottom:10px;">* לחץ על כפתור Ctrl כדי לבחור מספר פלייליסטים יחד</div>
-      <input id="adm-media-title" class="form-input" placeholder="שם השיר / הסרטון">
-      <select id="adm-media-type" class="form-input" style="width:95%;">
-        <option value="">סוג מדיה</option>
-        <option value="audio">MP3 / אודיו</option>
-        <option value="video">MP4 / וידאו</option>
-        <option value="youtube">YouTube</option>
-      </select>
-      <input id="adm-media-url" class="form-input" placeholder="קישור (URL) למדיה">
-      <input id="adm-media-img" class="form-input" placeholder="קישור לתמונת קאבר (לא חובה)">
-      <button class="btn-ctrl" onclick="addMediaItem()">הוסף למדיה</button>
-      <div id="adm-media-items"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>🧩 ניהול חידה יומית (10)</h3>
-      <input id="adm-r-t" class="form-input" placeholder="טקסט החידה">
-      <button class="btn-ctrl" onclick="addItem('daily_riddle', {text: document.getElementById('adm-r-t').value}, 'adm-r-t')">הוסף חידה</button>
-      <div id="adm-riddles"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>📢 פס מודעות רץ (11 - למעלה בכל האתר)</h3>
-      <input id="adm-n-t" class="form-input" placeholder="תוכן המודעה">
-      <button class="btn-ctrl" onclick="addItem('notices', {text: document.getElementById('adm-n-t').value}, 'adm-n-t')">הוסף לפס מודעות</button>
-      <div id="adm-notices"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>📋 לוח מודעות בדף הבית</h3>
-      <input id="adm-hb-t" class="form-input" placeholder="תוכן מודעה ללוח בדף הבית">
-      <button class="btn-ctrl" onclick="addItem('home_board', {text: document.getElementById('adm-hb-t').value}, 'adm-hb-t')">הוסף ללוח הבית</button>
-      <div id="adm-home-board"></div>
-    </div>
-    
-    <div class="admin-section">
-      <h3>🎵 רשימת שירים לבקשות מאזינים (12)</h3>
-      <input id="adm-rs-n" class="form-input" placeholder="שם שיר להוספה לרשימה">
-      <button class="btn-ctrl" onclick="addItem('request_songs_list', {name: document.getElementById('adm-rs-n').value}, 'adm-rs-n')">הוסף שיר לרשימה</button>
-      <div id="adm-req"></div>
-    </div>
-    
-    <div class="admin-section" style="border-color:#22c55e;">
-      <h3>👥 ניהול משתמשים</h3>
-      <div id="admin-users-table"></div>
-      <div id="admin-user-details" style="margin-top:20px;"></div>
-    </div>
-    
-  </div>
+<div class="admin-header">
+<h1>⚙️ מרכז השליטה - קול פופר</h1>
+<button class="btn-ctrl" style="background:#f56565;" onclick="document.getElementById('admin-panel').style.display='none'">סגור ניהול ❌</button>
 </div>
-
+<div class="admin-content">
+<div class="admin-section" style="background:#451a03;">
+<h3>📢 שלח הודעה קופצת (Popup) לכל המשתמשים</h3>
+<input id="pop-txt" class="form-input" placeholder="הכנס את תוכן ההודעה...">
+<button class="btn-ctrl" style="background:linear-gradient(135deg,#f97316,#ea580c); width:100%;" onclick="sendPopup()">שלח פופ-אפ עכשיו! 🚀</button>
+</div>
+<div class="admin-section" style="border-color:#38bdf8;">
+<h3>📜 ניהול דברי תורה וכתבות (13)</h3>
+<input id="adm-art-title" class="form-input" placeholder="כותרת הכתבה">
+<textarea id="adm-art-text" class="form-input" style="height:120px;" placeholder="תוכן הכתבה המלא..."></textarea>
+<button class="btn-ctrl" onclick="addItem('articles_list', {title: document.getElementById('adm-art-title').value, text: document.getElementById('adm-art-text').value}, ['adm-art-title','adm-art-text'])">הוסף כתבה</button>
+<div id="adm-articles"></div>
+</div>
+<div class="admin-section" style="background:#450a0a;">
+<h3>🛑 איפוסי מערכת (1,2,3,6,13)</h3>
+<button class="btn-del" style="padding:10px;" onclick="resetData('comments','תגובות')">איפוס תגובות (1)</button>
+<button class="btn-del" style="padding:10px;" onclick="resetData('inbox','הודעות')">איפוס אינבוקס (2)</button>
+<button class="btn-del" style="padding:10px;" onclick="resetLikes()">איפוס לייקים (3)</button>
+<button class="btn-del" style="padding:10px;" onclick="resetData('winners','זוכים')">איפוס טבלת זוכים (6)</button>
+<button class="btn-del" style="padding:10px;" onclick="resetData('articles_list','כתבות')">איפוס כתבות (13)</button>
+</div>
+<div class="admin-section"><h3>📥 תיבת הודעות (4)</h3><div id="adm-inbox"></div></div>
+<div class="admin-section">
+<h3>🧠 שאלות חידון הכוכבים (5)</h3>
+<input id="adm-q-t" class="form-input" placeholder="שאלה">
+<input id="adm-q-a" class="form-input" placeholder="תשובה נכונה">
+<input id="adm-q-o2" class="form-input" placeholder="אופציה 2">
+<input id="adm-q-o3" class="form-input" placeholder="אופציה 3">
+<button class="btn-ctrl" onclick="addQuiz()">הוסף שאלה לחידון</button>
+<div id="adm-quiz"></div>
+</div>
+<div class="admin-section"><h3>🏆 רשימת זוכים (6)</h3><div id="adm-winners"></div></div>
+<div class="admin-section">
+<h3>🤣 ניהול בדיחות (7)</h3>
+<textarea id="adm-j-t" class="form-input" placeholder="בדיחה חדשה..."></textarea>
+<button class="btn-ctrl" onclick="addItem('jokes_list', {text: document.getElementById('adm-j-t').value}, 'adm-j-t')">הוסף בדיחה</button>
+<div id="adm-jokes"></div>
+</div>
+<div class="admin-section">
+<h3>🎚 ניהול פלייליסטים לנגן</h3>
+<input id="adm-pl-name" class="form-input" placeholder="שם פלייליסט חדש">
+<button class="btn-ctrl" onclick="addPlaylist()">הוסף פלייליסט</button>
+<div id="adm-playlists"></div>
+</div>
+<div class="admin-section">
+<h3>🎵 ניהול שירים / סרטונים לנגן</h3>
+<select id="adm-media-pl-select" class="form-input" style="width:95%; height:100px;" multiple></select>
+<div style="font-size:12px; margin-bottom:10px;">* לחץ על כפתור Ctrl כדי לבחור מספר פלייליסטים יחד</div>
+<input id="adm-media-title" class="form-input" placeholder="שם השיר / הסרטון">
+<select id="adm-media-type" class="form-input" style="width:95%;">
+<option value="">סוג מדיה</option>
+<option value="audio">MP3 / אודיו</option>
+<option value="video">MP4 / וידאו</option>
+<option value="youtube">YouTube</option>
+</select>
+<input id="adm-media-url" class="form-input" placeholder="קישור (URL) למדיה">
+<input id="adm-media-img" class="form-input" placeholder="קישור לתמונת קאבר (לא חובה)">
+<button class="btn-ctrl" onclick="addMediaItem()">הוסף למדיה</button>
+<div id="adm-media-items"></div>
+</div>
+<div class="admin-section">
+<h3>🧩 ניהול חידה יומית (10)</h3>
+<input id="adm-r-t" class="form-input" placeholder="טקסט החידה">
+<button class="btn-ctrl" onclick="addItem('daily_riddle', {text: document.getElementById('adm-r-t').value}, 'adm-r-t')">הוסף חידה</button>
+<div id="adm-riddles"></div>
+</div>
+<div class="admin-section">
+<h3>📢 פס מודעות רץ (11 - למעלה בכל האתר)</h3>
+<input id="adm-n-t" class="form-input" placeholder="תוכן המודעה">
+<button class="btn-ctrl" onclick="addItem('notices', {text: document.getElementById('adm-n-t').value}, 'adm-n-t')">הוסף לפס מודעות</button>
+<div id="adm-notices"></div>
+</div>
+<div class="admin-section">
+<h3>📋 לוח מודעות בדף הבית</h3>
+<input id="adm-hb-t" class="form-input" placeholder="תוכן מודעה ללוח בדף הבית">
+<button class="btn-ctrl" onclick="addItem('home_board', {text: document.getElementById('adm-hb-t').value}, 'adm-hb-t')">הוסף ללוח הבית</button>
+<div id="adm-home-board"></div>
+</div>
+<div class="admin-section">
+<h3>🎵 רשימת שירים לבקשות מאזינים (12)</h3>
+<input id="adm-rs-n" class="form-input" placeholder="שם שיר להוספה לרשימה">
+<button class="btn-ctrl" onclick="addItem('request_songs_list', {name: document.getElementById('adm-rs-n').value}, 'adm-rs-n')">הוסף שיר לרשימה</button>
+<div id="adm-req"></div>
+</div>
+<div class="admin-section" style="border-color:#22c55e;">
+<h3>👥 ניהול משתמשים</h3>
+<div id="admin-users-table"></div>
+<div id="admin-user-details" style="margin-top:20px;"></div>
+</div>
+</div>
+</div>
 <div id="login-modal" class="modal-overlay">
-  <div class="modal-box">
-    <h2>התחברות</h2>
-    <input id="login-username" class="form-input" placeholder="שם משתמש">
-    <input id="login-pass" class="form-input" type="password" placeholder="סיסמה">
-    <button class="btn-ctrl" onclick="loginUser()">התחבר</button>
-    <div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeLogin()">סגור</div>
-  </div>
+<div class="modal-box">
+<h2>התחברות</h2>
+<input id="login-username" class="form-input" placeholder="שם משתמש">
+<input id="login-pass" class="form-input" type="password" placeholder="סיסמה">
+<button class="btn-ctrl" onclick="loginUser()">התחבר</button>
+<div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeLogin()">סגור</div>
 </div>
-
+</div>
 <div id="register-modal" class="modal-overlay">
-  <div class="modal-box">
-    <h2>הרשמה</h2>
-    <input id="reg-username" class="form-input" placeholder="שם משתמש (באנגלית)">
-    <input id="reg-pass" class="form-input" type="password" placeholder="סיסמה (לפחות 6 תווים)">
-    <input id="reg-avatar" class="form-input" placeholder="קישור לתמונת פרופיל (לא חובה)">
-    <button class="btn-ctrl" onclick="registerUser()">צור חשבון</button>
-    <div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeRegister()">סגור</div>
-  </div>
+<div class="modal-box">
+<h2>הרשמה</h2>
+<input id="reg-username" class="form-input" placeholder="שם משתמש (באנגלית)">
+<input id="reg-pass" class="form-input" type="password" placeholder="סיסמה (לפחות 6 תווים)">
+<input id="reg-avatar" class="form-input" placeholder="קישור לתמונת פרופיל (לא חובה)">
+<button class="btn-ctrl" onclick="registerUser()">צור חשבון</button>
+<div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeRegister()">סגור</div>
 </div>
-
+</div>
 <div id="profile-modal" class="modal-overlay">
-  <div class="modal-box">
-    <h2>הפרופיל שלי</h2>
-    <div style="margin-bottom:10px;">
-      <div class="profile-avatar-big" id="profile-avatar"></div>
-      <div id="profile-username" style="font-weight:700;margin-bottom:4px;"></div>
-      <div id="profile-score" style="font-size:13px;color:#a5b4fc;"></div>
-    </div>
-    <input id="profile-username-input" class="form-input" placeholder="שם משתמש חדש">
-    <input id="profile-avatar-input" class="form-input" placeholder="קישור לתמונת פרופיל">
-    <button class="btn-ctrl" onclick="updateProfile()">עדכון פרופיל</button>
-    <button class="btn-del" style="margin-top:8px;" onclick="deleteOwnAccount()">מחיקת חשבון</button>
-    <div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeProfile()">סגור</div>
-  </div>
+<div class="modal-box">
+<h2>הפרופיל שלי</h2>
+<div style="margin-bottom:10px;">
+<div class="profile-avatar-big" id="profile-avatar"></div>
+<div id="profile-username" style="font-weight:700;margin-bottom:4px;"></div>
+<div id="profile-score" style="font-size:13px;color:#a5b4fc;"></div>
 </div>
-
+<input id="profile-username-input" class="form-input" placeholder="שם משתמש חדש">
+<input id="profile-avatar-input" class="form-input" placeholder="קישור לתמונת פרופיל">
+<button class="btn-ctrl" onclick="updateProfile()">עדכון פרופיל</button>
+<button class="btn-del" style="margin-top:8px;" onclick="deleteOwnAccount()">מחיקת חשבון</button>
+<div style="margin-top:8px;font-size:13px;cursor:pointer;" onclick="closeProfile()">סגור</div>
+</div>
+</div>
 <div class="toast" id="toast"></div>
-
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
-  databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
-  projectId: "kolpopper-46",
-  appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
+apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
+databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
+projectId: "kolpopper-46",
+appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let data = {
-  jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], home_board:[], request_songs_list:[], articles_list:[], playlists:[], media_items:[]
+jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], home_board:[], request_songs_list:[], articles_list:[], playlists:[], media_items:[]
 };
 let cur = { joke:0 };
 let sitePassword = "1234";
 let currentUser = null;
 let usersMap = {};
 let musicState = {
-  playlistId: null, trackIndex: 0, shuffle: false, repeat: false, currentList: [], audioEl: null, videoEl: null, type: null
+playlistId: null, trackIndex: 0, shuffle: false, repeat: false, currentList: [], audioEl: null, videoEl: null, type: null, ytPlayer: null, ytInterval: null
 };
-
 function safeCoverElement(el, url, name) {
-  function setFallback() {
-    el.style.backgroundImage = "none";
-    el.innerHTML = `<div class="fallback-avatar">${(name || '?').trim().charAt(0) || '?'}</div>`;
-  }
-  if (!url) {
-    setFallback();
-  } else {
-    const img = new Image();
-    img.onload = () => {
-      el.innerHTML = "";
-      el.style.backgroundImage = `url('${url}')`;
-    };
-    img.onerror = () => {
-      setFallback(); 
-    };
-    img.src = url;
-  }
+function setFallback() {
+el.style.backgroundImage = "none";
+el.innerHTML = `<div class="fallback-avatar">${(name || '?').trim().charAt(0) || '?'}</div>`;
 }
-
+if (!url) {
+setFallback();
+} else {
+const img = new Image();
+img.onload = () => {
+el.innerHTML = "";
+el.style.backgroundImage = `url('${url}')`;
+};
+img.onerror = () => {
+setFallback();
+};
+img.src = url;
+}
+}
 window.addEventListener("load", () => {
-  setTimeout(() => {
-    const s = document.getElementById("splash");
-    if(s) s.style.display = "none";
-  }, 2500);
+setTimeout(() => {
+const s = document.getElementById("splash");
+if(s) s.style.display = "none";
+}, 2500);
 });
-
 document.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  const btn = document.getElementById("theme-toggle");
-  if (savedTheme === "light") {
-    document.body.classList.add("light-mode");
-    if(btn) btn.innerText = "☀️ בהיר";
-  } else {
-    if(btn) btn.innerText = "🌙 כהה";
-  }
+const savedTheme = localStorage.getItem("theme");
+const btn = document.getElementById("theme-toggle");
+if (savedTheme === "light") {
+document.body.classList.add("light-mode");
+if(btn) btn.innerText = "☀️ בהיר";
+} else {
+if(btn) btn.innerText = "🌙 כהה";
+}
 });
-
 function toggleTheme() {
-  const body = document.body;
-  const btn = document.getElementById("theme-toggle");
-  if (body.classList.contains("light-mode")) {
-    body.classList.remove("light-mode");
-    if(btn) btn.innerText = "🌙 כהה";
-    localStorage.setItem("theme", "dark");
-  } else {
-    body.classList.add("light-mode");
-    if(btn) btn.innerText = "☀️ בהיר";
-    localStorage.setItem("theme", "light");
-  }
+const body = document.body;
+const btn = document.getElementById("theme-toggle");
+if (body.classList.contains("light-mode")) {
+body.classList.remove("light-mode");
+if(btn) btn.innerText = "🌙 כהה";
+localStorage.setItem("theme", "dark");
+} else {
+body.classList.add("light-mode");
+if(btn) btn.innerText = "☀️ בהיר";
+localStorage.setItem("theme", "light");
 }
-
+}
 function sync(p) {
-  db.ref(p).on('value', s => {
-    let v = s.val();
-    data[p] = v ? Object.values(v) : [];
-    data[p + '_k'] = v ? Object.keys(v) : [];
-    render();
-    renderAdmin();
-  });
-}
-
-['jokes_list','inbox','daily_riddle','quiz_questions','winners','notices','home_board','request_songs_list','articles_list','playlists','media_items'].forEach(sync);
-
-db.ref('users').on('value', s => {
-  usersMap = s.val() || {};
-  renderAdminUsers();
-  renderPlayersPage();
-  renderProfilePage();
+db.ref(p).on('value', s => {
+let v = s.val();
+data[p] = v ? Object.values(v) : [];
+data[p + '_k'] = v ? Object.keys(v) : [];
+render();
+renderAdmin();
 });
-
+}
+['jokes_list','inbox','daily_riddle','quiz_questions','winners','notices','home_board','request_songs_list','articles_list','playlists','media_items'].forEach(sync);
+db.ref('users').on('value', s => {
+usersMap = s.val() || {};
+renderAdminUsers();
+renderPlayersPage();
+renderProfilePage();
+});
 db.ref('admin_password').on('value', s => { if(s.val()) sitePassword = s.val(); });
 db.ref('likes').on('value', s => {
-  const el = document.getElementById('likes');
-  if(el) el.innerText = s.val() || 0;
+const el = document.getElementById('likes');
+if(el) el.innerText = s.val() || 0;
 });
-
 function showPage(p) {
-  document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
-  const el = document.getElementById(p);
-  if(el) el.classList.add('active');
-  window.scrollTo(0,0);
-  if(p === 'profile-page') renderProfilePage();
-  if(p === 'players-page') renderPlayersPage();
-  if(p === 'player') renderMusicPage();
+document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
+const el = document.getElementById(p);
+if(el) el.classList.add('active');
+window.scrollTo(0,0);
+if(p === 'profile-page') renderProfilePage();
+if(p === 'players-page') renderPlayersPage();
+if(p === 'player') renderMusicPage();
 }
-
 function move(p,d) {
-  let l = data[p+'_list'] || data[p+'s_list'];
-  if(l && l.length){
-    cur[p]=(cur[p]+d+l.length)%l.length;
-    render();
-  }
+let l = data[p+'_list'] || data[p+'s_list'];
+if(l && l.length){
+cur[p]=(cur[p]+d+l.length)%l.length;
+render();
 }
-
+}
 function render() {
-  if(data.jokes_list.length) {
-    const jd = document.getElementById('j-display');
-    if(jd) jd.innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
-  }
-  const nd = document.getElementById('notice-display');
-  if(nd) nd.innerText = data.notices.length ? data.notices.map(n=>n.text).join(' ★ ') : "ברוכים הבאים לקול פופר!";
-  
-  let rSelect = document.getElementById('req-song-select');
-  if(rSelect) {
-    rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
-  }
-  if(data.daily_riddle.length) {
-    const dq = document.getElementById('daily-q-text');
-    if(dq) dq.innerText = data.daily_riddle[data.daily_riddle.length-1].text;
-  }
-  const ad = document.getElementById('articles-display');
-  if(ad) {
-    ad.innerHTML = data.articles_list.length ?
-      data.articles_list.map(a => `<div class="article-card"><h3>${a.title}</h3><div class="article-text">${a.text}</div></div>`).reverse().join('') :
-      "אין תוכן כרגע.";
-  }
-  renderWinners('winners-list-home');
-  renderWinners('winners-list-riddles');
-  const hb = document.getElementById('home-board-list');
-  if(hb) {
-    hb.innerHTML = data.home_board.length ?
-      data.home_board.map(n=>`<div class="home-board-item">${n.text}</div>`).join('') :
-      "<div class='home-board-item'>אין הודעות כרגע.</div>";
-  }
-  renderMusicPage();
+if(data.jokes_list.length) {
+const jd = document.getElementById('j-display');
+if(jd) jd.innerText = data.jokes_list[cur.joke % data.jokes_list.length].text;
 }
+const nd = document.getElementById('notice-display');
+if(nd) nd.innerText = data.notices.length ? data.notices.map(n=>n.text).join(' ★ ') : "ברוכים הבאים לקול פופר!";
 
+let rSelect = document.getElementById('req-song-select');
+if(rSelect) {
+rSelect.innerHTML = '<option value="">-- בחר שיר --</option>' + data.request_songs_list.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+}
+if(data.daily_riddle.length) {
+const dq = document.getElementById('daily-q-text');
+if(dq) dq.innerText = data.daily_riddle[data.daily_riddle.length-1].text;
+}
+const ad = document.getElementById('articles-display');
+if(ad) {
+ad.innerHTML = data.articles_list.length ?
+data.articles_list.map(a => `<div class="article-card"><h3>${a.title}</h3><div class="article-text">${a.text}</div></div>`).reverse().join('') :
+"אין תוכן כרגע.";
+}
+renderWinners('winners-list-home');
+renderWinners('winners-list-riddles');
+const hb = document.getElementById('home-board-list');
+if(hb) {
+hb.innerHTML = data.home_board.length ?
+data.home_board.map(n=>`<div class="home-board-item">${n.text}</div>`).join('') :
+"<div class='home-board-item'>אין הודעות כרגע.</div>";
+}
+renderMusicPage();
+}
 function renderWinners(id) {
-  let sorted = [...data.winners].sort((a,b)=>b.score-a.score).slice(0,5);
-  const icons = ["🥇", "🥈", "🥉", "🏅", "🏅"];
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.innerHTML = sorted.map((w,i)=>`
-    <div class="winner-card">
-      <div><span class="rank-icon">${icons[i] || "🏅"}</span> <span class="winner-name">${w.name}</span></div>
-      <div class="winner-score">${w.score} נק'</div>
-    </div>
-  `).join('');
+let sorted = [...data.winners].sort((a,b)=>b.score-a.score).slice(0,5);
+const icons = ["🥇", "🥈", "🥉", "🏅", "🏅"];
+const el = document.getElementById(id);
+if(!el) return;
+el.innerHTML = sorted.map((w,i)=>`
+<div class="winner-card">
+<div><span class="rank-icon">${icons[i] || "🏅"}</span> <span class="winner-name">${w.name}</span></div>
+<div class="winner-score">${w.score} נק'</div>
+</div>
+`).join('');
 }
-
 function addLike() { db.ref('likes').transaction(c=>(c||0)+1); }
-
 function postComm() {
-  let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value;
-  if(n&&t){
-    db.ref('comments').push({name:n, text:t, time:Date.now()});
-    document.getElementById('c-t').value="";
-  }
+let n=document.getElementById('c-n').value, t=document.getElementById('c-t').value;
+if(n&&t){
+db.ref('comments').push({name:n, text:t, time:Date.now()});
+document.getElementById('c-t').value="";
 }
-
+}
 function sendInb(type) {
-  let n = document.getElementById(type==='message'?'con-n':'req-n').value;
-  let c = type==='message'?document.getElementById('con-m').value:document.getElementById('req-song-select').value;
-  if(n && c) {
-    db.ref('inbox').push({sender:n, content: (type==='message'?"הודעה: ":"בקשת שיר: ")+c, time:Date.now()});
-    showToast('נשלח לאולפן 🎙️');
-    if(type==='message') document.getElementById('con-m').value = "";
-  }
+let n = document.getElementById(type==='message'?'con-n':'req-n').value;
+let c = type==='message'?document.getElementById('con-m').value:document.getElementById('req-song-select').value;
+if(n && c) {
+db.ref('inbox').push({sender:n, content: (type==='message'?"הודעה: ":"בקשת שיר: ")+c, time:Date.now()});
+showToast('נשלח לאולפן 🎙️');
+if(type==='message') document.getElementById('con-m').value = "";
 }
-
+}
 function sendAns() {
-  let n=document.getElementById('ans-n').value, t=document.getElementById('ans-t').value;
-  if(n&&t){
-    db.ref('inbox').push({sender:n, content:"פתרון חידה: "+t, time:Date.now()});
-    showToast('הפתרון נשלח! 🧠');
-    document.getElementById('ans-t').value="";
-  }
+let n=document.getElementById('ans-n').value, t=document.getElementById('ans-t').value;
+if(n&&t){
+db.ref('inbox').push({sender:n, content:"פתרון חידה: "+t, time:Date.now()});
+showToast('הפתרון נשלח! 🧠');
+document.getElementById('ans-t').value="";
 }
-
+}
 let qIdx=0, stars=0;
 function doQuiz() {
-  if(!data.quiz_questions.length) return;
-  let q = data.quiz_questions[qIdx];
-  if(!q) {
-    let nameForTable = currentUser ? currentUser.username : prompt("כל הכבוד! שמך לטבלת הזוכים:");
-    if(nameForTable) db.ref('winners').push({name:nameForTable, score:stars});
-    if(currentUser && auth.currentUser) {
-      const uid = auth.currentUser.uid;
-      const entry = {
-        time: Date.now(),
-        correct: stars,
-        total: data.quiz_questions.length,
-        addedScore: stars
-      };
-      db.ref('users/'+uid+'/quiz_history').push(entry);
-      currentUser.score = (currentUser.score || 0) + stars;
-      db.ref('users/'+uid+'/score').set(currentUser.score);
-      renderProfilePage();
-      renderPlayersPage();
-    }
-    qIdx=0;
-    stars=0;
-    document.getElementById('stars').innerText = "";
-    document.getElementById('q-display').innerText = "לחץ על שאלה חדשה כדי להתחיל שוב!";
-    document.getElementById('q-opts').innerHTML = `<button class="btn-ctrl" onclick="doQuiz()">התחל חידון מחדש</button>`;
-    return;
-  }
-  document.getElementById('stars').innerText = "⭐".repeat(stars);
-  document.getElementById('q-display').innerText = q.q;
-  document.getElementById('q-opts').innerHTML = q.options.map((o,i)=>`<button class="btn-ctrl" style="width:100%" onclick="ansQuiz(${i===0})">${o}</button>`).sort(()=>Math.random()-0.5).join('');
+if(!data.quiz_questions.length) return;
+let q = data.quiz_questions[qIdx];
+if(!q) {
+let nameForTable = currentUser ? currentUser.username : prompt("כל הכבוד! שמך לטבלת הזוכים:");
+if(nameForTable) db.ref('winners').push({name:nameForTable, score:stars});
+if(currentUser && auth.currentUser) {
+const uid = auth.currentUser.uid;
+const entry = {
+time: Date.now(),
+correct: stars,
+total: data.quiz_questions.length,
+addedScore: stars
+};
+db.ref('users/'+uid+'/quiz_history').push(entry);
+currentUser.score = (currentUser.score || 0) + stars;
+db.ref('users/'+uid+'/score').set(currentUser.score);
+renderProfilePage();
+renderPlayersPage();
 }
-
+qIdx=0;
+stars=0;
+document.getElementById('stars').innerText = "";
+document.getElementById('q-display').innerText = "לחץ על שאלה חדשה כדי להתחיל שוב!";
+document.getElementById('q-opts').innerHTML = `<button class="btn-ctrl" onclick="doQuiz()">התחל חידון מחדש</button>`;
+return;
+}
+document.getElementById('stars').innerText = "⭐".repeat(stars);
+document.getElementById('q-display').innerText = q.q;
+document.getElementById('q-opts').innerHTML = q.options.map((o,i)=>`<button class="btn-ctrl" style="width:100%" onclick="ansQuiz(${i===0})">${o}</button>`).sort(()=>Math.random()-0.5).join('');
+}
 function ansQuiz(isC) {
-  if(isC) stars++;
-  qIdx++;
-  doQuiz();
+if(isC) stars++;
+qIdx++;
+doQuiz();
 }
 setTimeout(doQuiz, 2000);
-
 function adminCheck() {
-  let p = prompt("סיסמת מנהל:");
-  if(p===sitePassword) document.getElementById('admin-panel').style.display='block';
+let p = prompt("סיסמת מנהל:");
+if(p===sitePassword) document.getElementById('admin-panel').style.display='block';
 }
-
 function renderAdmin() {
-  tbl('inbox', 'adm-inbox', i => `<b>${i.sender}:</b> ${i.content}`);
-  tbl('quiz_questions', 'adm-quiz', i => i.q);
-  tbl('winners', 'adm-winners', i => `${i.name} (${i.score})`);
-  tbl('jokes_list', 'adm-jokes', i => i.text.substring(0,30));
-  tbl('daily_riddle', 'adm-riddles', i => i.text);
-  tbl('notices', 'adm-notices', i => i.text);
-  tbl('home_board', 'adm-home-board', i => i.text);
-  tbl('request_songs_list', 'adm-req', i => i.name);
-  tbl('articles_list', 'adm-articles', i => i.title);
-  renderAdminPlaylists();
-  renderAdminMediaItems();
+tbl('inbox', 'adm-inbox', i => `<b>${i.sender}:</b> ${i.content}`);
+tbl('quiz_questions', 'adm-quiz', i => i.q);
+tbl('winners', 'adm-winners', i => `${i.name} (${i.score})`);
+tbl('jokes_list', 'adm-jokes', i => i.text.substring(0,30));
+tbl('daily_riddle', 'adm-riddles', i => i.text);
+tbl('notices', 'adm-notices', i => i.text);
+tbl('home_board', 'adm-home-board', i => i.text);
+tbl('request_songs_list', 'adm-req', i => i.name);
+tbl('articles_list', 'adm-articles', i => i.title);
+renderAdminPlaylists();
+renderAdminMediaItems();
 }
-
 function tbl(path, target, formatFn) {
-  let h = "<table class='admin-table'>";
-  if(data[path]) data[path].forEach((item, i) => {
-    let k = data[path+'_k'][i];
-    h += `<tr><td>${formatFn(item)}</td><td style="text-align:left;">
-      <button class="btn-edit" onclick="editItem('${path}','${k}')">✏️</button>
-      <button class="btn-del" onclick="delItem('${path}','${k}')">🗑️</button>
-    </td></tr>`;
-  });
-  document.getElementById(target).innerHTML = h + "</table>";
+let h = "<table class='admin-table'>";
+if(data[path]) data[path].forEach((item, i) => {
+let k = data[path+'_k'][i];
+h += `<tr><td>${formatFn(item)}</td><td style="text-align:left;">
+<button class="btn-edit" onclick="editItem('${path}','${k}')">✏️</button>
+<button class="btn-del" onclick="delItem('${path}','${k}')">🗑️</button>
+</td></tr>`;
+});
+document.getElementById(target).innerHTML = h + "</table>";
 }
-
 function delItem(p,k) { if(confirm('למחוק?')) db.ref(p+'/'+k).remove(); }
-
 function addItem(p,d,ids) {
-  if(!d) return;
-  db.ref(p).push(d);
-  if(Array.isArray(ids)) ids.forEach(id=>document.getElementById(id).value="");
-  else document.getElementById(ids).value="";
+if(!d) return;
+db.ref(p).push(d);
+if(Array.isArray(ids)) ids.forEach(id=>document.getElementById(id).value="");
+else document.getElementById(ids).value="";
 }
-
 function resetData(p,l) { if(confirm('לאפס את '+l+'?')) db.ref(p).remove(); }
 function resetLikes() { db.ref('likes').set(0); }
-
 function addQuiz() {
-  let q=document.getElementById('adm-q-t').value, a=document.getElementById('adm-q-a').value, o2=document.getElementById('adm-q-o2').value, o3=document.getElementById('adm-q-o3').value;
-  if(q && a) {
-    db.ref('quiz_questions').push({q:q, options:[a,o2,o3]});
-    document.getElementById('adm-q-t').value = "";
-    document.getElementById('adm-q-a').value = "";
-    document.getElementById('adm-q-o2').value = "";
-    document.getElementById('adm-q-o3').value = "";
-  }
+let q=document.getElementById('adm-q-t').value, a=document.getElementById('adm-q-a').value, o2=document.getElementById('adm-q-o2').value, o3=document.getElementById('adm-q-o3').value;
+if(q && a) {
+db.ref('quiz_questions').push({q:q, options:[a,o2,o3]});
+document.getElementById('adm-q-t').value = "";
+document.getElementById('adm-q-a').value = "";
+document.getElementById('adm-q-o2').value = "";
+document.getElementById('adm-q-o3').value = "";
 }
-
+}
 function editItem(p, k) {
-  let ref = db.ref(p+'/'+k);
-  ref.once('value', s => {
-    let v = s.val();
-    if(v.title && v.text) {
-      let t=prompt("כותרת:",v.title), txt=prompt("תוכן:",v.text);
-      if(t&&txt) ref.update({title:t, text:txt});
-    }
-    else if(v.text) {
-      let t=prompt("טקסט:",v.text);
-      if(t) ref.update({text:t});
-    }
-    else if(v.name) {
-      let n=prompt("שם:",v.name);
-      if(n) ref.update({name:n});
-    }
-  });
+let ref = db.ref(p+'/'+k);
+ref.once('value', s => {
+let v = s.val();
+if(v.title && v.text) {
+let t=prompt("כותרת:",v.title), txt=prompt("תוכן:",v.text);
+if(t&&txt) ref.update({title:t, text:txt});
 }
-
+else if(v.text) {
+let t=prompt("טקסט:",v.text);
+if(t) ref.update({text:t});
+}
+else if(v.name) {
+let n=prompt("שם:",v.name);
+if(n) ref.update({name:n});
+}
+});
+}
 function sendPopup() {
-  let t = document.getElementById('pop-txt').value;
-  if(t) {
-    db.ref('current_popup').set({ text: t, time: Date.now() });
-    showToast('הפופ-אפ נשלח! 📢');
-    document.getElementById('pop-txt').value = "";
-  }
+let t = document.getElementById('pop-txt').value;
+if(t) {
+db.ref('current_popup').set({ text: t, time: Date.now() });
+showToast('הפופ-אפ נשלח! 📢');
+document.getElementById('pop-txt').value = "";
 }
-
+}
 db.ref('current_popup').on('value', s => {
-  let v = s.val();
-  if(v && (Date.now() - v.time < 30000)) showToast("הודעה חשובה מקול פופר: " + v.text);
+let v = s.val();
+if(v && (Date.now() - v.time < 30000)) showToast("הודעה חשובה מקול פופר: " + v.text);
 });
-
 db.ref('comments').on('value', s => {
-  let h = "";
-  if(s.val()) {
-    Object.values(s.val()).sort((a,b)=>(b.time||0)-(a.time||0)).forEach(c => {
-      h += `<div class="comment-item"><b>${c.name}:</b> ${c.text}</div>`;
-    });
-  }
-  const cl = document.getElementById('comm-list');
-  if(cl) cl.innerHTML = h;
+let h = "";
+if(s.val()) {
+Object.values(s.val()).sort((a,b)=>(b.time||0)-(a.time||0)).forEach(c => {
+h += `<div class="comment-item"><b>${c.name}:</b> ${c.text}</div>`;
 });
-
+}
+const cl = document.getElementById('comm-list');
+if(cl) cl.innerHTML = h;
+});
 let toastTimeout = null;
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.classList.add('show');
-  if(toastTimeout) clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(()=>t.classList.remove('show'), 3000);
+const t = document.getElementById('toast');
+t.innerText = msg;
+t.classList.add('show');
+if(toastTimeout) clearTimeout(toastTimeout);
+toastTimeout = setTimeout(()=>t.classList.remove('show'), 3000);
 }
-
 function fakeEmailFromUsername(username) {
-  return username.toLowerCase() + "@kolpopper.local";
+return username.toLowerCase() + "@kolpopper.local";
 }
-
 function openLogin() {
-  document.getElementById('login-modal').style.display = 'flex';
+document.getElementById('login-modal').style.display = 'flex';
 }
 function closeLogin() {
-  document.getElementById('login-modal').style.display = 'none';
+document.getElementById('login-modal').style.display = 'none';
 }
 function openRegister() {
-  document.getElementById('register-modal').style.display = 'flex';
+document.getElementById('register-modal').style.display = 'flex';
 }
 function closeRegister() {
-  document.getElementById('register-modal').style.display = 'none';
+document.getElementById('register-modal').style.display = 'none';
 }
-
 function openProfile() {
-  if(!currentUser) { showToast("יש להתחבר קודם"); return; }
-  document.getElementById('profile-modal').style.display = 'flex';
-  document.getElementById('profile-username').innerText = currentUser.username || "";
-  document.getElementById('profile-score').innerText = "ניקוד: " + (currentUser.score || 0);
-  document.getElementById('profile-username-input').value = currentUser.username || "";
-  document.getElementById('profile-avatar-input').value = currentUser.avatarUrl || "";
-  
-  const avatar = document.getElementById('profile-avatar');
-  if(currentUser.avatarUrl) {
-    avatar.style.backgroundImage = "url('"+currentUser.avatarUrl+"')";
-  } else {
-    avatar.style.backgroundImage = "";
-  }
-}
+if(!currentUser) { showToast("יש להתחבר קודם"); return; }
+document.getElementById('profile-modal').style.display = 'flex';
+document.getElementById('profile-username').innerText = currentUser.username || "";
+document.getElementById('profile-score').innerText = "ניקוד: " + (currentUser.score || 0);
+document.getElementById('profile-username-input').value = currentUser.username || "";
+document.getElementById('profile-avatar-input').value = currentUser.avatarUrl || "";
 
+const avatar = document.getElementById('profile-avatar');
+if(currentUser.avatarUrl) {
+avatar.style.backgroundImage = "url('"+currentUser.avatarUrl+"')";
+} else {
+avatar.style.backgroundImage = "";
+}
+}
 function closeProfile() {
-  document.getElementById('profile-modal').style.display = 'none';
+document.getElementById('profile-modal').style.display = 'none';
 }
-
 function registerUser() {
-  const username = document.getElementById('reg-username').value.trim();
-  const pass = document.getElementById('reg-pass').value.trim();
-  const avatarUrl = document.getElementById('reg-avatar').value.trim();
-  
-  if(!username || !pass) {
-    showToast("נא למלא שם משתמש וסיסמה");
-    return;
-  }
-  if(pass.length < 6) {
-    showToast("הסיסמה חייבת להיות לפחות 6 תווים");
-    return;
-  }
-  if(!/^[a-zA-Z0-9._-]+$/.test(username)) {
-    showToast("שם המשתמש חייב להיות באנגלית בלבד, ללא רווחים");
-    return;
-  }
-  
-  db.ref('usernames/'+username).once('value').then(snap => {
-    if(snap.exists()) {
-      showToast("שם המשתמש כבר בשימוש, נסה שם אחר");
-      return;
-    }
-    const email = fakeEmailFromUsername(username);
-    auth.createUserWithEmailAndPassword(email, pass)
-      .then(cred => {
-        const uid = cred.user.uid;
-        const userObj = {
-          username: username,
-          score: 0,
-          createdAt: Date.now(),
-          avatarUrl: avatarUrl || ""
-        };
-        db.ref('users/'+uid).set(userObj);
-        db.ref('usernames/'+username).set(uid);
-        
-        currentUser = userObj;
-        currentUser.uid = uid;
-        updateUserUI();
-        renderProfilePage();
-        renderPlayersPage();
-        closeRegister();
-        showToast("נרשמת בהצלחה, " + username + " 🎉");
-      })
-      .catch(err => {
-        console.error(err);
-        showToast(err.message);
-      });
-  });
+const username = document.getElementById('reg-username').value.trim();
+const pass = document.getElementById('reg-pass').value.trim();
+const avatarUrl = document.getElementById('reg-avatar').value.trim();
+
+if(!username || !pass) {
+showToast("נא למלא שם משתמש וסיסמה");
+return;
+}
+if(pass.length < 6) {
+showToast("הסיסמה חייבת להיות לפחות 6 תווים");
+return;
+}
+if(!/^[a-zA-Z0-9._-]+$/.test(username)) {
+showToast("שם המשתמש חייב להיות באנגלית בלבד, ללא רווחים");
+return;
 }
 
+db.ref('usernames/'+username).once('value').then(snap => {
+if(snap.exists()) {
+showToast("שם המשתמש כבר בשימוש, נסה שם אחר");
+return;
+}
+const email = fakeEmailFromUsername(username);
+auth.createUserWithEmailAndPassword(email, pass)
+.then(cred => {
+const uid = cred.user.uid;
+const userObj = {
+username: username,
+score: 0,
+createdAt: Date.now(),
+avatarUrl: avatarUrl || ""
+};
+db.ref('users/'+uid).set(userObj);
+db.ref('usernames/'+username).set(uid);
+
+currentUser = userObj;
+currentUser.uid = uid;
+updateUserUI();
+renderProfilePage();
+renderPlayersPage();
+closeRegister();
+showToast("נרשמת בהצלחה, " + username + " 🎉");
+})
+.catch(err => {
+console.error(err);
+showToast(err.message);
+});
+});
+}
 function loginUser() {
-  const username = document.getElementById('login-username').value.trim();
-  const pass = document.getElementById('login-pass').value.trim();
-  if(!username || !pass) {
-    showToast("נא למלא שם משתמש וסיסמה");
-    return;
-  }
-  const email = fakeEmailFromUsername(username);
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(() => {
-      showToast("התחברת בהצלחה 🎧");
-      closeLogin();
-    })
-    .catch(err => {
-      console.error(err);
-      showToast("שם משתמש או סיסמה שגויים");
-    });
+const username = document.getElementById('login-username').value.trim();
+const pass = document.getElementById('login-pass').value.trim();
+if(!username || !pass) {
+showToast("נא למלא שם משתמש וסיסמה");
+return;
 }
-
+const email = fakeEmailFromUsername(username);
+auth.signInWithEmailAndPassword(email, pass)
+.then(() => {
+showToast("התחברת בהצלחה 🎧");
+closeLogin();
+})
+.catch(err => {
+console.error(err);
+showToast("שם משתמש או סיסמה שגויים");
+});
+}
 function logoutUser() {
-  auth.signOut().then(()=>{
-    showToast("התנתקת");
-  });
+auth.signOut().then(()=>{
+showToast("התנתקת");
+});
+}
+auth.onAuthStateChanged(user => {
+if(user) {
+db.ref('users/'+user.uid).once('value').then(snap => {
+currentUser = snap.val() || null;
+if(currentUser) currentUser.uid = user.uid;
+updateUserUI();
+renderProfilePage();
+});
+} else {
+currentUser = null;
+updateUserUI();
+renderProfilePage();
+}
+});
+function updateUserUI() {
+const box = document.getElementById('user-info');
+const label = document.getElementById('user-name-label');
+const avatar = document.getElementById('user-avatar');
+const btnLogin = document.getElementById('btn-login');
+const btnRegister = document.getElementById('btn-register');
+const btnLogout = document.getElementById('btn-logout');
+const btnProfile = document.getElementById('btn-profile');
+
+if(currentUser) {
+box.style.display = 'flex';
+label.innerText = "שלום, " + currentUser.username;
+btnLogin.style.display = 'none';
+btnRegister.style.display = 'none';
+btnLogout.style.display = 'inline-block';
+btnProfile.style.display = 'inline-block';
+
+if(currentUser.avatarUrl) {
+avatar.style.backgroundImage = "url('"+currentUser.avatarUrl+"')";
+avatar.style.backgroundSize = "cover";
+avatar.style.backgroundPosition = "center";
+} else {
+avatar.style.backgroundImage = "";
+}
+} else {
+box.style.display = 'none';
+label.innerText = "";
+btnLogin.style.display = 'inline-block';
+btnRegister.style.display = 'inline-block';
+btnLogout.style.display = 'none';
+btnProfile.style.display = 'none';
+avatar.style.backgroundImage = "";
+}
+}
+function updateProfile() {
+if(!currentUser || !auth.currentUser) return;
+
+const newUsername = document.getElementById('profile-username-input').value.trim();
+const newAvatar = document.getElementById('profile-avatar-input').value.trim();
+const uid = auth.currentUser.uid;
+const updates = {};
+
+if(newUsername && newUsername !== currentUser.username) {
+if(!/^[a-zA-Z0-9._-]+$/.test(newUsername)) {
+showToast("שם המשתמש חייב להיות באנגלית בלבד, ללא רווחים");
+return;
+}
+db.ref('usernames/'+newUsername).once('value').then(snap => {
+if(snap.exists()) {
+showToast("שם המשתמש כבר תפוס");
+return;
+}
+db.ref('usernames/'+currentUser.username).remove();
+db.ref('usernames/'+newUsername).set(uid);
+
+updates.username = newUsername;
+updates.avatarUrl = newAvatar;
+db.ref('users/'+uid).update(updates).then(()=>{
+currentUser.username = newUsername;
+currentUser.avatarUrl = newAvatar;
+updateUserUI();
+renderProfilePage();
+renderPlayersPage();
+openProfile();
+showToast("הפרופיל עודכן");
+});
+});
+} else {
+updates.avatarUrl = newAvatar;
+db.ref('users/'+uid).update(updates).then(()=>{
+currentUser.avatarUrl = newAvatar;
+updateUserUI();
+renderProfilePage();
+renderPlayersPage();
+showToast("הפרופיל עודכן");
+});
+}
+}
+function renderPlayersPage() {
+const container = document.getElementById('players-page-content');
+if(!container) return;
+const users = usersMap || {};
+const entries = Object.keys(users).map(uid => ({uid, ...users[uid]}));
+
+if(!entries.length) {
+container.innerHTML = `<div class="section-box">אין שחקנים רשומים עדיין.</div>`;
+return;
 }
 
-auth.onAuthStateChanged(user => {
-  if(user) {
-    db.ref('users/'+user.uid).once('value').then(snap => {
-      currentUser = snap.val() || null;
-      if(currentUser) currentUser.uid = user.uid;
-      updateUserUI();
-      renderProfilePage();
-    });
-  } else {
-    currentUser = null;
-    updateUserUI();
-    renderProfilePage();
-  }
+entries.sort((a,b)=>(b.score||0)-(a.score||0));
+let cards = "";
+
+entries.forEach((u,idx)=>{
+cards += `
+<div class="player-card">
+<div class="avatar" style="${u.avatarUrl ? "background-image:url('"+u.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
+<div class="name">${idx+1}. ${u.username || ''}</div>
+<div class="score">ניקוד: ${u.score || 0}</div>
+<div style="font-size:11px;color:#9ca3af;margin-top:4px;">נוצר: ${u.createdAt ? new Date(u.createdAt).toLocaleDateString('he-IL') : ''}</div>
+</div>
+`;
 });
 
-function updateUserUI() {
-  const box = document.getElementById('user-info');
-  const label = document.getElementById('user-name-label');
-  const avatar = document.getElementById('user-avatar');
-  const btnLogin = document.getElementById('btn-login');
-  const btnRegister = document.getElementById('btn-register');
-  const btnLogout = document.getElementById('btn-logout');
-  const btnProfile = document.getElementById('btn-profile');
-  
-  if(currentUser) {
-    box.style.display = 'flex';
-    label.innerText = "שלום, " + currentUser.username;
-    btnLogin.style.display = 'none';
-    btnRegister.style.display = 'none';
-    btnLogout.style.display = 'inline-block';
-    btnProfile.style.display = 'inline-block';
-    
-    if(currentUser.avatarUrl) {
-      avatar.style.backgroundImage = "url('"+currentUser.avatarUrl+"')";
-      avatar.style.backgroundSize = "cover";
-      avatar.style.backgroundPosition = "center";
-    } else {
-      avatar.style.backgroundImage = "";
-    }
-  } else {
-    box.style.display = 'none';
-    label.innerText = "";
-    btnLogin.style.display = 'inline-block';
-    btnRegister.style.display = 'inline-block';
-    btnLogout.style.display = 'none';
-    btnProfile.style.display = 'none';
-    avatar.style.backgroundImage = "";
-  }
+container.innerHTML = `
+<div class="section-box">
+<div class="players-grid">
+${cards}
+</div>
+</div>
+`;
 }
-
-function updateProfile() {
-  if(!currentUser || !auth.currentUser) return;
-  
-  const newUsername = document.getElementById('profile-username-input').value.trim();
-  const newAvatar = document.getElementById('profile-avatar-input').value.trim();
-  const uid = auth.currentUser.uid;
-  const updates = {};
-  
-  if(newUsername && newUsername !== currentUser.username) {
-    if(!/^[a-zA-Z0-9._-]+$/.test(newUsername)) {
-      showToast("שם המשתמש חייב להיות באנגלית בלבד, ללא רווחים");
-      return;
-    }
-    db.ref('usernames/'+newUsername).once('value').then(snap => {
-      if(snap.exists()) {
-        showToast("שם המשתמש כבר תפוס");
-        return;
-      }
-      db.ref('usernames/'+currentUser.username).remove();
-      db.ref('usernames/'+newUsername).set(uid);
-      
-      updates.username = newUsername;
-      updates.avatarUrl = newAvatar;
-      db.ref('users/'+uid).update(updates).then(()=>{
-        currentUser.username = newUsername;
-        currentUser.avatarUrl = newAvatar;
-        updateUserUI();
-        renderProfilePage();
-        renderPlayersPage();
-        openProfile();
-        showToast("הפרופיל עודכן");
-      });
-    });
-  } else {
-    updates.avatarUrl = newAvatar;
-    db.ref('users/'+uid).update(updates).then(()=>{
-      currentUser.avatarUrl = newAvatar;
-      updateUserUI();
-      renderProfilePage();
-      renderPlayersPage();
-      showToast("הפרופיל עודכן");
-    });
-  }
-}
-
-function renderPlayersPage() {
-  const container = document.getElementById('players-page-content');
-  if(!container) return;
-  const users = usersMap || {};
-  const entries = Object.keys(users).map(uid => ({uid, ...users[uid]}));
-  
-  if(!entries.length) {
-    container.innerHTML = `<div class="section-box">אין שחקנים רשומים עדיין.</div>`;
-    return;
-  }
-  
-  entries.sort((a,b)=>(b.score||0)-(a.score||0));
-  let cards = "";
-  
-  entries.forEach((u,idx)=>{
-    cards += `
-      <div class="player-card">
-        <div class="avatar" style="${u.avatarUrl ? "background-image:url('"+u.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
-        <div class="name">${idx+1}. ${u.username || ''}</div>
-        <div class="score">ניקוד: ${u.score || 0}</div>
-        <div style="font-size:11px;color:#9ca3af;margin-top:4px;">נוצר: ${u.createdAt ? new Date(u.createdAt).toLocaleDateString('he-IL') : ''}</div>
-      </div>
-    `;
-  });
-  
-  container.innerHTML = `
-    <div class="section-box">
-      <div class="players-grid">
-        ${cards}
-      </div>
-    </div>
-  `;
-}
-
 function renderAdminUsers() {
-  const container = document.getElementById('admin-users-table');
-  if(!container) return;
-  const users = usersMap || {};
-  let rows = "";
-  Object.keys(users).forEach(uid=>{
-    const u = users[uid];
-    rows += `<tr onclick="adminSelectUser('${uid}')" style="cursor:pointer;">
-      <td>${u.username || ''}</td>
-      <td>${u.score || 0}</td>
-      <td>${u.createdAt ? new Date(u.createdAt).toLocaleString('he-IL') : ''}</td>
-    </tr>`;
-  });
-  
-  container.innerHTML = `
-    <table class="admin-table">
-      <tr>
-        <td><b>שם משתמש</b></td>
-        <td><b>ניקוד</b></td>
-        <td><b>נוצר בתאריך</b></td>
-      </tr>
-      ${rows || '<tr><td colspan="3">אין משתמשים עדיין</td></tr>'}
-    </table>
-  `;
-}
+const container = document.getElementById('admin-users-table');
+if(!container) return;
+const users = usersMap || {};
+let rows = "";
+Object.keys(users).forEach(uid=>{
+const u = users[uid];
+rows += `<tr onclick="adminSelectUser('${uid}')" style="cursor:pointer;">
+<td>${u.username || ''}</td>
+<td>${u.score || 0}</td>
+<td>${u.createdAt ? new Date(u.createdAt).toLocaleString('he-IL') : ''}</td>
+</tr>`;
+});
 
+container.innerHTML = `
+<table class="admin-table">
+<tr>
+<td><b>שם משתמש</b></td>
+<td><b>ניקוד</b></td>
+<td><b>נוצר בתאריך</b></td>
+</tr>
+${rows || '<tr><td colspan="3">אין משתמשים עדיין</td></tr>'}
+</table>
+`;
+}
 function adminSelectUser(uid) {
-  const target = document.getElementById('admin-user-details');
-  const u = usersMap[uid];
-  if(!u) { target.innerHTML = ""; return; }
-  
-  let historyHtml = "";
-  if(u.quiz_history) {
-    const entries = Object.values(u.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
-    entries.forEach(e=>{
-      historyHtml += `<div class="history-item">
-        <div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
-        <div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
-        <div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
-      </div>`;
-    });
-  } else {
-    historyHtml = "<div>אין היסטוריית חידונים</div>";
-  }
-  
-  target.innerHTML = `
-    <div class="profile-row">
-      <div class="profile-card">
-        <div class="profile-avatar-big" style="${u.avatarUrl ? "background-image:url('"+u.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
-        <div><b>שם משתמש:</b> ${u.username || ''}</div>
-        <div><b>ניקוד:</b> ${u.score || 0}</div>
-        <div><b>נוצר:</b> ${u.createdAt ? new Date(u.createdAt).toLocaleString('he-IL') : ''}</div>
-        <div style="margin-top:10px;">
-          <button class="btn-edit" onclick="adminResetScore('${uid}')">איפוס ניקוד</button>
-          <button class="btn-edit" onclick="adminClearHistory('${uid}')">מחיקת היסטוריה</button>
-          <button class="btn-del" onclick="adminDeleteUser('${uid}')">מחיקת משתמש</button>
-        </div>
-      </div>
-      <div class="profile-history">
-        <b>היסטוריית חידונים:</b>
-        <div style="margin-top:8px;">${historyHtml}</div>
-      </div>
-    </div>
-  `;
+const target = document.getElementById('admin-user-details');
+const u = usersMap[uid];
+if(!u) { target.innerHTML = ""; return; }
+
+let historyHtml = "";
+if(u.quiz_history) {
+const entries = Object.values(u.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
+entries.forEach(e=>{
+historyHtml += `<div class="history-item">
+<div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
+<div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
+<div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
+</div>`;
+});
+} else {
+historyHtml = "<div>אין היסטוריית חידונים</div>";
 }
 
+target.innerHTML = `
+<div class="profile-row">
+<div class="profile-card">
+<div class="profile-avatar-big" style="${u.avatarUrl ? "background-image:url('"+u.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
+<div><b>שם משתמש:</b> ${u.username || ''}</div>
+<div><b>ניקוד:</b> ${u.score || 0}</div>
+<div><b>נוצר:</b> ${u.createdAt ? new Date(u.createdAt).toLocaleString('he-IL') : ''}</div>
+<div style="margin-top:10px;">
+<button class="btn-edit" onclick="adminResetScore('${uid}')">איפוס ניקוד</button>
+<button class="btn-edit" onclick="adminClearHistory('${uid}')">מחיקת היסטוריה</button>
+<button class="btn-del" onclick="adminDeleteUser('${uid}')">מחיקת משתמש</button>
+</div>
+</div>
+<div class="profile-history">
+<b>היסטוריית חידונים:</b>
+<div style="margin-top:8px;">${historyHtml}</div>
+</div>
+</div>
+`;
+}
 function addPlaylist() {
-  const name = document.getElementById('adm-pl-name').value.trim();
-  if(!name) return;
-  db.ref('playlists').push({name});
-  document.getElementById('adm-pl-name').value = "";
+const name = document.getElementById('adm-pl-name').value.trim();
+if(!name) return;
+db.ref('playlists').push({name});
+document.getElementById('adm-pl-name').value = "";
 }
-
 function renderAdminPlaylists() {
-  const container = document.getElementById('adm-playlists');
-  const select = document.getElementById('adm-media-pl-select');
-  if(!container || !select) return;
-  
-  let rows = "";
-  data.playlists.forEach((pl,i)=>{
-    const k = data.playlists_k[i];
-    rows += `<tr>
-      <td>${pl.name || ''}</td>
-      <td style="text-align:left;">
-        <button class="btn-edit" onclick="editPlaylist('${k}','${pl.name || ''}')">✏️</button>
-        <button class="btn-del" onclick="delItem('playlists','${k}')">🗑️</button>
-      </td>
-    </tr>`;
-  });
-  
-  container.innerHTML = `
-    <table class="admin-table">
-      <tr><td><b>שם פלייליסט</b></td><td></td></tr>
-      ${rows || '<tr><td colspan="2">אין פלייליסטים עדיין</td></tr>'}
-    </table>
-  `;
-  
-  select.innerHTML = '<option value="">בחר פלייליסט</option>' + 
-    data.playlists.map((pl,i)=>`<option value="${data.playlists_k[i]}">${pl.name}</option>`).join('');
-}
+const container = document.getElementById('adm-playlists');
+const select = document.getElementById('adm-media-pl-select');
+if(!container || !select) return;
 
+let rows = "";
+data.playlists.forEach((pl,i)=>{
+const k = data.playlists_k[i];
+rows += `<tr>
+<td>${pl.name || ''}</td>
+<td style="text-align:left;">
+<button class="btn-edit" onclick="editPlaylist('${k}','${pl.name || ''}')">✏️</button>
+<button class="btn-del" onclick="delItem('playlists','${k}')">🗑️</button>
+</td>
+</tr>`;
+});
+
+container.innerHTML = `
+<table class="admin-table">
+<tr><td><b>שם פלייליסט</b></td><td></td></tr>
+${rows || '<tr><td colspan="2">אין פלייליסטים עדיין</td></tr>'}
+</table>
+`;
+
+select.innerHTML = '<option value="">בחר פלייליסט</option>' +
+data.playlists.map((pl,i)=>`<option value="${data.playlists_k[i]}">${pl.name}</option>`).join('');
+}
 function editPlaylist(k, oldName) {
-  const n = prompt("שם פלייליסט:", oldName || "");
-  if(n) db.ref('playlists/'+k).update({name:n});
+const n = prompt("שם פלייליסט:", oldName || "");
+if(n) db.ref('playlists/'+k).update({name:n});
 }
-
 function addMediaItem() {
-  const plSelect = document.getElementById('adm-media-pl-select');
-  const selectedOptions = Array.from(plSelect.selectedOptions).map(opt => opt.value);
-  const title = document.getElementById('adm-media-title').value.trim();
-  const type = document.getElementById('adm-media-type').value;
-  const url = document.getElementById('adm-media-url').value.trim();
-  const img = document.getElementById('adm-media-img').value.trim();
-
-  if(!selectedOptions.length || !title || !type || !url) {
-    showToast("נא למלא פלייליסט, שם, סוג וקישור");
-    return;
-  }
-
-  db.ref('media_items').push({
-    playlistIds: selectedOptions, 
-    title,
-    type,
-    url,
-    imageUrl: img || ""
-  });
-
-  document.getElementById('adm-media-title').value = "";
-  document.getElementById('adm-media-type').value = "";
-  document.getElementById('adm-media-url').value = "";
-  document.getElementById('adm-media-img').value = "";
+const plSelect = document.getElementById('adm-media-pl-select');
+const selectedOptions = Array.from(plSelect.selectedOptions).map(opt => opt.value);
+const title = document.getElementById('adm-media-title').value.trim();
+const type = document.getElementById('adm-media-type').value;
+const url = document.getElementById('adm-media-url').value.trim();
+const img = document.getElementById('adm-media-img').value.trim();
+if(!selectedOptions.length || !title || !type || !url) {
+showToast("נא למלא פלייליסט, שם, סוג וקישור");
+return;
 }
-
+db.ref('media_items').push({
+playlistIds: selectedOptions,
+title,
+type,
+url,
+imageUrl: img || ""
+});
+document.getElementById('adm-media-title').value = "";
+document.getElementById('adm-media-type').value = "";
+document.getElementById('adm-media-url').value = "";
+document.getElementById('adm-media-img').value = "";
+}
 function renderAdminMediaItems() {
-  const container = document.getElementById('adm-media-items');
-  if(!container) return;
-  
-  let rows = "";
-  data.media_items.forEach((m,i)=>{
-    const k = data.media_items_k[i];
-    let plName = "";
-    if (m.playlistIds && m.playlistIds.length) {
-      plName = m.playlistIds.map(id=>{
-        const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===id);
-        return p ? p.name : "";
-      }).filter(Boolean).join(", ");
-    } else {
-      const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===m.playlistId);
-      plName = p ? p.name : "";
-    }
-    
-    rows += `<tr>
-      <td>${m.title || ''}</td>
-      <td>${m.type || ''}</td>
-      <td>${plName}</td>
-      <td style="text-align:left;">
-        <button class="btn-del" onclick="delItem('media_items','${k}')">🗑️</button>
-      </td>
-    </tr>`;
-  });
-  
-  container.innerHTML = `
-    <table class="admin-table">
-      <tr>
-        <td><b>שם</b></td>
-        <td><b>סוג</b></td>
-        <td><b>פלייליסט</b></td>
-        <td></td>
-      </tr>
-      ${rows || '<tr><td colspan="4">אין מדיה עדיין</td></tr>'}
-    </table>
-  `;
+const container = document.getElementById('adm-media-items');
+if(!container) return;
+
+let rows = "";
+data.media_items.forEach((m,i)=>{
+const k = data.media_items_k[i];
+let plName = "";
+if (m.playlistIds && m.playlistIds.length) {
+plName = m.playlistIds.map(id=>{
+const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===id);
+return p ? p.name : "";
+}).filter(Boolean).join(", ");
+} else {
+const p = data.playlists.find((pl,idx)=>data.playlists_k[idx]===m.playlistId);
+plName = p ? p.name : "";
 }
 
+rows += `<tr>
+<td>${m.title || ''}</td>
+<td>${m.type || ''}</td>
+<td>${plName}</td>
+<td style="text-align:left;">
+<button class="btn-del" onclick="delItem('media_items','${k}')">🗑️</button>
+</td>
+</tr>`;
+});
+
+container.innerHTML = `
+<table class="admin-table">
+<tr>
+<td><b>שם</b></td>
+<td><b>סוג</b></td>
+<td><b>פלייליסט</b></td>
+<td></td>
+</tr>
+${rows || '<tr><td colspan="4">אין מדיה עדיין</td></tr>'}
+</table>
+`;
+}
 function getMediaByPlaylistId(plId) {
-  if (plId === "ALL_SONGS") return data.media_items;
-  
-  return data.media_items.filter(m => {
-    if (m.playlistIds && Array.isArray(m.playlistIds) && m.playlistIds.includes(plId)) return true;
-    if (m.playlistId && m.playlistId === plId) return true;
-    return false;
-  });
-}
+if (plId === "ALL_SONGS") return data.media_items;
 
+return data.media_items.filter(m => {
+if (m.playlistIds && Array.isArray(m.playlistIds) && m.playlistIds.includes(plId)) return true;
+if (m.playlistId && m.playlistId === plId) return true;
+return false;
+});
+}
 function selectAllSongs() {
-  musicState.playlistId = "ALL_SONGS";
-  musicState.trackIndex = 0;
-  musicState.type = null;
-  musicStopAll();
-  renderMusicPage();
+musicState.playlistId = "ALL_SONGS";
+musicState.trackIndex = 0;
+musicState.type = null;
+musicStopAll();
+renderMusicPage();
 }
-
 function renderMusicPage() {
-  const plListEl = document.getElementById('music-playlists-list');
-  const trackListEl = document.getElementById('music-tracklist');
-  if(!plListEl || !trackListEl) return;
-  
-  let plHtml = "";
-  data.playlists.forEach((pl,i)=>{
-    const id = data.playlists_k[i];
-    const count = getMediaByPlaylistId(id).length;
-    const active = (musicState.playlistId === id) ? "active" : "";
-    plHtml += `
-      <div class="playlist-item-row ${active}" onclick="musicSelectPlaylist('${id}')">
-        <div class="playlist-name">${pl.name || ''}</div>
-        <div class="playlist-count">${count} שירים</div>
-      </div>
-    `;
-  });
-  plListEl.innerHTML = plHtml || "<div style='font-size:13px;color:#9ca3af;'>אין פלייליסטים עדיין</div>";
-  
-  const allCount = data.media_items.length;
-  const allRow = document.getElementById('all-songs-row');
-  const allCountEl = document.getElementById('all-songs-count');
-  if (allCountEl) allCountEl.innerText = allCount + " שירים";
-  if (allRow) {
-    if (musicState.playlistId === "ALL_SONGS") allRow.classList.add('active');
-    else allRow.classList.remove('active');
-  }
-  
-  if(!musicState.playlistId) {
-    trackListEl.innerHTML = "<div style='font-size:13px;color:#9ca3af;'>בחר פלייליסט או 'כל השירים' כדי לראות שירים</div>";
-    return;
-  }
-  
-  const list = getMediaByPlaylistId(musicState.playlistId);
-  musicState.currentList = list;
-  let tHtml = "";
-  
-  list.forEach((m,idx)=>{
-    const active = (idx === musicState.trackIndex) ? "active" : "";
-    const typeLabel = m.type === 'audio' ? 'אודיו' : (m.type === 'video' ? 'וידאו' : 'YouTube');
-    tHtml += `
-      <div class="music-track-row ${active}" onclick="musicPlayIndex(${idx})">
-        <div class="music-track-thumb" id="track-thumb-${idx}"></div>
-        <div>
-          <div class="music-track-title">${m.title || ''}</div>
-          <div class="music-track-type">${typeLabel}</div>
-        </div>
-      </div>
-    `;
-  });
-  
-  trackListEl.innerHTML = tHtml || "<div style='font-size:13px;color:#9ca3af;'>אין שירים בפלייליסט זה</div>";
-  
-  list.forEach((m,idx)=>{
-    const img = m.imageUrl || getMediaDefaultImage(m);
-    const thumb = document.getElementById('track-thumb-'+idx);
-    if (thumb) safeCoverElement(thumb, img, m.title || "");
-  });
-  
-  if(list.length && musicState.type == null) {
-    musicState.trackIndex = 0;
-    musicStartCurrent();
-  }
+const plListEl = document.getElementById('music-playlists-list');
+const trackListEl = document.getElementById('music-tracklist');
+if(!plListEl || !trackListEl) return;
+
+let plHtml = "";
+data.playlists.forEach((pl,i)=>{
+const id = data.playlists_k[i];
+const count = getMediaByPlaylistId(id).length;
+const active = (musicState.playlistId === id) ? "active" : "";
+plHtml += `
+<div class="playlist-item-row ${active}" onclick="musicSelectPlaylist('${id}')">
+<div class="playlist-name">${pl.name || ''}</div>
+<div class="playlist-count">${count} שירים</div>
+</div>
+`;
+});
+plListEl.innerHTML = plHtml || "<div style='font-size:13px;color:#9ca3af;'>אין פלייליסטים עדיין</div>";
+
+const allCount = data.media_items.length;
+const allRow = document.getElementById('all-songs-row');
+const allCountEl = document.getElementById('all-songs-count');
+if (allCountEl) allCountEl.innerText = allCount + " שירים";
+if (allRow) {
+if (musicState.playlistId === "ALL_SONGS") allRow.classList.add('active');
+else allRow.classList.remove('active');
 }
 
+if(!musicState.playlistId) {
+trackListEl.innerHTML = "<div style='font-size:13px;color:#9ca3af;'>בחר פלייליסט או 'כל השירים' כדי לראות שירים</div>";
+return;
+}
+
+const list = getMediaByPlaylistId(musicState.playlistId);
+musicState.currentList = list;
+let tHtml = "";
+
+list.forEach((m,idx)=>{
+const active = (idx === musicState.trackIndex) ? "active" : "";
+const typeLabel = m.type === 'audio' ? 'אודיו' : (m.type === 'video' ? 'וידאו' : 'YouTube');
+tHtml += `
+<div class="music-track-row ${active}" onclick="musicPlayIndex(${idx})">
+<div class="music-track-thumb" id="track-thumb-${idx}"></div>
+<div>
+<div class="music-track-title">${m.title || ''}</div>
+<div class="music-track-type">${typeLabel}</div>
+</div>
+</div>
+`;
+});
+
+trackListEl.innerHTML = tHtml || "<div style='font-size:13px;color:#9ca3af;'>אין שירים בפלייליסט זה</div>";
+
+list.forEach((m,idx)=>{
+const img = m.imageUrl || getMediaDefaultImage(m);
+const thumb = document.getElementById('track-thumb-'+idx);
+if (thumb) safeCoverElement(thumb, img, m.title || "");
+});
+
+if(list.length && musicState.type == null) {
+musicState.trackIndex = 0;
+musicStartCurrent();
+}
+}
 function getMediaDefaultImage(m) {
-  if(m.type === 'youtube') {
-    const id = extractYouTubeId(m.url);
-    if(id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  }
-  if(m.type === 'audio') return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Audio";
-  if(m.type === 'video') return "https://via.placeholder.com/300x300/0f172a/f97316?text=Video";
-  return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Media";
+if(m.type === 'youtube') {
+const id = extractYouTubeId(m.url);
+if(id) return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 }
-
+if(m.type === 'audio') return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Audio";
+if(m.type === 'video') return "https://via.placeholder.com/300x300/0f172a/f97316?text=Video";
+return "https://via.placeholder.com/300x300/0f172a/38bdf8?text=Media";
+}
 function extractYouTubeId(url) {
-  try {
-    const u = new URL(url);
-    if(u.hostname.includes('youtu.be')) {
-      return u.pathname.replace('/','');
-    }
-    if(u.searchParams.get('v')) return u.searchParams.get('v');
-  } catch(e) {}
-  return null;
+try {
+const u = new URL(url);
+if(u.hostname.includes('youtu.be')) {
+return u.pathname.replace('/','');
 }
-
+if(u.searchParams.get('v')) return u.searchParams.get('v');
+} catch(e) {}
+return null;
+}
 function musicSelectPlaylist(id) {
-  musicState.playlistId = id;
-  musicState.trackIndex = 0;
-  musicState.type = null;
-  musicStopAll();
-  renderMusicPage();
+musicState.playlistId = id;
+musicState.trackIndex = 0;
+musicState.type = null;
+musicStopAll();
+renderMusicPage();
 }
-
 function musicPlayIndex(idx) {
-  musicState.trackIndex = idx;
-  musicStartCurrent();
-  renderMusicPage();
+musicState.trackIndex = idx;
+musicStartCurrent();
+renderMusicPage();
 }
-
 function musicStartCurrent() {
-  const list = musicState.currentList || [];
-  if(!list.length) return;
-  
-  const m = list[musicState.trackIndex];
-  if(!m) return;
-  
-  musicStopAll();
-  musicState.type = m.type;
-  
-  const cover = document.getElementById('music-cover');
-  const titleEl = document.getElementById('music-title');
-  const subEl = document.getElementById('music-sub');
-  const mediaContainer = document.getElementById('music-media-container');
-  const playBtn = document.getElementById('music-play-btn');
-  const totalEl = document.getElementById('music-time-total');
-  const currentEl = document.getElementById('music-time-current');
-  const range = document.getElementById('music-progress-range');
-  
-  const img = m.imageUrl || getMediaDefaultImage(m);
-  safeCoverElement(cover, img, m.title || "");
-  
-  titleEl.innerText = m.title || "";
-  subEl.innerText = m.type === 'audio' ? "אודיו" : (m.type === 'video' ? "וידאו" : "YouTube");
-  
-  mediaContainer.innerHTML = "";
-  currentEl.innerText = "00:00";
-  totalEl.innerText = "00:00";
-  range.value = 0;
-  
-  if(m.type === 'audio') {
-    const audio = document.createElement('audio');
-    audio.controls = true;
-    audio.src = m.url;
-    audio.addEventListener('timeupdate', ()=>musicSyncProgress(audio));
-    audio.addEventListener('ended', ()=>musicOnEnded());
-    mediaContainer.appendChild(audio);
-    musicState.audioEl = audio;
-    audio.play();
-    playBtn.innerText = "⏸️";
-  } else if(m.type === 'video') {
-    const video = document.createElement('video');
-    video.controls = true;
-    video.src = m.url;
-    video.addEventListener('timeupdate', ()=>musicSyncProgress(video));
-    video.addEventListener('ended', ()=>musicOnEnded());
-    mediaContainer.appendChild(video);
-    musicState.videoEl = video;
-    video.play();
-    playBtn.innerText = "⏸️";
-  } else if(m.type === 'youtube') {
-    const id = extractYouTubeId(m.url);
-    const iframe = document.createElement('iframe');
-    iframe.width = "100%";
-    iframe.height = "260";
-    iframe.style.borderRadius = "18px";
-    iframe.style.border = "none";
-    
-    // התיקון הוטמע כאן:
-    iframe.src = id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&enablejsapi=1&origin=${window.location.origin}` : m.url;
-    iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-    
-    iframe.allowFullscreen = true;
-    mediaContainer.appendChild(iframe);
-    playBtn.innerText = "▶️";
-    totalEl.innerText = "--:--";
-    currentEl.innerText = "--:--";
-  }
-}
+const list = musicState.currentList || [];
+if(!list.length) return;
 
-function musicStopAll() {
-  if(musicState.audioEl) {
-    musicState.audioEl.pause();
-    musicState.audioEl = null;
-  }
-  if(musicState.videoEl) {
-    musicState.videoEl.pause();
-    musicState.videoEl = null;
-  }
-}
+const m = list[musicState.trackIndex];
+if(!m) return;
 
-function musicTogglePlay() {
-  const playBtn = document.getElementById('music-play-btn');
-  if(musicState.type === 'audio' && musicState.audioEl) {
-    if(musicState.audioEl.paused) {
-      musicState.audioEl.play();
-      playBtn.innerText = "⏸️";
-    } else {
-      musicState.audioEl.pause();
-      playBtn.innerText = "▶️";
-    }
-  } else if(musicState.type === 'video' && musicState.videoEl) {
-    if(musicState.videoEl.paused) {
-      musicState.videoEl.play();
-      playBtn.innerText = "⏸️";
-    } else {
-      musicState.videoEl.pause();
-      playBtn.innerText = "▶️";
-    }
-  } else if(musicState.type === 'youtube') {
-    musicStartCurrent();
-  } else {
-    if(musicState.currentList && musicState.currentList.length) {
-      musicStartCurrent();
-    }
-  }
-}
+musicStopAll();
+musicState.type = m.type;
 
-function musicNext() {
-  const list = musicState.currentList || [];
-  if(!list.length) return;
-  if(musicState.shuffle) {
-    musicState.trackIndex = Math.floor(Math.random()*list.length);
-  } else {
-    musicState.trackIndex = (musicState.trackIndex+1) % list.length;
-  }
-  musicStartCurrent();
-  renderMusicPage();
-}
+const cover = document.getElementById('music-cover');
+const titleEl = document.getElementById('music-title');
+const subEl = document.getElementById('music-sub');
+const mediaContainer = document.getElementById('music-media-container');
+const playBtn = document.getElementById('music-play-btn');
+const totalEl = document.getElementById('music-time-total');
+const currentEl = document.getElementById('music-time-current');
+const range = document.getElementById('music-progress-range');
 
-function musicPrev() {
-  const list = musicState.currentList || [];
-  if(!list.length) return;
-  if(musicState.shuffle) {
-    musicState.trackIndex = Math.floor(Math.random()*list.length);
-  } else {
-    musicState.trackIndex = (musicState.trackIndex-1+list.length) % list.length;
-  }
-  musicStartCurrent();
-  renderMusicPage();
-}
+const img = m.imageUrl || getMediaDefaultImage(m);
+safeCoverElement(cover, img, m.title || "");
 
-function musicOnEnded() {
-  const list = musicState.currentList || [];
-  if(!list.length) return;
-  if(musicState.repeat) {
-    musicStartCurrent();
-  } else {
-    musicNext();
-  }
-}
+titleEl.innerText = m.title || "";
+subEl.innerText = m.type === 'audio' ? "אודיו" : (m.type === 'video' ? "וידאו" : "YouTube");
 
-function musicSyncProgress(el) {
-  const currentEl = document.getElementById('music-time-current');
-  const totalEl = document.getElementById('music-time-total');
-  const range = document.getElementById('music-progress-range');
-  if(!el.duration || isNaN(el.duration)) return;
-  
-  const cur = el.currentTime;
-  const dur = el.duration;
-  range.value = (cur/dur)*100;
-  currentEl.innerText = formatTime(cur);
-  totalEl.innerText = formatTime(dur);
-}
+mediaContainer.innerHTML = "";
+currentEl.innerText = "00:00";
+totalEl.innerText = "00:00";
+range.value = 0;
 
-function musicSeek(val) {
-  const v = parseFloat(val);
-  if(musicState.audioEl && musicState.audioEl.duration) {
-    musicState.audioEl.currentTime = (v/100)*musicState.audioEl.duration;
-  }
-  if(musicState.videoEl && musicState.videoEl.duration) {
-    musicState.videoEl.currentTime = (v/100)*musicState.videoEl.duration;
-  }
-}
+if(m.type === 'audio') {
+const audio = document.createElement('audio');
+audio.controls = true;
+audio.src = m.url;
+audio.addEventListener('timeupdate', ()=>musicSyncProgress(audio));
+audio.addEventListener('ended', ()=>musicOnEnded());
+mediaContainer.appendChild(audio);
+musicState.audioEl = audio;
+audio.play();
+playBtn.innerText = "⏸️";
+} else if(m.type === 'video') {
+const video = document.createElement('video');
+video.controls = true;
+video.src = m.url;
+video.addEventListener('timeupdate', ()=>musicSyncProgress(video));
+video.addEventListener('ended', ()=>musicOnEnded());
+mediaContainer.appendChild(video);
+musicState.videoEl = video;
+video.play();
+playBtn.innerText = "⏸️";
+} else if(m.type === 'youtube') {
+const id = extractYouTubeId(m.url);
+const placeholder = document.createElement('div');
+placeholder.id = 'yt-player-placeholder';
+mediaContainer.appendChild(placeholder);
+playBtn.innerText = "▶️";
+totalEl.innerText = "--:--";
+currentEl.innerText = "--:--";
 
-function formatTime(sec) {
-  sec = Math.floor(sec || 0);
-  const m = Math.floor(sec/60);
-  const s = sec%60;
-  return (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
-}
-
-function musicToggleShuffle() {
-  musicState.shuffle = !musicState.shuffle;
-  const btn = document.getElementById('music-shuffle-btn');
-  btn.innerText = musicState.shuffle ? "🔀 אקראי" : "🔀 רגיל";
-}
-
-function musicToggleRepeat() {
-  musicState.repeat = !musicState.repeat;
-  const btn = document.getElementById('music-repeat-btn');
-  btn.innerText = musicState.repeat ? "🔁 חזרה" : "🔁 רגיל";
-}
-
-function renderProfilePage() {
-  const container = document.getElementById('profile-page-content');
-  if(!container) return;
-  
-  if(!currentUser) {
-    container.innerHTML = `<div class="section-box">כדי לראות את הפרופיל שלך, התחבר למערכת.</div>`;
-    return;
-  }
-  
-  let historyHtml = "";
-  if(currentUser.quiz_history) {
-    const entries = Object.values(currentUser.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
-    entries.forEach(e=>{
-      historyHtml += `<div class="history-item">
-        <div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
-        <div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
-        <div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
-      </div>`;
+const initYT = () => {
+    musicState.ytPlayer = new YT.Player('yt-player-placeholder', {
+        height: '260',
+        width: '100%',
+        videoId: id,
+        playerVars: { 'autoplay': 1, 'rel': 0, 'enablejsapi': 1, 'origin': window.location.origin },
+        events: {
+            'onReady': (event) => {
+                event.target.playVideo();
+                playBtn.innerText = "⏸️";
+                musicState.ytInterval = setInterval(() => {
+                    if(musicState.ytPlayer && musicState.ytPlayer.getCurrentTime) {
+                        const cur = musicState.ytPlayer.getCurrentTime();
+                        const dur = musicState.ytPlayer.getDuration();
+                        if(dur) {
+                            range.value = (cur/dur)*100;
+                            currentEl.innerText = formatTime(cur);
+                            totalEl.innerText = formatTime(dur);
+                        }
+                    }
+                }, 500);
+            },
+            'onStateChange': (event) => {
+                if (event.data === YT.PlayerState.ENDED) {
+                    musicOnEnded();
+                } else if (event.data === YT.PlayerState.PLAYING) {
+                    playBtn.innerText = "⏸️";
+                } else if (event.data === YT.PlayerState.PAUSED) {
+                    playBtn.innerText = "▶️";
+                }
+            }
+        }
     });
-  } else {
-    historyHtml = "<div>אין היסטוריית חידונים עדיין.</div>";
-  }
-  
-  container.innerHTML = `
-    <div class="profile-row">
-      <div class="profile-card">
-        <div class="profile-avatar-big" style="${currentUser.avatarUrl ? "background-image:url('"+currentUser.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
-        <div><b>שם משתמש:</b> ${currentUser.username || ''}</div>
-        <div><b>ניקוד:</b> ${currentUser.score || 0}</div>
-        <div style="margin-top:10px;">
-          <button class="btn-ctrl" onclick="openProfile()">עריכת פרופיל</button>
-        </div>
-      </div>
-      <div class="profile-history">
-        <b>היסטוריית חידונים:</b>
-        <div style="margin-top:8px;">${historyHtml}</div>
-      </div>
-    </div>
-  `;
+    setTimeout(() => {
+        const iframe = document.getElementById('yt-player-placeholder');
+        if(iframe) { iframe.style.borderRadius = "18px"; iframe.style.border = "none"; }
+    }, 500);
+};
+
+if (window.YT && window.YT.Player) {
+    initYT();
+} else {
+    if(!document.getElementById('yt-api-script')) {
+        const tag = document.createElement('script');
+        tag.id = 'yt-api-script';
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+    }
+    window.onYouTubeIframeAPIReady = initYT;
+}
+}
+}
+function musicStopAll() {
+if(musicState.audioEl) {
+musicState.audioEl.pause();
+musicState.audioEl = null;
+}
+if(musicState.videoEl) {
+musicState.videoEl.pause();
+musicState.videoEl = null;
+}
+if(musicState.ytPlayer) {
+try { musicState.ytPlayer.destroy(); } catch(e){}
+musicState.ytPlayer = null;
+}
+if(musicState.ytInterval) {
+clearInterval(musicState.ytInterval);
+musicState.ytInterval = null;
+}
+}
+function musicTogglePlay() {
+const playBtn = document.getElementById('music-play-btn');
+if(musicState.type === 'audio' && musicState.audioEl) {
+if(musicState.audioEl.paused) {
+musicState.audioEl.play();
+playBtn.innerText = "⏸️";
+} else {
+musicState.audioEl.pause();
+playBtn.innerText = "▶️";
+}
+} else if(musicState.type === 'video' && musicState.videoEl) {
+if(musicState.videoEl.paused) {
+musicState.videoEl.play();
+playBtn.innerText = "⏸️";
+} else {
+musicState.videoEl.pause();
+playBtn.innerText = "▶️";
+}
+} else if(musicState.type === 'youtube' && musicState.ytPlayer && musicState.ytPlayer.getPlayerState) {
+const state = musicState.ytPlayer.getPlayerState();
+if(state === 1) { // PLAYING
+    musicState.ytPlayer.pauseVideo();
+} else {
+    musicState.ytPlayer.playVideo();
+}
+} else {
+if(musicState.currentList && musicState.currentList.length) {
+musicStartCurrent();
+}
+}
+}
+function musicNext() {
+const list = musicState.currentList || [];
+if(!list.length) return;
+if(musicState.shuffle) {
+musicState.trackIndex = Math.floor(Math.random()*list.length);
+} else {
+musicState.trackIndex = (musicState.trackIndex+1) % list.length;
+}
+musicStartCurrent();
+renderMusicPage();
+}
+function musicPrev() {
+const list = musicState.currentList || [];
+if(!list.length) return;
+if(musicState.shuffle) {
+musicState.trackIndex = Math.floor(Math.random()*list.length);
+} else {
+musicState.trackIndex = (musicState.trackIndex-1+list.length) % list.length;
+}
+musicStartCurrent();
+renderMusicPage();
+}
+function musicOnEnded() {
+const list = musicState.currentList || [];
+if(!list.length) return;
+if(musicState.repeat) {
+musicStartCurrent();
+} else {
+musicNext();
+}
+}
+function musicSyncProgress(el) {
+const currentEl = document.getElementById('music-time-current');
+const totalEl = document.getElementById('music-time-total');
+const range = document.getElementById('music-progress-range');
+if(!el.duration || isNaN(el.duration)) return;
+
+const cur = el.currentTime;
+const dur = el.duration;
+range.value = (cur/dur)*100;
+currentEl.innerText = formatTime(cur);
+totalEl.innerText = formatTime(dur);
+}
+function musicSeek(val) {
+const v = parseFloat(val);
+if(musicState.audioEl && musicState.audioEl.duration) {
+musicState.audioEl.currentTime = (v/100)*musicState.audioEl.duration;
+}
+if(musicState.videoEl && musicState.videoEl.duration) {
+musicState.videoEl.currentTime = (v/100)*musicState.videoEl.duration;
+}
+if(musicState.type === 'youtube' && musicState.ytPlayer && musicState.ytPlayer.getDuration) {
+const dur = musicState.ytPlayer.getDuration();
+musicState.ytPlayer.seekTo((v/100)*dur, true);
+}
+}
+function formatTime(sec) {
+sec = Math.floor(sec || 0);
+const m = Math.floor(sec/60);
+const s = sec%60;
+return (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+}
+function musicToggleShuffle() {
+musicState.shuffle = !musicState.shuffle;
+const btn = document.getElementById('music-shuffle-btn');
+btn.innerText = musicState.shuffle ? "🔀 אקראי" : "🔀 רגיל";
+}
+function musicToggleRepeat() {
+musicState.repeat = !musicState.repeat;
+const btn = document.getElementById('music-repeat-btn');
+btn.innerText = musicState.repeat ? "🔁 חזרה" : "🔁 רגיל";
+}
+function renderProfilePage() {
+const container = document.getElementById('profile-page-content');
+if(!container) return;
+
+if(!currentUser) {
+container.innerHTML = `<div class="section-box">כדי לראות את הפרופיל שלך, התחבר למערכת.</div>`;
+return;
 }
 
+let historyHtml = "";
+if(currentUser.quiz_history) {
+const entries = Object.values(currentUser.quiz_history).sort((a,b)=>(b.time||0)-(a.time||0));
+entries.forEach(e=>{
+historyHtml += `<div class="history-item">
+<div><b>תאריך:</b> ${e.time ? new Date(e.time).toLocaleString('he-IL') : ''}</div>
+<div><b>נכון:</b> ${e.correct || 0} / ${e.total || 0}</div>
+<div><b>ניקוד שנוסף:</b> ${e.addedScore || 0}</div>
+</div>`;
+});
+} else {
+historyHtml = "<div>אין היסטוריית חידונים עדיין.</div>";
+}
+
+container.innerHTML = `
+<div class="profile-row">
+<div class="profile-card">
+<div class="profile-avatar-big" style="${currentUser.avatarUrl ? "background-image:url('"+currentUser.avatarUrl+"');background-size:cover;background-position:center;" : ""}"></div>
+<div><b>שם משתמש:</b> ${currentUser.username || ''}</div>
+<div><b>ניקוד:</b> ${currentUser.score || 0}</div>
+<div style="margin-top:10px;">
+<button class="btn-ctrl" onclick="openProfile()">עריכת פרופיל</button>
+</div>
+</div>
+<div class="profile-history">
+<b>היסטוריית חידונים:</b>
+<div style="margin-top:8px;">${historyHtml}</div>
+</div>
+</div>
+`;
+}
 function deleteOwnAccount() {
-  if(!currentUser || !auth.currentUser) return;
-  if(!confirm("למחוק את החשבון שלך? (לא מוחק את חשבון ה-Auth)")) return;
-  
-  const uid = auth.currentUser.uid;
-  const u = currentUser;
-  if(u && u.username) db.ref('usernames/'+u.username).remove();
-  db.ref('users/'+uid).remove();
-  showToast("החשבון נמחק ממערכת הניהול");
+if(!currentUser || !auth.currentUser) return;
+if(!confirm("למחוק את החשבון שלך? (לא מוחק את חשבון ה-Auth)")) return;
+
+const uid = auth.currentUser.uid;
+const u = currentUser;
+if(u && u.username) db.ref('usernames/'+u.username).remove();
+db.ref('users/'+uid).remove();
+showToast("החשבון נמחק ממערכת הניהול");
 }
 </script>
 </body>
