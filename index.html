@@ -1077,16 +1077,19 @@ appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
 };
 firebase.initializeApp(firebaseConfig);
 
-// משנים ל-database כדי שכל האתר יעבוד
-const database = firebase.database(); 
+// בראש הקוד - פעם אחת בלבד!
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const db = database;
 const auth = firebase.auth();
 
-// הוסף את המשתנים האלו כדי למנוע שגיאות "not defined" בטעינה
-// משתנים גלובליים - מופיעים רק פעם אחת בראש הקובץ
-let kolPopperClient = null; 
+// משתני מערכת השידור (Agora & Recording)
+let kolPopperClient = null;
 let localAudioTrack = null;
-let isBroadcasting = false;
+let liveRecorder = null;
+let liveChunks = [];
 let isListeningLive = false;
+let isBroadcasting = false;
 
 let data = {
     jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], home_board:[], request_songs_list:[], articles_list:[], playlists:[], media_items:[]
@@ -1098,13 +1101,6 @@ let usersMap = {};
 let musicState = {
 playlistId: null, trackIndex: 0, shuffle: false, repeat: false, currentList: [], audioEl: null, videoEl: null, type: null
 };
-
-// משתני מערכת השידור החי (Agora & Recording)
-let kolPopperClient = null;
-let localAudioTrack = null;
-let liveRecorder = null;
-let liveChunks = [];
-let isListeningLive = false;
 
 function safeCoverElement(el, url, name) {
 function setFallback() {
