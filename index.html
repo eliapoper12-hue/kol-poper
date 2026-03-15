@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <title>קול פופר 🎈</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.11.0.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.11.0.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.11.0.js"></script>
 <style>
 body {
 margin:0;
@@ -2380,17 +2379,17 @@ function setupFakeViewers() {
         viewerDisplay.innerText = next;
     }, 4000); // שינוי כל 4 שניות
 }
-
-// הפעלה של הכל ברגע שהדף נטען
+// --- הפעלה של הכל ברגע שהדף נטען ---
 window.addEventListener('load', () => {
-    // בודק אם Agora נטען כדי למנוע קריסה
+    // הפעלת Agora רק אם הספרייה נטענה בהצלחה
     if (typeof AgoraRTC !== 'undefined') {
         startAgora();
         setupFakeViewers();
     } else {
-        console.error("Agora SDK לא נטען - בדוק שהוספת את השורה ב-head");
+        console.error("שגיאה: הספרייה של Agora לא נמצאה. וודא שהוספת את ה-script בראש הדף.");
     }
-});
+}); 
+// סוף הקוד
 </script>
 </body>
 </html>
