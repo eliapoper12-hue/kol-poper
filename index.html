@@ -2230,53 +2230,38 @@ showToast("החשבון נמחק ממערכת הניהול");
 
 // המנהל מתחיל שידור
 async function startImperialLive() {
-try {
-// --- 1. הוסף את השורות האלו כאן ---
+    try {
+        // הכנת הלקוח של אגורה
         if (!agoraClient) {
             agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
         }
-        await agoraClient.setClientRole("host"); // זה הפתרון לשגיאה!
+        
+        // הגדרת תפקיד שדרן (זה פותר את השגיאה שקיבלת)
+        await agoraClient.setClientRole("host");
+        
+        // התחברות לשידור
         await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
         
-        const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        // הפעלת המיקרופון לשידור חי
+        localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         await agoraClient.publish([localAudioTrack]);
-        // ----------------------------------
-const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-liveRecorder = new MediaRecorder(stream);
-liveChunks = [];
 
-liveRecorder.ondataavailable = e => {
-if(e.data.size > 0) liveChunks.push(e.data);
-};
+        // הקלטה מקומית (הקוד הקיים שלך)
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        liveRecorder = new MediaRecorder(stream);
+        liveChunks = [];
+        liveRecorder.start();
 
-liveRecorder.onstop = () => {
-const blob = new Blob(liveChunks, { type: 'audio/webm' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = 'kol-popper-live-' + Date.now() + '.webm';
-a.click();
-URL.revokeObjectURL(url);
-};
+        // עדכון Firebase
+        database.ref('liveStream/isLive').set(true);
+        isBroadcasting = true;
+        
+        showToast("השידור התחיל בהצלחה!"); // שונה מ"שידור מלכותי"
 
-liveRecorder.start();
-
-agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
-localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-await agoraClient.publish([localAudioTrack]);
-
-db.ref("broadcast/isLive").set(true);
-
-document.getElementById('btn-start-live').style.display = 'none';
-document.getElementById('btn-stop-live').style.display = 'inline-block';
-document.getElementById('admin-live-status').innerText = "סטטוס: בשידור! 🔴";
-showToast("שידור חי החל בהצלחה! הוד מעלתו באוויר.");
-
-} catch (e) {
-console.error(e);
-showToast("שגיאה בהפעלת השידור: " + e.message);
-}
+    } catch (e) {
+        console.error(e);
+        showToast("שגיאה בהפעלת השידור: " + e.message);
+    }
 }
 
 // המנהל עוצר שידור
@@ -2309,16 +2294,13 @@ showToast("שגיאה בסיום השידור: " + e.message);
 // המאזין מצטרף לשידור
 async function joinLiveStream() {
     if(isListeningLive) return;
-    musicStopAll(); 
+    musicStopAll();
     try {
-        if(!agoraClient) {
-            agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-        }
-
-        // --- השורה שחובה להוסיף כאן ---
+        if(!agoraClient) agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+        
+        // הגדרת תפקיד מאזין
         await agoraClient.setClientRole("audience");
-        // ----------------------------
-
+        
         await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
         
         agoraClient.on("user-published", async (user, mediaType) => {
@@ -2331,13 +2313,12 @@ async function joinLiveStream() {
         isListeningLive = true;
         document.getElementById('live-listener-status').style.display = 'block';
         document.getElementById('btn-join-live').style.display = 'none';
-        showToast("התחברת לשידור החי בהצלחה!");
+        showToast("התחברת לשידור החי!");
         
     } catch(e) {
         console.error(e);
-        showToast("שגיאה בהתחברות לשידור: " + e.message);
+        showToast("שגיאה בהתחברות: " + e.message);
     }
-}
 }
 
 // המאזין מתנתק מהשידור
