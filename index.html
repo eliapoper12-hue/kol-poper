@@ -1075,14 +1075,17 @@ databaseURL: "https://kolpopper-46-default-rtdb.firebaseio.com",
 projectId: "kolpopper-46",
 appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
 };
-firebase.initializeApp(firebaseConfig);
+// בדיקה אם Firebase כבר אותחל כדי למנוע את שגיאת duplicate-app
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app(); // שימוש באפליקציה הקיימת
+}
 
-// בראש הקוד - פעם אחת בלבד!
-firebase.initializeApp(firebaseConfig);
+// הגדרת משתני הגישה (לוודא שמופיעים רק פעם אחת)
 const database = firebase.database();
-const db = database;
+const db = database; 
 const auth = firebase.auth();
-
 // משתני מערכת השידור (Agora & Recording)
 let kolPopperClient = null;
 let localAudioTrack = null;
