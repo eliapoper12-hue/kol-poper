@@ -2382,9 +2382,14 @@ function setupFakeViewers() {
 
 // הפעלה של הכל ברגע שהדף נטען
 window.addEventListener('load', () => {
-    startAgora();
-    setupFakeViewers();
-});
+    // בודק אם Agora נטען כדי למנוע קריסה
+    if (typeof AgoraRTC !== 'undefined') {
+        startAgora();
+        setupFakeViewers();
+    } else {
+        console.error("Agora SDK לא נטען - בדוק שהוספת את השורה ב-head");
+    }
+}); // סגירת ה-addEventListener
 </script>
 </body>
 </html>
