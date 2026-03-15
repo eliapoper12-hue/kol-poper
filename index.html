@@ -1082,7 +1082,8 @@ const database = firebase.database();
 const auth = firebase.auth();
 
 // הוסף את המשתנים האלו כדי למנוע שגיאות "not defined" בטעינה
-let agoraClient = null;
+// משתנים גלובליים - מופיעים רק פעם אחת בראש הקובץ
+let kolPopperClient = null; 
 let localAudioTrack = null;
 let isBroadcasting = false;
 let isListeningLive = false;
@@ -1099,7 +1100,7 @@ playlistId: null, trackIndex: 0, shuffle: false, repeat: false, currentList: [],
 };
 
 // משתני מערכת השידור החי (Agora & Recording)
-let agoraClient = null;
+let kolPopperClient = null;
 let localAudioTrack = null;
 let liveRecorder = null;
 let liveChunks = [];
@@ -2240,19 +2241,52 @@ showToast("החשבון נמחק ממערכת הניהול");
 // המנהל מתחיל שידור
 async function startImperialLive() {
     try {
-        if (!agoraClient) {
-            agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+        // שימוש בשם החדש כדי למנוע את השגיאה בטעינה
+        if (!kolPopperClient) {
+            kolPopperClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
         }
 
-        if (agoraClient.connectionState !== "DISCONNECTED") {
-            await agoraClient.leave();
+        // אם כבר מחובר, נתנתק כדי למנוע כפילות
+        if (kolPopperClient.connectionState !== "DISCONNECTED") {
+            await kolPopperClient.leave();
         }
 
-        await agoraClient.setClientRole("host");
-        await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
+        await kolPopperClient.setClientRole("host");
+        await kolPopperClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
 
         localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        await agoraClient.publish([localAudioTrack]);
+        await kolPopperClient.publish([localAudioTrack]);
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        liveRecorder = new MediaRecorder(stream);
+        liveChunks = [];
+        liveRecorder.start();
+
+        database.ref('liveStream/isLive').set(true);
+        isBroadcasting = true;
+        showToast("השידור התחיל בהצלחה!");
+
+    } catch (e) {
+        console.error(e);
+        if (kolPopperClient) await kolPopperClient.leave();
+        showToast("שגיאה בהפעלת השידור: " + e.message);
+    }
+}
+// המנהל עוצר שידורasync function startImperialLive() {
+    try {
+        if (!kolPopperClient) {
+            kolPopperClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+        }
+
+        if (kolPopperClient.connectionState !== "DISCONNECTED") {
+            await kolPopperClient.leave();
+        }
+
+        await kolPopperClient.setClientRole("host");
+        await kolPopperClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
+
+        localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        await kolPopperClient.publish([localAudioTrack]);
 
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         liveRecorder = new MediaRecorder(stream);
@@ -2267,19 +2301,18 @@ async function startImperialLive() {
 
     } catch (e) {
         console.error(e);
-        if (agoraClient) await agoraClient.leave();
+        if (kolPopperClient) await kolPopperClient.leave();
         showToast("שגיאה בהפעלת השידור: " + e.message);
     }
 }
-// המנהל עוצר שידור
 async function stopImperialLive() {
 try {
 if(localAudioTrack) {
 localAudioTrack.stop();
 localAudioTrack.close();
 }
-if(agoraClient) {
-await agoraClient.leave();
+if(kolPopperClient) {
+await kolPopperClient.leave();
 }
 if(liveRecorder && liveRecorder.state !== "inactive") {
 liveRecorder.stop();
@@ -2303,15 +2336,15 @@ async function joinLiveStream() {
     if(isListeningLive) return;
     musicStopAll();
     try {
-        if(!agoraClient) agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+        if(!kolPopperClient) kolPopperClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
         
         // הגדרת תפקיד מאזין
-        await agoraClient.setClientRole("audience");
+        await kolPopperClient.setClientRole("audience");
         
-        await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
+        await kolPopperClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
         
-        agoraClient.on("user-published", async (user, mediaType) => {
-            await agoraClient.subscribe(user, mediaType);
+        kolPopperClient.on("user-published", async (user, mediaType) => {
+            await kolPopperClient.subscribe(user, mediaType);
             if (mediaType === "audio") {
                 user.audioTrack.play();
             }
@@ -2331,8 +2364,8 @@ async function joinLiveStream() {
 // המאזין מתנתק מהשידור
 async function stopListeningToLive() {
 if(!isListeningLive) return;
-if(agoraClient) {
-await agoraClient.leave();
+if(kolPopperClient) {
+await kolPopperClient.leave();
 }
 isListeningLive = false;
 document.getElementById('live-listener-status').style.display = 'none';
