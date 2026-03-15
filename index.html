@@ -1076,10 +1076,16 @@ projectId: "kolpopper-46",
 appId: "1:205439458089:web:54efeaaa1aae748fc7b538"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const database = firebase.database(); // שינינו מ-db ל-database כדי שיתאים לפונקציות
 const auth = firebase.auth();
+
+// משתנים שחובה להוסיף עבור השידור החי
+let agoraClient = null;
+let localAudioTrack = null;
+let isBroadcasting = false; 
+
 let data = {
-jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], home_board:[], request_songs_list:[], articles_list:[], playlists:[], media_items:[]
+    jokes_list:[], inbox:[], daily_riddle:[], quiz_questions:[], winners:[], notices:[], home_board:[], request_songs_list:[], articles_list:[], playlists:[], media_items:[]
 };
 let cur = { joke:0 };
 let sitePassword = "1234";
@@ -2231,46 +2237,43 @@ showToast("החשבון נמחק ממערכת הניהול");
 // המנהל מתחיל שידור
 async function startImperialLive() {
     try {
-        // 1. אתחול הלקוח
         if (!agoraClient) {
             agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
         }
 
-        // 2. פתרון לשגיאה: אם כבר מחובר, נתנתק כדי למנוע כפילות
+        // פתרון שגיאת ה-connecting: אם מחובר, נתנתק קודם
         if (agoraClient.connectionState !== "DISCONNECTED") {
             await agoraClient.leave();
         }
 
-        // 3. הגדרת תפקיד שדרן
+        // הגדרת תפקיד שדרן
         await agoraClient.setClientRole("host");
 
-        // 4. התחברות לשידור
+        // התחברות לשידור
         await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
 
-        // 5. הפעלת המיקרופון לשידור
+        // הפעלת מיקרופון
         localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         await agoraClient.publish([localAudioTrack]);
 
-        // 6. הקלטה מקומית (הקוד המקורי שלך)
+        // הקלטה מקומית (הקוד המקורי שלך)
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         liveRecorder = new MediaRecorder(stream);
         liveChunks = [];
         liveRecorder.start();
 
-        // 7. עדכון Firebase
+        // עדכון Firebase
         database.ref('liveStream/isLive').set(true);
         isBroadcasting = true;
         
-        showToast("השידור התחיל בהצלחה!");
+        showToast("השידור התחיל בהצלחה!"); // ללא מילים מיותרות
 
     } catch (e) {
         console.error(e);
-        // אם קרתה שגיאה באמצע, ננסה לשחרר את החיבור
         if (agoraClient) await agoraClient.leave();
         showToast("שגיאה בהפעלת השידור: " + e.message);
     }
 }
-
 // המנהל עוצר שידור
 async function stopImperialLive() {
 try {
