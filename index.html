@@ -2231,35 +2231,42 @@ showToast("החשבון נמחק ממערכת הניהול");
 // המנהל מתחיל שידור
 async function startImperialLive() {
     try {
-        // הכנת הלקוח של אגורה
+        // 1. אתחול הלקוח
         if (!agoraClient) {
             agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
         }
-        
-        // הגדרת תפקיד שדרן (זה פותר את השגיאה שקיבלת)
+
+        // 2. פתרון לשגיאה: אם כבר מחובר, נתנתק כדי למנוע כפילות
+        if (agoraClient.connectionState !== "DISCONNECTED") {
+            await agoraClient.leave();
+        }
+
+        // 3. הגדרת תפקיד שדרן
         await agoraClient.setClientRole("host");
-        
-        // התחברות לשידור
+
+        // 4. התחברות לשידור
         await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
-        
-        // הפעלת המיקרופון לשידור חי
+
+        // 5. הפעלת המיקרופון לשידור
         localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         await agoraClient.publish([localAudioTrack]);
 
-        // הקלטה מקומית (הקוד הקיים שלך)
+        // 6. הקלטה מקומית (הקוד המקורי שלך)
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         liveRecorder = new MediaRecorder(stream);
         liveChunks = [];
         liveRecorder.start();
 
-        // עדכון Firebase
+        // 7. עדכון Firebase
         database.ref('liveStream/isLive').set(true);
         isBroadcasting = true;
         
-        showToast("השידור התחיל בהצלחה!"); // שונה מ"שידור מלכותי"
+        showToast("השידור התחיל בהצלחה!");
 
     } catch (e) {
         console.error(e);
+        // אם קרתה שגיאה באמצע, ננסה לשחרר את החיבור
+        if (agoraClient) await agoraClient.leave();
         showToast("שגיאה בהפעלת השידור: " + e.message);
     }
 }
