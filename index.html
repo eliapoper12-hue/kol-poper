@@ -5,9 +5,9 @@
 <title>קול פופר 🎈</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.11.0.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.11.0.js"></script>
 <style>
 body {
 margin:0;
@@ -40,6 +40,13 @@ border-radius:999px;
 font-size:12px;
 margin-left:8px;
 }
+
+@keyframes blink { 
+  0% { opacity: 1; } 
+  50% { opacity: 0.2; } 
+  100% { opacity: 1; } 
+}
+
 .header-right {
 display:flex;
 align-items:center;
@@ -703,11 +710,6 @@ margin-bottom:6px;
 font-size:14px;
 color:#cbd5f5;
 }
-@keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
-}
 </style>
 </head>
 <body>
@@ -718,28 +720,26 @@ color:#cbd5f5;
 </div>
 
 <header>
-  <div class="header-inner">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <h1><span class="live-tag">LIVE</span> קול פופר 🎈</h1>
-      
-      <div id="viewer-container" style="display:inline-flex; align-items:center; background:rgba(255,0,0,0.15); padding:4px 10px; border-radius:12px; border:1px solid #ff4444; font-size:14px; color:#ff4444; font-weight:bold;">
-         <div id="viewer-dot" style="width:7px; height:7px; background:#ff4444; border-radius:50%; margin-left:8px; animation:blink 1.5s infinite;"></div>
-         <span id="fake-viewers">156</span>
-      </div>
-    </div>
-
-    <div class="header-right">
-      <button class="btn-small" onclick="toggleTheme()" id="theme-toggle">🌙 כהה</button>
-      <div id="user-info" class="user-info">
-        <div class="user-avatar" id="user-avatar"></div>
-        <span class="user-name-label" id="user-name-label"></span>
-      </div>
-      <button class="btn-small" onclick="showPage('profile-page')" id="btn-profile" style="display:none;">הפרופיל שלי</button>
-      <button class="btn-small" onclick="openLogin()" id="btn-login">התחברות</button>
-      <button class="btn-small" onclick="openRegister()" id="btn-register">הרשמה</button>
-      <button class="btn-small" onclick="logoutUser()" id="btn-logout" style="display:none;">התנתקות</button>
+<div class="header-inner">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <h1><span class="live-tag">LIVE</span> קול פופר 🎈</h1>
+    <div id="viewer-container" style="display:inline-flex; align-items:center; background:rgba(255,0,0,0.15); padding:4px 10px; border-radius:12px; border:1px solid #ff4444; font-size:14px; color:#ff4444; font-weight:bold;">
+       <div id="viewer-dot" style="width:7px; height:7px; background:#ff4444; border-radius:50%; margin-left:8px; animation:blink 1.5s infinite;"></div>
+       <span id="fake-viewers">156</span>
     </div>
   </div>
+<div class="header-right">
+<button class="btn-small" onclick="toggleTheme()" id="theme-toggle">🌙 כהה</button>
+<div id="user-info" class="user-info">
+<div class="user-avatar" id="user-avatar"></div>
+<span class="user-name-label" id="user-name-label"></span>
+</div>
+<button class="btn-small" onclick="showPage('profile-page')" id="btn-profile" style="display:none;">הפרופיל שלי</button>
+<button class="btn-small" onclick="openLogin()" id="btn-login">התחברות</button>
+<button class="btn-small" onclick="openRegister()" id="btn-register">הרשמה</button>
+<button class="btn-small" onclick="logoutUser()" id="btn-logout" style="display:none;">התנתקות</button>
+</div>
+</div>
 </header>
 
 <img src="logo.png" class="player-logo-rect" alt="לוגו קול פופר">
@@ -822,17 +822,17 @@ color:#cbd5f5;
 <p style="font-size:14px; color:#a5b4fc; margin-bottom:18px;">בחר פלייליסט, בחר שיר, ותן למוזיקה לעבוד.</p>
 
 <div id="live-listener-banner" style="display:none; background:rgba(239, 68, 68, 0.1); border:1px solid #ef4444; padding:20px; border-radius:18px; margin-bottom:20px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.2);">
-    <h3 style="color:#ef4444; margin-top:0; font-size:24px;">🔴 קול פופר שידור חי עכשיו!</h3>
-    <p style="font-size:16px;">השידור החי פועל כעת. המוזיקה הרגילה עובדת כרגיל, אך תוכל להצטרף לשידור המיוחד!</p>
-    <button id="btn-join-live" class="btn-ctrl" style="background:linear-gradient(135deg,#ef4444,#b91c1c); font-size:18px; padding:12px 25px;" onclick="joinLiveStream()">הצטרף להאזנה לשידור החי 🎧</button>
-    
-    <div id="live-listener-status" style="display:none; margin-top:15px;">
-        <div class="fake-visualizer">
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        </div>
-        <p style="color:#22c55e; font-weight:bold; margin-top:10px; font-size:18px;">מחובר ומוכן! מאזין לשידור החי...</p>
-        <button class="btn-ctrl" style="background:#64748b; font-size:14px; padding:8px 16px; margin-top:10px;" onclick="stopListeningToLive()">חזור למוזיקה הרגילה</button>
-    </div>
+<h3 style="color:#ef4444; margin-top:0; font-size:24px;">🔴 קול פופר שידור חי עכשיו!</h3>
+<p style="font-size:16px;">השידור החי פועל כעת. המוזיקה הרגילה עובדת כרגיל, אך תוכל להצטרף לשידור המיוחד!</p>
+<button id="btn-join-live" class="btn-ctrl" style="background:linear-gradient(135deg,#ef4444,#b91c1c); font-size:18px; padding:12px 25px;" onclick="joinLiveStream()">הצטרף להאזנה לשידור החי 🎧</button>
+
+<div id="live-listener-status" style="display:none; margin-top:15px;">
+<div class="fake-visualizer">
+<div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
+<p style="color:#22c55e; font-weight:bold; margin-top:10px; font-size:18px;">מחובר ומוכן! מאזין לשידור החי...</p>
+<button class="btn-ctrl" style="background:#64748b; font-size:14px; padding:8px 16px; margin-top:10px;" onclick="stopListeningToLive()">חזור למוזיקה הרגילה</button>
+</div>
 </div>
 
 <div class="music-layout">
@@ -914,11 +914,11 @@ color:#cbd5f5;
 <div class="admin-content">
 
 <div class="admin-section" style="border-color:#ef4444;">
-    <h3>🎙️ ניהול שידור חי (Agora + הקלטה)</h3>
-    <p style="font-size:14px; color:#a5b4fc;">הפעל שידור חי. ברגע שתלחץ "עצור", ההקלטה תישמר ותרד אוטומטית למחשב שלך!</p>
-    <div id="admin-live-status" style="font-size:18px; margin-bottom:15px; font-weight:bold;">סטטוס: לא בשידור</div>
-    <button class="btn-ctrl" id="btn-start-live" style="background:linear-gradient(135deg,#22c55e,#16a34a); padding:15px 30px; font-size:18px;" onclick="startImperialLive()">התחל שידור חי לממלכה 🔴</button>
-    <button class="btn-ctrl" id="btn-stop-live" style="background:linear-gradient(135deg,#ef4444,#b91c1c); padding:15px 30px; font-size:18px; display:none;" onclick="stopImperialLive()">עצור שידור ושמור הקלטה ⏹️</button>
+<h3>🎙️ ניהול שידור חי (Agora + הקלטה)</h3>
+<p style="font-size:14px; color:#a5b4fc;">הפעל שידור חי. ברגע שתלחץ "עצור", ההקלטה תישמר ותרד אוטומטית למחשב שלך!</p>
+<div id="admin-live-status" style="font-size:18px; margin-bottom:15px; font-weight:bold;">סטטוס: לא בשידור</div>
+<button class="btn-ctrl" id="btn-start-live" style="background:linear-gradient(135deg,#22c55e,#16a34a); padding:15px 30px; font-size:18px;" onclick="startImperialLive()">התחל שידור חי לממלכה 🔴</button>
+<button class="btn-ctrl" id="btn-stop-live" style="background:linear-gradient(135deg,#ef4444,#b91c1c); padding:15px 30px; font-size:18px; display:none;" onclick="stopImperialLive()">עצור שידור ושמור הקלטה ⏹️</button>
 </div>
 
 <div class="admin-section" style="background:#451a03;">
@@ -1066,9 +1066,8 @@ color:#cbd5f5;
 <div class="toast" id="toast"></div>
 
 <script>
-// ---------- הוד מעלתו: זכור להדביק פה את ה-App ID של Agora! ----------
-const AGORA_APP_ID = "YOUR_AGORA_APP_ID_HERE"; 
-// ----------------------------------------------------------------------
+// הקוד החדש והיחיד שיש לו App ID
+const AGORA_APP_ID = "f9f19c4c51fb4f57a80c12e38c44807a";
 
 const firebaseConfig = {
 apiKey: "AIzaSyB8Dqhb0_CypZDgC0Pks3Sumag5LYnCddA",
@@ -1117,7 +1116,20 @@ img.src = url;
 }
 }
 
+function setupFakeViewers() {
+    const viewerDisplay = document.getElementById('fake-viewers');
+    if (!viewerDisplay) return;
+    setInterval(() => {
+        let current = parseInt(viewerDisplay.innerText);
+        let change = Math.floor(Math.random() * 5) - 2;
+        let next = current + change;
+        if (next < 140) next = 155;
+        viewerDisplay.innerText = next;
+    }, 4000);
+}
+
 window.addEventListener("load", () => {
+setupFakeViewers(); // הפעלת המד המזויף
 setTimeout(() => {
 const s = document.getElementById("splash");
 if(s) s.style.display = "none";
@@ -1176,16 +1188,16 @@ if(el) el.innerText = s.val() || 0;
 
 // מאזין לסטטוס השידור החי (עבור המאזינים)
 db.ref("broadcast/isLive").on("value", snapshot => {
-    const isLive = snapshot.val();
-    const banner = document.getElementById('live-listener-banner');
-    if(banner) {
-        if(isLive) {
-            banner.style.display = 'block';
-        } else {
-            banner.style.display = 'none';
-            stopListeningToLive(); // התנתקות אוטומטית כשהוד מעלתו מסיים
-        }
-    }
+const isLive = snapshot.val();
+const banner = document.getElementById('live-listener-banner');
+if(banner) {
+if(isLive) {
+banner.style.display = 'block';
+} else {
+banner.style.display = 'none';
+stopListeningToLive(); // התנתקות אוטומטית כשהוד מעלתו מסיים
+}
+}
 });
 
 function showPage(p) {
@@ -2218,178 +2230,110 @@ showToast("החשבון נמחק ממערכת הניהול");
 
 // המנהל מתחיל שידור
 async function startImperialLive() {
-    try {
-        // 1. קבלת אישור גישה למיקרופון בשביל ההקלטה המקומית
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        liveRecorder = new MediaRecorder(stream);
-        liveChunks = [];
-        
-        liveRecorder.ondataavailable = e => { 
-            if(e.data.size > 0) liveChunks.push(e.data); 
-        };
-        
-        liveRecorder.onstop = () => {
-            // כשההקלטה מסתיימת, אנחנו בונים את הקובץ ומורידים אותו למחשב
-            const blob = new Blob(liveChunks, { type: 'audio/webm' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'kol-popper-live-' + Date.now() + '.webm';
-            a.click();
-            URL.revokeObjectURL(url);
-        };
-        
-        liveRecorder.start();
+try {
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+liveRecorder = new MediaRecorder(stream);
+liveChunks = [];
 
-        // 2. חיבור ל-Agora כדי לשדר לכולם בזמן אמת
-        agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-        await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
-        localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        await agoraClient.publish([localAudioTrack]);
+liveRecorder.ondataavailable = e => {
+if(e.data.size > 0) liveChunks.push(e.data);
+};
 
-        // 3. עדכון ב-Firebase כדי שכל הנתינים יראו את ההודעה
-        db.ref("broadcast/isLive").set(true);
+liveRecorder.onstop = () => {
+const blob = new Blob(liveChunks, { type: 'audio/webm' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'kol-popper-live-' + Date.now() + '.webm';
+a.click();
+URL.revokeObjectURL(url);
+};
 
-        document.getElementById('btn-start-live').style.display = 'none';
-        document.getElementById('btn-stop-live').style.display = 'inline-block';
-        document.getElementById('admin-live-status').innerText = "סטטוס: בשידור! 🔴";
-        showToast("שידור חי החל בהצלחה! הוד מעלתו באוויר.");
-        
-    } catch (e) {
-        console.error(e);
-        showToast("שגיאה בהפעלת השידור: " + e.message);
-    }
+liveRecorder.start();
+
+agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
+localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+await agoraClient.publish([localAudioTrack]);
+
+db.ref("broadcast/isLive").set(true);
+
+document.getElementById('btn-start-live').style.display = 'none';
+document.getElementById('btn-stop-live').style.display = 'inline-block';
+document.getElementById('admin-live-status').innerText = "סטטוס: בשידור! 🔴";
+showToast("שידור חי החל בהצלחה! הוד מעלתו באוויר.");
+
+} catch (e) {
+console.error(e);
+showToast("שגיאה בהפעלת השידור: " + e.message);
+}
 }
 
 // המנהל עוצר שידור
 async function stopImperialLive() {
-    try {
-        if(localAudioTrack) {
-            localAudioTrack.stop();
-            localAudioTrack.close();
-        }
-        if(agoraClient) {
-            await agoraClient.leave();
-        }
-        if(liveRecorder && liveRecorder.state !== "inactive") {
-            liveRecorder.stop(); // פקודה זו מפעילה את הורדת הקובץ שכתבנו קודם
-        }
-        
-        db.ref("broadcast/isLive").set(false);
+try {
+if(localAudioTrack) {
+localAudioTrack.stop();
+localAudioTrack.close();
+}
+if(agoraClient) {
+await agoraClient.leave();
+}
+if(liveRecorder && liveRecorder.state !== "inactive") {
+liveRecorder.stop();
+}
 
-        document.getElementById('btn-start-live').style.display = 'inline-block';
-        document.getElementById('btn-stop-live').style.display = 'none';
-        document.getElementById('admin-live-status').innerText = "סטטוס: לא בשידור";
-        showToast("שידור חי הופסק. ההקלטה נשמרת למחשב שלך...");
-        
-    } catch (e) {
-        console.error(e);
-        showToast("שגיאה בסיום השידור: " + e.message);
-    }
+db.ref("broadcast/isLive").set(false);
+
+document.getElementById('btn-start-live').style.display = 'inline-block';
+document.getElementById('btn-stop-live').style.display = 'none';
+document.getElementById('admin-live-status').innerText = "סטטוס: לא בשידור";
+showToast("שידור חי הופסק. ההקלטה נשמרת למחשב שלך...");
+
+} catch (e) {
+console.error(e);
+showToast("שגיאה בסיום השידור: " + e.message);
+}
 }
 
 // המאזין מצטרף לשידור
 async function joinLiveStream() {
-    if(isListeningLive) return;
-    musicStopAll(); // עוצרים את המוזיקה הרגילה אם היא מנגנת
-    try {
-        if(!agoraClient) agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-        await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
-        
-        agoraClient.on("user-published", async (user, mediaType) => {
-            await agoraClient.subscribe(user, mediaType);
-            if (mediaType === "audio") {
-                user.audioTrack.play();
-            }
-        });
-        
-        isListeningLive = true;
-        document.getElementById('live-listener-status').style.display = 'block';
-        document.getElementById('btn-join-live').style.display = 'none';
-        showToast("התחברת לשידור החי בהצלחה!");
-        
-    } catch(e) {
-        console.error(e);
-        showToast("שגיאה בהתחברות לשידור: " + e.message);
-    }
+if(isListeningLive) return;
+musicStopAll();
+try {
+if(!agoraClient) agoraClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+await agoraClient.join(AGORA_APP_ID, "kol-popper-live", null, null);
+
+agoraClient.on("user-published", async (user, mediaType) => {
+await agoraClient.subscribe(user, mediaType);
+if (mediaType === "audio") {
+user.audioTrack.play();
+}
+});
+
+isListeningLive = true;
+document.getElementById('live-listener-status').style.display = 'block';
+document.getElementById('btn-join-live').style.display = 'none';
+showToast("התחברת לשידור החי בהצלחה!");
+
+} catch(e) {
+console.error(e);
+showToast("שגיאה בהתחברות לשידור: " + e.message);
+}
 }
 
-// המאזין מתנתק מהשידור (או שהשידור נגמר)
+// המאזין מתנתק מהשידור
 async function stopListeningToLive() {
-    if(!isListeningLive) return;
-    if(agoraClient) {
-        await agoraClient.leave();
-    }
-    isListeningLive = false;
-    document.getElementById('live-listener-status').style.display = 'none';
-    document.getElementById('btn-join-live').style.display = 'inline-block';
-    showToast("התנתקת מהשידור החי.");
+if(!isListeningLive) return;
+if(agoraClient) {
+await agoraClient.leave();
 }
-// --- הגדרות Agora ומד צופים מזויף ---
-const AGORA_APP_ID = "f9f19c4c51fb4f57a80c12e38c44807a"; 
-const AGORA_CHANNEL = "kol-popper";
-const client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
-
-async function startAgora() {
-    try {
-        // המשתמשים שנכנסים לאתר הם רק קהל (Audience)
-        client.setClientRole("audience");
-        await client.join(AGORA_APP_ID, AGORA_CHANNEL, null);
-        
-        // ברגע שמישהו (אתה) מתחיל לשדר בערוץ
-        client.on("user-published", async (user, mediaType) => {
-            await client.subscribe(user, mediaType);
-            
-            if (mediaType === "video") {
-                const screen = document.getElementById("media-screen");
-                if (screen) {
-                    screen.innerHTML = ""; // מנקה את הנגן הנוכחי כדי להציג את השידור
-                    const remotePlayer = document.createElement("div");
-                    remotePlayer.id = user.uid.toString();
-                    remotePlayer.style.width = "100%";
-                    remotePlayer.style.height = "100%";
-                    screen.append(remotePlayer);
-                    user.videoTrack.play(remotePlayer);
-                }
-            }
-            if (mediaType === "audio") {
-                user.audioTrack.play();
-            }
-        });
-    } catch (e) {
-        console.log("Agora connection error:", e);
-    }
+isListeningLive = false;
+document.getElementById('live-listener-status').style.display = 'none';
+document.getElementById('btn-join-live').style.display = 'inline-block';
+showToast("התנתקת מהשידור החי.");
 }
 
-// פונקציה שמשנה את מספר הצופים כדי שייראה אמיתי
-function setupFakeViewers() {
-    const viewerDisplay = document.getElementById('fake-viewers');
-    if (!viewerDisplay) return;
-
-    setInterval(() => {
-        let current = parseInt(viewerDisplay.innerText);
-        // מגריל מספר בין 2- ל-4+ כדי להוסיף או להוריד מהנוכחי
-        let change = Math.floor(Math.random() * 7) - 2;
-        let next = current + change;
-        
-        // מוודא שהמספר לא צונח נמוך מדי או קופץ גבוה מדי
-        if (next < 140) next = 155;
-        if (next > 480) next = 420;
-        
-        viewerDisplay.innerText = next;
-    }, 4000); // שינוי כל 4 שניות
-}
-// --- הפעלה של הכל ברגע שהדף נטען ---
-window.addEventListener('load', () => {
-    // הפעלת Agora רק אם הספרייה נטענה בהצלחה
-    if (typeof AgoraRTC !== 'undefined') {
-        startAgora();
-        setupFakeViewers();
-    } else {
-        console.error("שגיאה: הספרייה של Agora לא נמצאה. וודא שהוספת את ה-script בראש הדף.");
-    }
-}); 
-// סוף הקוד
 </script>
 </body>
 </html>
