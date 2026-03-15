@@ -2268,7 +2268,8 @@ async function startImperialLive() {
         showToast("שגיאה בהפעלת השידור: " + e.message);
     }
 }
-// המנהל עוצר שידורasync function startImperialLive() {
+// המנהל עוצר שידור
+  async function startImperialLive() {
     try {
         if (!kolPopperClient) {
             kolPopperClient = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
